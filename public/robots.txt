@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login
+Disallow: /logout
+
+Sitemap: https://autogalleria.co.uk/sitemap.xml
+Sitemap: https://autogalleria.co.uk/video-sitemap.xml

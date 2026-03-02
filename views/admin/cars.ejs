@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin – Cars</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-6xl mx-auto py-10">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Manage Cars</h1>
+
+    <div class="mb-4">
+      <a href="/admin/cars/new" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">+ Add Car</a>
+    </div>
+
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <table class="w-full table-auto">
+        <thead class="bg-gray-50 text-left text-sm font-semibold text-gray-600">
+          <tr>
+            <th class="px-4 py-3">Make</th>
+            <th class="px-4 py-3">Model</th>
+            <th class="px-4 py-3">Year</th>
+            <th class="px-4 py-3">Price</th>
+            <th class="px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
+          <% cars.forEach(car => { %>
+            <tr>
+              <td class="px-4 py-3"><%= car.make %></td>
+              <td class="px-4 py-3"><%= car.model %></td>
+              <td class="px-4 py-3"><%= car.year %></td>
+              <td class="px-4 py-3">£<%= car.price %></td>
+             <td class="px-4 py-3 flex gap-2">
+  <a href="/admin/cars/<%= car._id %>/edit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">Edit</a>
+
+  <form action="/admin/cars/<%= car._id %>/delete" method="POST" onsubmit="return confirm('Delete this car?');">
+    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
+  </form>
+
+  <a href="/car/<%= car.slug %>" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">View</a>
+</td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

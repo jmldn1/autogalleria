@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Car Valuation</title>
+  <meta name="description" content="Complete your car valuation by adding your contact details. Get your free instant offer and same-day payment.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+  <!-- Step 2 Form Section -->
+  <section class="relative bg-white py-20 px-6 sm:px-10">
+    <div class="max-w-xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4 text-center">Almost Done!</h1>
+      <p class="text-lg text-gray-600 mb-8 text-center">We’ve got your car details. Just add your contact info so we can send your valuation.</p>
+
+      <form action="/submit-valuation" method="POST" class="bg-gray-100 shadow-lg rounded-2xl p-6 sm:p-8 space-y-6">
+        
+        <!-- Hidden fields from Step 1 -->
+        <input type="hidden" name="carReg" value="{{carReg}}">
+        <input type="hidden" name="postcode" value="{{postcode}}">
+
+        <!-- Contact Details -->
+        <div>
+          <label for="name" class="block font-medium mb-1">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="John Smith"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="email" class="block font-medium mb-1">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="phone" class="block font-medium mb-1">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="07123 456789"
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+          class="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
+          Get My Free Valuation
+        </button>
+      </form>
+
+      <!-- Reassurance -->
+      <div class="mt-6 text-center text-sm text-gray-500">
+        <p>🔒 Your details are secure and never shared with third parties.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

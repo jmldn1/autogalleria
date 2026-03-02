@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Auto Galleria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- NAVBAR -->
+<nav class="bg-white shadow p-4 flex justify-between items-center">
+  <h1 class="text-xl font-bold">Auto Galleria</h1>
+  <div>
+    <span class="mr-4">Hello, <%= user.name %></span>
+    <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN DASHBOARD -->
+<main class="max-w-7xl mx-auto p-6 space-y-8">
+
+  <!-- Dashboard Title -->
+  <h2 class="text-2xl font-bold">Dashboard</h2>
+
+  <!-- Top Admin Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Landings -->
+    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="font-semibold text-lg mb-2">Landings</h3>
+      <p class="text-gray-600 mb-4">Manage landing pages.</p>
+      <a href="/admin/landings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
+    </div>
+
+    <!-- Cars -->
+    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="font-semibold text-lg mb-2">Cars</h3>
+      <p class="text-gray-600 mb-4">Add, edit, and remove cars.</p>
+      <a href="/admin/cars" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
+    </div>
+
+    <!-- Blog -->
+    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="font-semibold text-lg mb-2">Blog</h3>
+      <p class="text-gray-600 mb-4">Manage blog posts.</p>
+      <a href="/admin/blog" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
+    </div>
+  </div>
+
+  <!-- Metrics Cards Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Total Users -->
+    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+      <div class="flex-shrink-0 bg-blue-500 text-white rounded-full p-3 mr-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <div>
+        <h4 class="text-gray-700 font-semibold">Total Users</h4>
+        <p class="text-2xl font-bold">1,245</p>
+      </div>
+    </div>
+
+    <!-- Cars Added -->
+    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+      <div class="flex-shrink-0 bg-green-500 text-white rounded-full p-3 mr-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h2l3 8h8l3-8h2"></path>
+        </svg>
+      </div>
+      <div>
+        <h4 class="text-gray-700 font-semibold">Cars Added</h4>
+        <p class="text-2xl font-bold">312</p>
+      </div>
+    </div>
+
+    <!-- Leads -->
+    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+      <div class="flex-shrink-0 bg-red-500 text-white rounded-full p-3 mr-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h8m-8 4h6"></path>
+        </svg>
+      </div>
+      <div>
+        <h4 class="text-gray-700 font-semibold">Leads</h4>
+        <p class="text-2xl font-bold">76</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- Line Chart -->
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="text-lg font-semibold mb-4">Leads Over Time</h3>
+      <canvas id="lineChart" class="w-full h-64"></canvas>
+    </div>
+
+    <!-- Heatmap Simulation -->
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="text-lg font-semibold mb-4">Website Activity Heatmap</h3>
+      <canvas id="heatmap" class="w-full h-64"></canvas>
+    </div>
+  </div>
+
+  <!-- Recent Leads Table -->
+  <div class="bg-white p-6 rounded shadow">
+    <h3 class="text-lg font-semibold mb-4">Recent Leads</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Car Interested</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% const recentLeads = [
+            { name:'John Doe', email:'john@example.com', car:'Audi A3', date:'2025-08-29' },
+            { name:'Jane Smith', email:'jane@example.com', car:'BMW 3 Series', date:'2025-08-28' },
+            { name:'Alex Johnson', email:'alex@example.com', car:'Mercedes C-Class', date:'2025-08-28' },
+            { name:'Emily Davis', email:'emily@example.com', car:'Toyota Corolla', date:'2025-08-27' }
+          ]; %>
+          <% recentLeads.forEach(lead => { %>
+            <tr class="hover:bg-gray-100">
+              <td class="px-6 py-4 whitespace-nowrap"><%= lead.name %></td>
+              <td class="px-6 py-4 whitespace-nowrap"><%= lead.email %></td>
+              <td class="px-6 py-4 whitespace-nowrap"><%= lead.car %></td>
+              <td class="px-6 py-4 whitespace-nowrap"><%= lead.date %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Line Chart
+  const ctxLine = document.getElementById('lineChart').getContext('2d');
+  const lineChart = new Chart(ctxLine, {
+    type: 'line',
+    data: {
+      labels: ['Aug 23', 'Aug 24', 'Aug 25', 'Aug 26', 'Aug 27', 'Aug 28', 'Aug 29'],
+      datasets: [{
+        label: 'New Leads',
+        data: [5, 8, 4, 10, 7, 6, 9],
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, precision:0 } }
+    }
+  });
+
+  // Heatmap Simulation
+  const ctxHeat = document.getElementById('heatmap').getContext('2d');
+  const heatData = [];
+  for (let i = 0; i < 50; i++) {
+    heatData.push({
+      x: Math.random() * 24,
+      y: Math.random() * 100,
+      r: Math.random() * 10 + 3
+    });
+  }
+  new Chart(ctxHeat, {
+    type: 'bubble',
+    data: { datasets: [{ label: 'Activity', data: heatData, backgroundColor: 'rgba(239, 68, 68, 0.5)' }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { title: { display: true, text: 'Hour of Day' }, min:0, max:24 },
+        y: { title: { display: true, text: 'Hits' }, min:0, max:100 }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

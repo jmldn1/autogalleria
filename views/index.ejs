@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>autogalleria | App Design Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .device-screen {
+      background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.03));
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .bezel { box-shadow: 0 12px 30px rgba(2,6,23,0.15); }
+    .screenshot { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .phone-notch { height: 22px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Hero Section with Responsive Background Image -->
+  <section class="relative min-h-screen flex flex-col justify-center items-center text-center text-white p-6">
+    <div class="absolute inset-0">
+      <picture>
+        <source srcset="/images/hero-bg-480x840.avif" type="image/avif" media="(max-width: 640px)">
+        <source srcset="/images/hero-bg-800x1400.avif" type="image/avif" media="(max-width: 1024px)">
+        <source srcset="/images/hero-bg-1600x900.avif" type="image/avif">
+
+        <source srcset="/images/hero-bg-480x840.webp" type="image/webp" media="(max-width: 640px)">
+        <source srcset="/images/hero-bg-800x1400.webp" type="image/webp" media="(max-width: 1024px)">
+        <source srcset="/images/hero-bg-1600x900.webp" type="image/webp">
+
+        <img src="/images/hero-bg-1600x900.jpg" 
+             alt="Hero Background" 
+             class="w-full h-full object-cover" 
+             loading="eager" 
+             fetchpriority="high">
+      </picture>
+
+      <div class="absolute inset-0 bg-black/50"></div>
+    </div>
+    <div class="relative z-10">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4">autogalleria</h1>
+      <p class="text-lg md:text-xl mb-6">Clean UI Designs and Websites</p>
+      <a href="#showcase" class="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow-lg hover:bg-blue-700 transition">View My Work</a>
+    </div>
+  </section>
+
+  <!-- Mockup Section with Overlap -->
+  <main class="max-w-6xl mx-auto px-6 py-16">
+    <header class="mb-8 text-center">
+      <h2 class="text-3xl font-bold">PC + Mobile</h2>
+      <p class="text-sm text-slate-500">Fully responsive SEO friendly super fast web solutions.</p>
+    </header>
+
+<section class="relative flex justify-center items-center">
+  <!-- Desktop / Laptop mockup -->
+  <figure class="w-full max-w-3xl">
+    <div class="relative bg-white rounded-2xl p-6 bezel">
+      <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner">
+        <div class="bg-black device-screen aspect-[16/9]">
+          <img id="pc-screenshot" class="screenshot" src="/images/hero-bg-1600x900.jpg" alt="PC Screenshot" />
+        </div>
+      </div>
+      <div class="mt-4 flex justify-center">
+        <div class="w-48 h-2 bg-slate-200 rounded-full"></div>
+      </div>
+      <div class="mt-1 flex justify-center">
+        <div class="w-24 h-3 bg-slate-300 rounded-t-lg"></div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Phone mockup, overlapping -->
+  <figure class="absolute right-10 bottom-0 w-32 sm:w-44 md:w-56 lg:w-64 transform translate-y-8 drop-shadow-2xl">
+    <div class="relative bg-white rounded-3xl p-4 bezel">
+      <div class="rounded-2xl overflow-hidden border border-slate-100">
+        <div class="flex justify-center items-center phone-notch bg-slate-50">
+          <div class="w-14 h-2 rounded-full bg-slate-200"></div>
+        </div>
+        <!-- Phone screen with proper aspect ratio -->
+        <div class="device-screen aspect-[9/19]">
+          <img id="phone-screenshot" class="screenshot rounded-xl" src="/images/hero-bg-480x840.jpg" alt="Phone Screenshot" />
+        </div>
+      </div>
+      <div class="mt-4 flex justify-center">
+        <div class="w-16 h-2 bg-slate-200 rounded-full"></div>
+      </div>
+    </div>
+  </figure>
+</section>
+
+  </main>
+<!-- Trusted By Section -->
+<section class="py-16 px-6 bg-gray-50">
+  <div class="max-w-6xl mx-auto text-center">
+    <p class="text-sm uppercase tracking-wide text-gray-500 mb-8">Trusted By</p>
+    <div class="flex flex-wrap justify-center gap-10 md:gap-16">
+      <!-- Example logos (swap with your own SVGs or PNGs) -->
+      <img src="/images/fiverr.svg" alt="Fiverr" 
+           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+      <img src="/images/logo-upwork.svg" alt="Upwork" 
+           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+      <img src="/images/logo-envato.svg" alt="Envato" 
+           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+      <img src="/images/logo-dribble.svg" alt="Dribbble" 
+           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+    </div>
+  </div>
+</section>
+
+<!-- Stats + Features Section -->
+<section class="py-20 px-6 bg-white border-t border-gray-100">
+  <div class="max-w-6xl mx-auto">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center mb-16">
+      <div>
+        <p class="text-4xl font-bold text-blue-600">25+</p>
+        <p class="mt-2 text-gray-600">Projects Delivered</p>
+      </div>
+      <div>
+        <p class="text-4xl font-bold text-blue-600">50+</p>
+        <p class="mt-2 text-gray-600">UI Kits Designed</p>
+      </div>
+      <div>
+        <p class="text-4xl font-bold text-blue-600">5k+</p>
+        <p class="mt-2 text-gray-600">Theme Downloads</p>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+<!-- Products & Templates Section --> 
+ <section class="py-16 px-6 bg-gray-50"> 
+  <div class="max-w-6xl mx-auto text-center mb-12"> 
+    <h2 class="text-3xl font-bold">Products & Templates</h2> 
+    <p class="text-gray-600">Browse my ready-to-use UI kits and templates.</p> 
+  </div> <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto"> 
+    <% const products = [ { title: 'SaaS Dashboard Kit', file: 'product1', link: '#' },
+     { title: 'Mobile Banking UI', file: 'product2', link: '#' }, { title: 'E-commerce App', file: 'product3', link: '#' } ]; %>
+      <% products.forEach((p, index) => { %> <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"> 
+        <picture> <!-- AVIF --> <source type="image/avif" srcset="/images/<%= p.file %>-400.avif" media="(max-width: 640px)"> 
+          <source type="image/avif" srcset="/images/<%= p.file %>-600.avif 600w, /images/<%= p.file %>-800.avif 800w, /images/<%= p.file %>-1200.avif 1200w" sizes="(max-width: 1024px) 50vw, 33vw"> <!-- WebP --> 
+          <source type="image/webp" srcset="/images/<%= p.file %>-400.webp" media="(max-width: 640px)"> 
+          <source type="image/webp" srcset="/images/<%= p.file %>-600.webp 600w, /images/<%= p.file %>-800.webp 800w, /images/<%= p.file %>-1200.webp 1200w" sizes="(max-width: 1024px) 50vw, 33vw"> <!-- JPG fallback --> 
+          <img src="/images/<%= p.file %>-1200.jpg" 
+          srcset="/images/<%= p.file %>-400.jpg 400w, /images/<%= p.file %>-600.jpg 600w, /images/<%= p.file %>-800.jpg 800w, /images/<%= p.file %>-1200.jpg 1200w" 
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="<%= p.title %>" 
+          class="w-full h-48 object-cover" loading="<%= index < 2 ? 'eager' : 'lazy' %>" fetchpriority="<%= index < 2 ? 'high' : 'auto' %>" 
+          style="background: url('/images/<%= p.file %>-400.jpg') center/cover blur(20px);"> 
+        </picture> <div class="p-6"> <h3 class="font-semibold text-lg mb-2"><%= p.title %></h3> 
+          <a href="<%= p.link %>" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"> View Details </a> 
+        </div> 
+        </div> <% }) %> 
+      </div> 
+    </section>
+
+
+  <!-- Showcase Section -->
+  <section id="showcase" class="py-16 px-6 bg-white">
+    <h2 class="text-3xl font-bold text-center mb-12">Showcase</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+      <% const screenshots = [
+        { file: 'screenshot1', alt: 'App Screenshot 1' },
+        { file: 'screenshot2', alt: 'App Screenshot 2' },
+        { file: 'screenshot3', alt: 'App Screenshot 3' }
+      ]; %>
+
+      <% screenshots.forEach((s, index) => { %>
+        <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 transition">
+          <picture>
+            <source type="image/avif" srcset="/images/<%= s.file %>-400.avif" media="(max-width: 640px)">
+            <source type="image/avif" srcset="/images/<%= s.file %>-600.avif 600w, /images/<%= s.file %>-800.avif 800w, /images/<%= s.file %>-1200.avif 1200w" sizes="(max-width: 1024px) 50vw, 33vw">
+
+            <source type="image/webp" srcset="/images/<%= s.file %>-400.webp" media="(max-width: 640px)">
+            <source type="image/webp" srcset="/images/<%= s.file %>-600.webp 600w, /images/<%= s.file %>-800.webp 800w, /images/<%= s.file %>-1200.webp 1200w" sizes="(max-width: 1024px) 50vw, 33vw">
+
+            <img src="/images/<%= s.file %>-1200.jpg"
+                 srcset="/images/<%= s.file %>-400.jpg 400w, /images/<%= s.file %>-600.jpg 600w, /images/<%= s.file %>-800.jpg 800w, /images/<%= s.file %>-1200.jpg 1200w"
+                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                 alt="<%= s.alt %>"
+                 class="w-full h-full object-cover"
+                 loading="<%= index < 2 ? 'eager' : 'lazy' %>"
+                 fetchpriority="<%= index < 2 ? 'high' : 'auto' %>"
+                 style="background: url('/images/<%= s.file %>-400.jpg') center/cover blur(20px);">
+          </picture>
+        </div>
+      <% }) %>
+
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-16 px-6 bg-gray-50 text-center">
+    <h2 class="text-3xl font-bold mb-6">About Me</h2>
+    <p class="max-w-2xl mx-auto text-lg mb-6">
+      I design sleek, modern app interfaces that focus on user experience. My work is available on Fiverr and ThemeForest, helping businesses and creators showcase their apps in the best light.
+    </p>
+    <div class="flex justify-center gap-4">
+      <a href="https://www.fiverr.com/sellers/autogalleria" target="_blank" class="px-6 py-3 bg-green-600 text-white rounded-2xl shadow hover:bg-green-700 transition">Hire Me on Fiverr</a>
+      <a href="https://themeforest.net/user/autogalleria" target="_blank" class="px-6 py-3 bg-gray-800 text-white rounded-2xl shadow hover:bg-gray-900 transition">View on ThemeForest</a>
+    </div>
+  </section>
+
+<!-- Footer with Landing Page Links -->
+<footer class="bg-white border-t border-gray-100 text-center py-8">
+  <!-- Landing Pages Links -->
+  <div class="mb-6">
+    <p class="text-sm text-gray-500 mb-2">Explore Our Services:</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/sell-your-LHD" class="text-blue-600 hover:text-blue-800 text-sm transition">Sell Your LHD Car</a>
+      <!-- Add more landing pages here -->
+    </div>
+  </div>
+
+  <!-- Standard Footer Text -->
+  <p class="text-sm text-gray-500">&copy; <span id="year"></span> Auto Galleria. All rights reserved.</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+</body>
+</html>
