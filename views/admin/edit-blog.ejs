@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Blog | Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="mx-auto max-w-5xl">
+    <%- include('partials/nav', { pageTitle: 'Edit Blog', user }) %>
+  </div>
+  <main class="max-w-5xl mx-auto py-10">
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Edit Blog</h1>
+          <p class="text-sm text-gray-500">Update your blog post content and metadata.</p>
+        </div>
+        <a href="/admin/blogs" class="text-blue-600 hover:underline">Back to list</a>
+      </div>
+
+      <form action="/admin/blogs/edit/<%= blog._id %>" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="title">Title</label>
+          <input id="title" name="title" required value="<%= blog.title %>" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-blue-500" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="slug">Slug</label>
+          <input id="slug" name="slug" required value="<%= blog.slug %>" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-blue-500" />
+          <p class="mt-2 text-sm text-gray-500">Unique slug for the blog URL.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="excerpt">Excerpt</label>
+          <textarea id="excerpt" name="excerpt" rows="3" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-blue-500"><%= blog.excerpt %></textarea>
+        </div>
+
+        <% if (blog.coverImage) { %>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Current Cover Image</label>
+            <img src="<%= blog.coverImage %>" alt="Current blog cover" class="h-48 w-full rounded-lg object-cover border border-gray-200" />
+          </div>
+        <% } %>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="coverImageFile">Replace Cover Image</label>
+          <div class="rounded-lg border border-dashed border-gray-300 p-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Upload a new cover image</p>
+                <p class="text-sm text-gray-500">PNG, JPG, or WEBP. This will replace the current image.</p>
+              </div>
+              <label for="coverImageFile" class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                Choose image
+              </label>
+            </div>
+            <input id="coverImageFile" name="coverImageFile" type="file" accept="image/*" class="sr-only" />
+            <div id="coverImageName" class="mt-3 text-sm text-gray-500">No file selected</div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="coverImage">Or use an image URL</label>
+          <input id="coverImage" name="coverImage" value="<%= blog.coverImage %>" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-blue-500" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="inlineImageFile">Insert image into content</label>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button id="insertImageBtn" type="button" class="inline-flex items-center justify-center rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300">Upload & insert image</button>
+            <div id="inlineImageName" class="text-sm text-gray-500">No file selected</div>
+          </div>
+          <input id="inlineImageFile" name="inlineImageFile" type="file" accept="image/*" class="sr-only" />
+          <p class="mt-2 text-sm text-gray-500">Uploads will be processed and inserted as an <code>&lt;img&gt;</code> tag into the content.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2" for="content">Content</label>
+          <textarea id="content" name="content" rows="10" required class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-blue-500"><%= blog.content %></textarea>
+        </div>
+
+        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700">Save Changes</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    const coverInput = document.getElementById('coverImageFile');
+    const coverName = document.getElementById('coverImageName');
+    const inlineImageInput = document.getElementById('inlineImageFile');
+    const inlineImageBtn = document.getElementById('insertImageBtn');
+    const inlineImageName = document.getElementById('inlineImageName');
+    const contentTextarea = document.getElementById('content');
+
+    if (coverInput && coverName) {
+      coverInput.addEventListener('change', () => {
+        coverName.textContent = coverInput.files?.[0] ? coverInput.files[0].name : 'No file selected';
+      });
+    }
+
+    if (inlineImageBtn && inlineImageInput && inlineImageName && contentTextarea) {
+      inlineImageBtn.addEventListener('click', () => inlineImageInput.click());
+
+      inlineImageInput.addEventListener('change', async () => {
+        const file = inlineImageInput.files?.[0];
+        inlineImageName.textContent = file ? file.name : 'No file selected';
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('blogId', '<%= blog._id %>');
+
+        inlineImageBtn.disabled = true;
+        inlineImageBtn.textContent = 'Uploading...';
+
+        try {
+          const response = await fetch('/admin/blogs/upload-image', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || 'Upload failed');
+          }
+          const imageUrl = data.url;
+          const imgTag = `<img src="${imageUrl}" alt="Blog image" />`;
+          const startPos = contentTextarea.selectionStart || 0;
+          const endPos = contentTextarea.selectionEnd || 0;
+          const before = contentTextarea.value.substring(0, startPos);
+          const after = contentTextarea.value.substring(endPos);
+          contentTextarea.value = `${before}${imgTag}${after}`;
+          contentTextarea.focus();
+          contentTextarea.selectionStart = contentTextarea.selectionEnd = before.length + imgTag.length;
+        } catch (err) {
+          console.error(err);
+          alert(err.message || 'Image upload failed.');
+        } finally {
+          inlineImageBtn.disabled = false;
+          inlineImageBtn.textContent = 'Upload & insert image';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

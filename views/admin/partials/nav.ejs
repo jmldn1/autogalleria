@@ -1,0 +1,46 @@
+<nav class="mb-6 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+  <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <a href="/admin/dashboard" class="text-lg font-semibold text-blue-600">Auto Galleria Admin</a>
+      <span class="hidden text-sm text-gray-500 sm:inline">/</span>
+      <span class="text-sm text-gray-600"><%= pageTitle || 'Admin' %></span>
+    </div>
+    <div class="flex items-center gap-3">
+      <button type="button" class="inline-flex items-center rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 md:hidden" onclick="this.nextElementSibling.classList.toggle('hidden')">
+        ☰ Menu
+      </button>
+      <div class="hidden flex-col gap-2 text-sm md:flex md:flex-row md:items-center">
+        <a href="/admin/dashboard" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Dashboard</a>
+        <a href="/admin/landings" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Landings</a>
+        <a href="/admin/cars" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Cars</a>
+        <a href="/admin/blogs" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Blog</a>
+        <a href="/logout" class="rounded px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
+      </div>
+      <div class="hidden items-center gap-2 rounded-full bg-gray-50 px-3 py-2 sm:flex">
+        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+          <%= (user && user.name ? user.name : 'A').charAt(0).toUpperCase() %>
+        </div>
+        <div class="text-sm">
+          <div class="font-medium text-gray-800"><%= user && user.name ? user.name : 'Admin' %></div>
+          <div class="text-xs text-gray-500">Signed in</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3 hidden flex-col gap-2 border-t border-gray-100 pt-3 text-sm md:hidden">
+    <div class="mb-2 flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+        <%= (user && user.name ? user.name : 'A').charAt(0).toUpperCase() %>
+      </div>
+      <div>
+        <div class="font-medium text-gray-800"><%= user && user.name ? user.name : 'Admin' %></div>
+        <div class="text-xs text-gray-500">Signed in</div>
+      </div>
+    </div>
+    <a href="/admin/dashboard" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Dashboard</a>
+    <a href="/admin/landings" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Landings</a>
+    <a href="/admin/cars" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Cars</a>
+    <a href="/admin/blogs" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Blog</a>
+    <a href="/logout" class="rounded px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
+  </div>
+</nav>

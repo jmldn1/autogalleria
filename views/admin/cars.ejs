@@ -1,50 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin – Cars</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manage Cars | Auto Galleria</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <div class="max-w-6xl mx-auto py-10">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Manage Cars</h1>
 
-    <div class="mb-4">
-      <a href="/admin/cars/new" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">+ Add Car</a>
+<body class="bg-gray-100 text-gray-800">
+  <main class="max-w-7xl mx-auto p-6">
+    <div class="mx-auto max-w-7xl">
+      <%- include('partials/nav', { pageTitle: 'Cars' }) %>
+    </div>
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold">Manage Cars</h1>
+        <p class="mt-1 text-sm text-gray-500">Review and manage your inventory from one place.</p>
+      </div>
+      <a href="/admin/cars/new"
+         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+        + Add New Car
+      </a>
     </div>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-      <table class="w-full table-auto">
-        <thead class="bg-gray-50 text-left text-sm font-semibold text-gray-600">
-          <tr>
-            <th class="px-4 py-3">Make</th>
-            <th class="px-4 py-3">Model</th>
-            <th class="px-4 py-3">Year</th>
-            <th class="px-4 py-3">Price</th>
-            <th class="px-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
-          <% cars.forEach(car => { %>
-            <tr>
-              <td class="px-4 py-3"><%= car.make %></td>
-              <td class="px-4 py-3"><%= car.model %></td>
-              <td class="px-4 py-3"><%= car.year %></td>
-              <td class="px-4 py-3">£<%= car.price %></td>
-             <td class="px-4 py-3 flex gap-2">
-  <a href="/admin/cars/<%= car._id %>/edit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">Edit</a>
+    <% if (cars.length === 0) { %>
+      <div class="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
+        No cars found.
+      </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <% cars.forEach(car => {
+             const firstImage = car.galleryImages?.[0];
+             const sources = firstImage?.manifest?.sources;
+             const avifSrcset = sources?.avif?.map(src => `${src.url} ${src.w}w`).join(', ');
+             const webpSrcset = sources?.webp?.map(src => `${src.url} ${src.w}w`).join(', ');
+             const jpgSrcset = sources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', ');
+             const jpgSrc = sources?.jpg?.[sources?.jpg?.length - 1]?.url;
+        %>
+          <div
+            onclick="window.location='/admin/cars/<%= car._id %>/edit'"
+            class="flex flex-col rounded-lg bg-white p-4 shadow transition hover:shadow-lg cursor-pointer"
+          >
+            <div class="mb-4">
+              <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
+                <picture>
+                  <% if (avifSrcset) { %>
+                    <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+                  <% } %>
+                  <% if (webpSrcset) { %>
+                    <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+                  <% } %>
+                  <img src="<%= jpgSrc || (sources?.webp?.[sources.webp.length - 1]?.url) || (sources?.avif?.[sources.avif.length - 1]?.url) %>"
+                       srcset="<%= jpgSrcset %>"
+                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                       class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                       alt="Car thumbnail">
+                </picture>
+              <% } else if (car.imagePath) { %>
+                <img src="<%= car.imagePath %>.jpg"
+                     class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                     alt="Car thumbnail">
+              <% } else { %>
+                <div class="flex h-32 w-full items-center justify-center rounded bg-gray-200 text-gray-500">
+                  No Image
+                </div>
+              <% } %>
+            </div>
 
-  <form action="/admin/cars/<%= car._id %>/delete" method="POST" onsubmit="return confirm('Delete this car?');">
-    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
-  </form>
+            <div class="flex-1">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-semibold text-gray-800">
+                  <%= car.year %> <%= car.make %> <%= car.model %>
+                </h3>
+                <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700">
+                  <%= car._id.toString().slice(-4) %>
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-gray-500">Price: £<%= car.price %></p>
+              <p class="mt-1 text-sm text-gray-500">Slug: <%= car.slug %></p>
+            </div>
 
-  <a href="/car/<%= car.slug %>" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">View</a>
-</td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  </div>
+            <div class="mt-4 flex flex-wrap gap-2 pt-2">
+              <a href="/admin/cars/<%= car._id %>/edit"
+                 onclick="event.stopPropagation()"
+                 class="text-blue-600 hover:underline">
+                Edit
+              </a>
+              <form action="/admin/cars/<%= car._id %>/delete"
+                    method="POST"
+                    class="inline"
+                    onclick="event.stopPropagation()"
+                    onsubmit="event.stopPropagation(); return confirm('Are you sure you want to delete this car?');">
+                <button type="submit"
+                        onclick="event.stopPropagation()"
+                        class="bg-transparent p-0 text-red-600 hover:underline border-0 cursor-pointer">
+                  Delete
+                </button>
+              </form>
+              <a href="/car/<%= car.slug %>"
+                 target="_blank"
+                 onclick="event.stopPropagation()"
+                 class="ml-auto rounded bg-blue-600 px-3 py-1 text-sm text-white transition hover:bg-blue-700">
+                View
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <a href="/admin/dashboard" class="mt-8 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+      <span aria-hidden="true">←</span>
+      <span>Back to Dashboard</span>
+    </a>
+  </main>
 </body>
 </html>

@@ -6,6 +6,8 @@ const blogSchema = new mongoose.Schema({
   excerpt: { type: String },
   content: { type: String, required: true },
   coverImage: { type: String }, // URL or file path
+  imageManifest: { type: Object },
+  placeholder: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Blog", blogSchema);

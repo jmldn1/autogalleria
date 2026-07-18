@@ -26,7 +26,22 @@
         Posted <%= blog.createdAt.toDateString() %> • by Auto Galleria
       </div>
     </div>
-    <% if (blog.coverImage) { %>
+    <% const heroSources = blog.imageManifest?.sources; %>
+    <% const heroAvifSrcset = heroSources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+    <% const heroWebpSrcset = heroSources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+    <% const heroJpgSrcset = heroSources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+    <% const heroJpgSrc = heroSources?.jpg?.[heroSources?.jpg?.length - 1]?.url || blog.coverImage; %>
+    <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc) { %>
+      <picture class="absolute inset-0 h-full w-full">
+        <% if (heroAvifSrcset) { %>
+          <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="100vw">
+        <% } %>
+        <% if (heroWebpSrcset) { %>
+          <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="100vw">
+        <% } %>
+        <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="100vw" alt="<%= blog.title %>" class="absolute inset-0 w-full h-full object-cover opacity-30" />
+      </picture>
+    <% } else if (blog.coverImage) { %>
       <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="absolute inset-0 w-full h-full object-cover opacity-30" />
     <% } %>
   </header>
@@ -44,7 +59,22 @@
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       <% relatedBlogs.forEach(r => { %>
         <a href="/blog/<%= r.slug %>" class="block bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
-          <% if (r.coverImage) { %>
+          <% const rSources = r.imageManifest?.sources; %>
+          <% const rAvifSrcset = rSources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const rWebpSrcset = rSources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const rJpgSrcset = rSources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const rJpgSrc = rSources?.jpg?.[rSources?.jpg?.length - 1]?.url || r.coverImage; %>
+          <% if (rAvifSrcset || rWebpSrcset || rJpgSrcset) { %>
+            <picture>
+              <% if (rAvifSrcset) { %>
+                <source type="image/avif" srcset="<%= rAvifSrcset %>" sizes="100vw">
+              <% } %>
+              <% if (rWebpSrcset) { %>
+                <source type="image/webp" srcset="<%= rWebpSrcset %>" sizes="100vw">
+              <% } %>
+              <img src="<%= rJpgSrc %>" srcset="<%= rJpgSrcset %>" sizes="100vw" alt="<%= r.title %>" class="w-full h-48 object-cover" />
+            </picture>
+          <% } else if (r.coverImage) { %>
             <img src="<%= r.coverImage %>" alt="<%= r.title %>" class="w-full h-48 object-cover" />
           <% } %>
           <div class="p-6">

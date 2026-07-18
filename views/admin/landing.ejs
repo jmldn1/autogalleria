@@ -8,23 +8,19 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <!-- NAVBAR -->
-  <nav class="bg-white shadow p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">Auto Galleria</h1>
-    <div>
-      <span class="mr-4">Hello, <%= user.name %></span>
-      <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Logout</a>
-    </div>
-  </nav>
+  <div class="mx-auto max-w-4xl">
+    <%- include('partials/nav', { pageTitle: landing._id ? 'Edit Landing' : 'New Landing', user }) %>
+  </div>
 
   <!-- MAIN CONTENT -->
   <main class="max-w-4xl mx-auto p-6">
 
-    <h2 class="text-2xl font-bold mb-6">Edit Landing Page</h2>
+    <h2 class="text-2xl font-bold mb-6"><%= landing._id ? 'Edit Landing Page' : 'Create Landing Page' %></h2>
 
     <section class="bg-white rounded-2xl shadow p-6">
 
-      <form action="/admin/landing/<%= landing.id %>" method="POST" enctype="multipart/form-data" class="space-y-6">
+      <% const landingAction = landing._id ? '/admin/landing/' + landing.id : '/admin/landing'; %>
+      <form action="<%= landingAction %>" method="POST" enctype="multipart/form-data" class="space-y-6">
         
         <!-- Make -->
         <div>
@@ -60,13 +56,52 @@
           <% } %>
         </div>
 
+        <!-- Hero Alt Text -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Hero Image Alt Text</label>
+          <input type="text" name="heroAltText" value="<%= landing.heroAltText || '' %>"
+                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Photo of {{make}} {{model}}">
+          <p class="text-xs text-gray-500 mt-1">Describe the hero image for accessibility and search relevance.</p>
+        </div>
+
         <!-- Meta Description -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
           <textarea name="description" rows="3"
                     class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.description %></textarea>
         </div>
+<!-- AI Assist -->
+<div class="border-t pt-6">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold">Body Copy</h3>
+    <button type="button" id="generateBtn"
+            class="px-4 py-2 bg-violet-600 text-white text-sm rounded-lg hover:bg-violet-700 shadow flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+      <span id="generateBtnText">✨ Generate with AI</span>
+    </button>
+  </div>
+  <div class="space-y-2">
+    <p id="generateError" class="hidden text-sm text-red-600"></p>
+    <p id="generateStatus" class="hidden text-sm text-green-600">AI copy generated successfully.</p>
+  </div>
 
+  <div class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Overview</label>
+      <textarea name="overview" id="field-overview" rows="3"
+                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.overview || '' %></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Value Factors</label>
+      <textarea name="valueFactors" id="field-valueFactors" rows="3"
+                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.valueFactors || '' %></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Selling Tips</label>
+      <textarea name="sellingTips" id="field-sellingTips" rows="3"
+                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.sellingTips || '' %></textarea>
+    </div>
+  </div>
+</div>
         <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow">
           Save Landing Page
         </button>
@@ -75,6 +110,56 @@
     </section>
 
   </main>
+<script>
+  const generateBtn = document.getElementById('generateBtn');
+  const generateBtnText = document.getElementById('generateBtnText');
+  const generateError = document.getElementById('generateError');
+  const generateStatus = document.getElementById('generateStatus');
 
+  generateBtn.addEventListener('click', async () => {
+    const make = document.querySelector('[name="make"]').value.trim();
+    const model = document.querySelector('[name="model"]').value.trim();
+
+    generateError.classList.add('hidden');
+    generateStatus.classList.add('hidden');
+
+    if (!make || !model) {
+      generateError.textContent = 'Enter make and model first.';
+      generateError.classList.remove('hidden');
+      return;
+    }
+
+    generateBtn.disabled = true;
+    generateBtnText.textContent = 'Generating…';
+
+    try {
+      const res = await fetch('/admin/landing/generate-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ make, model })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Generation failed');
+
+      document.getElementById('field-overview').value = data.overview || '';
+      document.getElementById('field-valueFactors').value = data.valueFactors || '';
+      document.getElementById('field-sellingTips').value = data.sellingTips || '';
+
+      const descField = document.querySelector('[name="description"]');
+      if (!descField.value.trim() && data.metaDescription) {
+        descField.value = data.metaDescription;
+      }
+
+      generateStatus.textContent = 'AI content filled successfully. Save to persist it.';
+      generateStatus.classList.remove('hidden');
+    } catch (err) {
+      generateError.textContent = err.message;
+      generateError.classList.remove('hidden');
+    } finally {
+      generateBtn.disabled = false;
+      generateBtnText.textContent = '✨ Generate with AI';
+    }
+  });
+</script>
 </body>
 </html>

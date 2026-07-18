@@ -18,7 +18,12 @@ router.get("/:slug", async (req, res) => {
   try {
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) return res.status(404).send("Blog not found");
-    res.render("blog-details", { blog });
+
+    const relatedBlogs = await Blog.find({ _id: { $ne: blog._id } })
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    res.render("blog-details", { blog, relatedBlogs });
   } catch (err) {
     console.error(err);
     res.status(500).send("Error loading blog");

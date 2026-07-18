@@ -3,6 +3,9 @@
 // heroImage.sources.avif/webp/jpg should each be an array matching the sizes in imageService.js
 %>
 
+<%
+  const heroAlt = heroImage.alt || (typeof landing !== 'undefined' && landing ? `Photo of ${landing.make} ${landing.model}` : '');
+%>
 <picture class="absolute inset-0 z-0">
   <!-- AVIF sources -->
   <% if (heroImage.sources.avif) { %>
@@ -25,7 +28,9 @@
     src="<%= heroImage.sources.jpg[2].url %>" 
     srcset="<%= heroImage.sources.jpg.map(img => `${img.url} ${img.w}w`).join(', ') %>"
     sizes="(max-width: 640px) 480px, (max-width: 1024px) 800px, (max-width: 1440px) 1200px, (max-width: 1920px) 1600px, 2400px"
-    alt="<%= heroImage.alt %>"
+    alt="<%= heroAlt %>"
+    aria-hidden="<%= heroAlt ? 'false' : 'true' %>"
     class="absolute inset-0 w-full h-full object-cover"
-    loading="lazy">
+    loading="eager"
+    fetchpriority="high">
 </picture>

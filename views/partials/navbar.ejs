@@ -1,0 +1,158 @@
+<nav id="main-nav"
+     role="navigation"
+     aria-label="Main Navigation"
+     class="fixed top-0 left-0 w-full z-50
+            transition-transform duration-300 ease-out
+            bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.94)_55%,rgba(30,41,59,0.88)_100%)]
+            border-b border-white/10 shadow-[0_8px_30px_rgba(2,6,23,0.25)]">
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="/" aria-label="Auto Galleria home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="20" viewBox="0 0 155 20" aria-hidden="true">
+        <text x="0" y="15" font-size="20" font-family="sans-serif"
+              id="logo-text"
+              class="fill-white transition-colors duration-300">
+          Auto Galleria
+        </text>
+      </svg>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium" id="nav-links">
+      <a href="/cars" class="nav-link text-white hover:text-blue-500 transition-colors duration-300">Cars</a>
+      <a href="/sell-your-LHD" class="nav-link text-white hover:text-blue-500 transition-colors duration-300">Sell Your Car</a>
+      <a href="/blog" class="nav-link text-white hover:text-blue-500 transition-colors duration-300">Blog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+
+      <!-- CTA -->
+      <a href="/sell-your-LHD"
+         class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">
+        Get Offer
+      </a>
+
+      <!-- Hamburger -->
+      <button id="menu-btn"
+              class="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-lg hover:bg-white/10 transition"
+              aria-label="Toggle menu"
+              aria-expanded="false"
+              aria-controls="mobile-menu">
+        <span id="bar-1" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+        <span id="bar-2" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+        <span id="bar-3" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu"
+       class="md:hidden hidden border-t bg-gray-900/95 border-white/10">
+    <div class="px-4 py-4 flex flex-col gap-1 text-sm font-medium">
+      <a href="/cars" class="mobile-link px-3 py-2.5 rounded-lg text-white hover:bg-white/10 transition">Cars</a>
+      <a href="/sell-your-LHD" class="mobile-link px-3 py-2.5 rounded-lg text-white hover:bg-white/10 transition">Sell Your Car</a>
+      <a href="/blog" class="mobile-link px-3 py-2.5 rounded-lg text-white hover:bg-white/10 transition">Blog</a>
+      <a href="/sell-your-LHD"
+         class="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold px-4 py-2.5 rounded-lg shadow transition">
+        Get Offer
+      </a>
+    </div>
+  </div>
+
+</nav>
+
+<script>
+(function () {
+
+  const nav        = document.getElementById('main-nav');
+  const menuBtn    = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const bar1       = document.getElementById('bar-1');
+  const bar2       = document.getElementById('bar-2');
+  const bar3       = document.getElementById('bar-3');
+  const logoText   = document.getElementById('logo-text');
+  const navLinks   = document.querySelectorAll('.nav-link');
+  const mobileLinks= document.querySelectorAll('.mobile-link');
+
+  let menuOpen    = false;
+  let lastScrollY = window.scrollY;
+  let hidden      = false;
+  let ticking     = false;
+
+  // Smooth transitions (important)
+  nav.style.transition = 'background-image 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease, transform 0.3s ease';
+
+  function updateGlass() {
+    const maxScroll = 120;
+    const scrollY = Math.min(window.scrollY, maxScroll);
+    const opacity = Math.min(0.95, 0.8 + (scrollY / maxScroll) * 0.15);
+
+    nav.style.backgroundColor = `rgba(2, 6, 23, ${opacity})`;
+    nav.style.backgroundImage = `linear-gradient(180deg, rgba(2, 6, 23, ${0.98 - scrollY / maxScroll * 0.05}) 0%, rgba(15, 23, 42, ${0.94 - scrollY / maxScroll * 0.03}) 55%, rgba(30, 41, 59, ${0.88 - scrollY / maxScroll * 0.02}) 100%)`;
+    nav.style.backdropFilter = `blur(${Math.min(16, 6 + scrollY / maxScroll * 10)}px)`;
+    nav.style.borderColor = 'rgba(255,255,255,0.12)';
+
+    logoText.classList.remove('fill-blue-800');
+    logoText.classList.add('fill-white');
+
+    navLinks.forEach(l => {
+      l.classList.remove('text-gray-700');
+      l.classList.add('text-white');
+    });
+  }
+
+  function handleScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+
+        // Hide / show nav
+        if (!menuOpen) {
+          const y = window.scrollY;
+
+          if (y < 80) {
+            nav.style.transform = 'translateY(0)';
+            hidden = false;
+          } else if (y > lastScrollY && !hidden) {
+            nav.style.transform = 'translateY(-100%)';
+            hidden = true;
+          } else if (y < lastScrollY && hidden) {
+            nav.style.transform = 'translateY(0)';
+            hidden = false;
+          }
+
+          lastScrollY = y;
+        }
+
+        updateGlass();
+
+        ticking = false;
+      });
+
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  menuBtn.addEventListener('click', function () {
+    menuOpen = !menuOpen;
+
+    menuBtn.setAttribute('aria-expanded', menuOpen);
+    mobileMenu.classList.toggle('hidden', !menuOpen);
+
+    bar1.style.transform = menuOpen ? 'translateY(8px) rotate(45deg)' : '';
+    bar2.style.opacity   = menuOpen ? '0' : '';
+    bar3.style.transform = menuOpen ? 'translateY(-8px) rotate(-45deg)' : '';
+
+    nav.style.transform = 'translateY(0)'; // keep visible
+    updateGlass();
+  });
+
+  // Init
+  updateGlass();
+
+})();
+</script>

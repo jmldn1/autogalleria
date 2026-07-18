@@ -2,40 +2,115 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Manage Blogs | Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manage Blogs | Auto Galleria</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-  <div class="max-w-5xl mx-auto py-10">
-    <h1 class="text-2xl font-bold mb-6">Manage Blogs</h1>
-
-    <a href="/admin/blogs/new" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg mb-6">+ New Blog</a>
-
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Title</th>
-            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Slug</th>
-            <th class="px-4 py-2 text-right text-sm font-medium text-gray-500">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          <% blogs.forEach(blog => { %>
-            <tr>
-              <td class="px-4 py-2"><%= blog.title %></td>
-              <td class="px-4 py-2 text-gray-500"><%= blog.slug %></td>
-              <td class="px-4 py-2 text-right space-x-2">
-                <a href="/admin/blogs/edit/<%= blog._id %>" class="text-blue-600 hover:underline">Edit</a>
-                <form action="/admin/blogs/delete/<%= blog._id %>" method="POST" class="inline">
-                  <button type="submit" class="text-red-600 hover:underline">Delete</button>
-                </form>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+<body class="bg-gray-100 text-gray-800">
+  <main class="mx-auto max-w-7xl p-6">
+    <div class="mx-auto max-w-7xl">
+      <%- include('partials/nav', { pageTitle: 'Blogs' }) %>
     </div>
-  </div>
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold">Manage Blogs</h1>
+        <p class="mt-1 text-sm text-gray-500">Create and update blog posts for your site.</p>
+      </div>
+      <a href="/admin/blogs/new"
+         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+        + Add New Blog
+      </a>
+    </div>
+
+    <% if (blogs.length === 0) { %>
+      <div class="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
+        No blogs found.
+      </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <% blogs.forEach(blog => { %>
+          <div
+            onclick="window.location='/admin/blogs/edit/<%= blog._id %>'"
+            class="flex flex-col rounded-lg bg-white p-4 shadow transition hover:shadow-lg cursor-pointer"
+          >
+            <div class="mb-4">
+              <% const sources = blog.imageManifest?.sources; %>
+              <% const avifSrcset = sources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+              <% const webpSrcset = sources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+              <% const jpgSrcset = sources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+              <% const jpgSrc = sources?.jpg?.[sources?.jpg?.length - 1]?.url; %>
+              <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
+                <picture>
+                  <% if (avifSrcset) { %>
+                    <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+                  <% } %>
+                  <% if (webpSrcset) { %>
+                    <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+                  <% } %>
+                  <img src="<%= jpgSrc || blog.coverImage %>"
+                       srcset="<%= jpgSrcset %>"
+                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                       class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                       alt="Blog thumbnail">
+                </picture>
+              <% } else if (blog.coverImage) { %>
+                <img src="<%= blog.coverImage %>"
+                     class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                     alt="Blog thumbnail">
+              <% } else { %>
+                <div class="flex h-32 w-full items-center justify-center rounded bg-gray-200 text-gray-500">
+                  No Image
+                </div>
+              <% } %>
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-semibold text-gray-800"><%= blog.title %></h3>
+                <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700">
+                  <%= blog._id.toString().slice(-4) %>
+                </span>
+              </div>
+              <p class="mt-2 text-sm text-gray-500">Slug: <%= blog.slug %></p>
+              <% if (blog.excerpt) { %>
+                <p class="mt-2 text-sm text-gray-500 line-clamp-2"><%= blog.excerpt %></p>
+              <% } %>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2 pt-2">
+              <a href="/admin/blogs/edit/<%= blog._id %>"
+                 onclick="event.stopPropagation()"
+                 class="text-blue-600 hover:underline">
+                Edit
+              </a>
+              <form action="/admin/blogs/delete/<%= blog._id %>"
+                    method="POST"
+                    class="inline"
+                    onclick="event.stopPropagation()"
+                    onsubmit="event.stopPropagation(); return confirm('Are you sure you want to delete this blog?');">
+                <button type="submit"
+                        onclick="event.stopPropagation()"
+                        class="bg-transparent p-0 text-red-600 hover:underline border-0 cursor-pointer">
+                  Delete
+                </button>
+              </form>
+              <a href="/blog/<%= blog.slug %>"
+                 target="_blank"
+                 onclick="event.stopPropagation()"
+                 class="ml-auto rounded bg-blue-600 px-3 py-1 text-sm text-white transition hover:bg-blue-700">
+                View
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <a href="/admin/dashboard" class="mt-8 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+      <span aria-hidden="true">←</span>
+      <span>Back to Dashboard</span>
+    </a>
+  </main>
 </body>
 </html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell Your <%= landing.make %> <%= landing.model %> | Auto Galleria</title>
+  <meta name="description" content="Sell your <%= landing.make %> <%= landing.model %> quickly with top offers and free pickup from Auto Galleria.">
+  <link rel="canonical" href="<%= process.env.SITE_URL %>/sell-your-<%= landing.slug %>">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How quickly can I sell my <%= landing.make %> <%= landing.model %>?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We can provide an instant offer for your <%= landing.make %> <%= landing.model %> and arrange free collection within 24 hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How quickly will I get paid?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We process full payment before collecting your vehicle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy non UK registration <%= landing.make %> <%= landing.model %>?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we can buy non UK registration <%= landing.make %> <%= landing.model %> and handle import formalities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy non-running <%= landing.make %> cars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we purchase <%= landing.make %> vehicles even if they are damaged or not running, and collection is always free."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="text-gray-800 antialiased bg-gray-100">
+
+  <!-- NAVBAR -->
+<nav class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm z-50" role="navigation" aria-label="Main Navigation">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-14">
+    <!-- h-14 = 3.5rem = 56px -->
+    <a href="/" class="flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="20" viewBox="0 0 155 20" role="img" aria-label="Auto Galleria Logo">
+        <text x="0" y="15" font-size="20" font-family="sans-serif" fill="#1a42a4">Auto Galleria</text>
+      </svg>
+    </a>
+    <span class="hidden md:inline text-sm text-gray-600 font-medium">Trusted UK LHD Buyer Since 2010</span>
+    <a href="#lead-form" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition duration-200" role="button">
+      Get Your Offer
+    </a>
+  </div>
+</nav>
+
+
+  <!-- HERO WITH FORM -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center pt-16 pb-8 text-center text-white" role="region" aria-label="Hero Section">
+    <% if (landing.imageManifest) { %>
+      <%- include('partials/hero', { heroImage: landing.imageManifest }) %>
+    <% } else { %>
+      <div class="absolute inset-0 bg-gray-800 z-0" aria-hidden="true"></div>
+    <% } %>
+
+    <div class="absolute inset-0 bg-black/50 z-10" aria-hidden="true"></div>
+
+    <div class="relative z-20 max-w-md w-full px-4 sm:px-6">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
+        Sell Your <%= landing.make %> <%= landing.model %> Today!
+      </h1>
+      <p class="text-lg md:text-xl mb-8 font-medium">Get a fast, fair offer with free pickup and payment within 24 hours.</p>
+
+      <form id="lead-form" 
+      action="/sell-your-<%= landing.slug %>/lead" 
+      method="POST"
+      class="bg-white/95 text-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl space-y-6 text-left"
+      aria-label="Lead Form" 
+      novalidate>
+        <input type="hidden" name="make" value="<%= landing.make %>">
+        <input type="hidden" name="model" value="<%= landing.model %>">
+
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+          <input type="text" name="name" id="name" placeholder="Enter your name" required
+                 aria-required="true"
+                 aria-describedby="nameError"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+          <p id="nameError" class="hidden text-red-500 text-xs mt-1" role="alert">Please enter your name</p>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your Email</label>
+          <input type="email" name="email" id="email" placeholder="Enter your email" required
+                 aria-required="true"
+                 aria-describedby="emailError"
+                 class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+          <p id="emailError" class="hidden text-red-500 text-xs mt-1" role="alert">Please enter a valid email</p>
+        </div>
+
+        <div>
+          <label for="carPhoto" class="block text-sm font-medium text-gray-700 mb-1">Upload a Car Photo (Optional)</label>
+          <input type="file" id="carPhoto" name="carPhoto" accept="image/*"
+                 aria-describedby="carPhotoHelp"
+                 class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-blue-50 file:text-blue-700
+                        hover:file:bg-blue-100 transition" />
+          <p id="carPhotoHelp" class="text-xs text-gray-500 mt-1">You can skip this if you don’t have a photo yet.</p>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 rounded-lg shadow-md flex items-center justify-center space-x-2 transition duration-200"
+                aria-label="Submit form to get your offer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M3 10l9-6 9 6-9 6-9-6zm0 0l9 6 9-6M3 10v10l9 6 9-6V10" />
+          </svg>
+          <span>Get Your Offer</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+<section class="py-16 bg-white" aria-labelledby="benefitsHeading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 id="benefitsHeading" class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-12">
+      Why Choose Auto Galleria
+    </h2>
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-center">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-blue-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" role="img" aria-label="Quick Quotes Icon">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-lg font-semibold text-gray-800">Quick Quotes</h3>
+        <p class="text-gray-600">Receive a valuation for your <%= landing.model %> in minutes.</p>
+      </div>
+      <div>
+  <svg xmlns="http://www.w3.org/2000/svg" 
+       class="mx-auto h-10 w-10 text-blue-600 mb-3" 
+       fill="none" viewBox="0 0 24 24" stroke="currentColor" 
+       stroke-width="2" role="img" aria-label="Top Offers Icon">
+    <path stroke-linecap="round" stroke-linejoin="round" 
+          d="M14.121 7.629A3 3 0 0 0 9.017 9.43c-.023.212-.002.425.028.636l.506 3.541a4.5 4.5 0 0 1-.43 2.65L9 16.5l1.539-.513a2.25 2.25 0 0 1 1.422 0l.655.218a2.25 2.25 0 0 0 1.718-.122L15 15.75M8.25 12H12m9 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </svg>
+        <h3 class="text-lg font-semibold text-gray-800">Top Offers</h3>
+        <p class="text-gray-600">We offer competitive prices for your <%= landing.make %>.</p>
+      </div>
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-blue-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" role="img" aria-label="Free Pickup Icon">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11l4 8H7l-4-8zM16 6h2a2 2 0 012 2v2h-4V6z" />
+        </svg>
+        <h3 class="text-lg font-semibold text-gray-800">Free Pickup</h3>
+        <p class="text-gray-600">Hassle-free collection from your location at no cost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-16 bg-gray-50" aria-labelledby="faqHeading">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 id="faqHeading" class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      <details class="bg-white p-4 rounded-lg shadow-sm">
+  <summary class="cursor-pointer font-semibold text-gray-800">
+    How quickly can I sell my <%= landing.make %> <%= landing.model %>?
+  </summary>
+  <p class="mt-2 text-gray-600">
+    We can provide an instant offer for your <%= landing.make %> <%= landing.model %> and arrange free collection within 24 hours.
+  </p>
+</details>
+
+<details class="bg-white p-4 rounded-lg shadow-sm">
+  <summary class="cursor-pointer font-semibold text-gray-800">
+    How quickly will I get paid?
+  </summary>
+  <p class="mt-2 text-gray-600">
+    We process full payment before collecting your vehicle.
+  </p>
+</details>
+
+<details class="bg-white p-4 rounded-lg shadow-sm">
+  <summary class="cursor-pointer font-semibold text-gray-800">
+    Do you buy non UK registration <%= landing.make %> <%= landing.model %>?
+  </summary>
+  <p class="mt-2 text-gray-600">
+    Yes, we can buy non UK registration <%= landing.make %> <%= landing.model %> and handle import formalities.
+  </p>
+</details>
+
+<details class="bg-white p-4 rounded-lg shadow-sm">
+  <summary class="cursor-pointer font-semibold text-gray-800">
+    Do you buy non-running <%= landing.make %> cars?
+  </summary>
+  <p class="mt-2 text-gray-600">
+    Yes, we purchase <%= landing.make %> vehicles even if they are damaged or not running, and collection is always free.
+  </p>
+</details>
+
+    </div>
+  </div>
+</section>
+  <!-- REG LOOKUP HERO -->
+<section class="relative min-h-screen flex items-center justify-center p-6 text-white overflow-hidden">
+
+  <% if (landing.imageManifest) { %>
+    <%- include('partials/hero', { heroImage: landing.imageManifest }) %>
+  <% } else { %>
+    <div class="absolute inset-0 bg-gray-900"></div>
+  <% } %>
+
+  <!-- Dark overlay -->
+  <div class="absolute inset-0 bg-black/60 z-10"></div>
+
+  <div class="relative z-20 w-full max-w-md">
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4">
+        🔍
+      </div>
+      <h2 class="text-4xl font-bold mb-2 drop-shadow-lg">
+        Vehicle Lookup
+      </h2>
+      <p class="text-gray-200">Enter your UK registration number</p>
+    </div>
+
+    <!-- Form -->
+    <form id="regForm" class="mb-6">
+      <div class="relative">
+        <input
+          id="regInput"
+          type="text"
+          placeholder="AB12ABC"
+          class="w-full px-6 py-4 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white uppercase tracking-widest font-semibold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400"
+        />
+        <button
+          type="submit"
+          id="submitBtn"
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white"
+        >
+          →
+        </button>
+      </div>
+    </form>
+
+    <!-- Error -->
+    <div id="errorBox" class="hidden mb-6 p-4 rounded-xl bg-red-500/20 border border-red-400 text-red-200 text-sm backdrop-blur"></div>
+
+    <!-- Result -->
+    <div id="resultBox" class="hidden space-y-4">
+
+      <div class="p-4 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-sm backdrop-blur">
+        Vehicle found
+      </div>
+
+      <div class="p-6 rounded-xl bg-white/10 backdrop-blur border border-white/20 space-y-4">
+        <h3 id="vehicleTitle" class="text-3xl font-bold"></h3>
+        <p id="vehicleModel" class="text-xl text-blue-300 font-semibold"></p>
+
+        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/20 text-sm">
+          <div><span class="text-gray-300">Color</span><br><span id="color"></span></div>
+          <div><span class="text-gray-300">Fuel</span><br><span id="fuel"></span></div>
+          <div><span class="text-gray-300">Transmission</span><br><span id="trans"></span></div>
+          <div><span class="text-gray-300">Registration</span><br><span id="regOut" class="font-mono font-bold"></span></div>
+        </div>
+      </div>
+
+      <button
+        id="continueBtn"
+        class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg transition"
+      >
+        Continue to Get Offer
+      </button>
+
+      <button
+        id="resetBtn"
+        class="w-full py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition"
+      >
+        Search Again
+      </button>
+    </div>
+
+  </div>
+</section>
+<script>
+const form = document.getElementById('regForm');
+const input = document.getElementById('regInput');
+const errorBox = document.getElementById('errorBox');
+const resultBox = document.getElementById('resultBox');
+
+const title = document.getElementById('vehicleTitle');
+const model = document.getElementById('vehicleModel');
+const color = document.getElementById('color');
+const fuel = document.getElementById('fuel');
+const trans = document.getElementById('trans');
+const regOut = document.getElementById('regOut');
+const resetBtn = document.getElementById('resetBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const reg = input.value.toUpperCase().trim();
+  errorBox.classList.add('hidden');
+  resultBox.classList.add('hidden');
+
+  try {
+    const res = await fetch(`/api/vehicle/lookup?reg=${reg}`);
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error);
+
+    title.textContent = `${data.year} ${data.make}`;
+    model.textContent = data.model;
+    color.textContent = data.color;
+    fuel.textContent = data.fuelType;
+    trans.textContent = data.transmission;
+    regOut.textContent = reg;
+
+    resultBox.classList.remove('hidden');
+  } catch (err) {
+    errorBox.textContent = err.message;
+    errorBox.classList.remove('hidden');
+  }
+});
+
+resetBtn.addEventListener('click', () => {
+  input.value = '';
+  resultBox.classList.add('hidden');
+  errorBox.classList.add('hidden');
+});
+const continueBtn = document.getElementById('continueBtn');
+
+if (continueBtn) {
+  continueBtn.addEventListener('click', () => {
+    document.getElementById('lead-form').scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  });
+}
+</script>
+
+  <!-- FOOTER -->
+<footer class="bg-gray-800 text-white py-8" role="contentinfo">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-sm">&copy; <%= new Date().getFullYear() %> Auto Galleria. All rights reserved.</p>
+  </div>
+</footer>
+
+  <script defer>
+    document.getElementById("lead-form").addEventListener("submit", function (e) {
+      let isValid = true;
+      const nameInput = document.getElementById("name");
+      const nameError = document.getElementById("nameError");
+      if (!nameInput.value.trim()) {
+        nameInput.classList.add("border-red-500");
+        nameError.classList.remove("hidden");
+        isValid = false;
+      } else {
+        nameInput.classList.remove("border-red-500");
+        nameError.classList.add("hidden");
+      }
+
+      const emailInput = document.getElementById("email");
+      const emailError = document.getElementById("emailError");
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (!emailInput.value.trim() || !emailPattern.test(emailInput.value)) {
+        emailInput.classList.add("border-red-500");
+        emailError.classList.remove("hidden");
+        isValid = false;
+      } else {
+        emailInput.classList.remove("border-red-500");
+        emailError.classList.add("hidden");
+      }
+
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

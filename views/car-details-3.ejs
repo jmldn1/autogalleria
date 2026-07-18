@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= car.year %> <%= car.make %> <%= car.model %> | Auto Galleria</title>
+
+  <meta name="description" content="Buy this <%= car.year %> <%= car.make %> <%= car.model %>. Explore detailed images, videos, and specs at Auto Galleria.">
+
+  <!-- schema.org/Car JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Car",
+    "name": "<%= car.year %> <%= car.make %> <%= car.model %>",
+    "brand": {
+      "@type": "Brand",
+      "name": "<%= car.make %>"
+    },
+    "model": "<%= car.model %>",
+    "vehicleModelDate": "<%= car.year %>",
+    "vehicleIdentificationNumber": "<%= car.vin %>",
+    "mileageFromOdometer": {
+      "@type": "QuantitativeValue",
+      "value": <%= parseInt(car.mileage) || 0 %>,
+      "unitCode": "SMI"
+    },
+    "itemCondition": "https://schema.org/<%= car.condition === 'New' ? 'NewCondition' : 'UsedCondition' %>",
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "GBP",
+      "price": "<%= car.price %>",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Auto Galleria"
+      }
+    }<% if (car.galleryImages && car.galleryImages.length) { %>,
+    "image": "<%= car.galleryImages[0].fallback %>"<% } %><% if (car.description) { %>,
+    "description": "<%= car.description.replace(/\\/g, '\\\\').replace(/"/g, '\\"') %>"<% } %>
+  }
+  </script>
+
+  <!-- Tailwind -->
+  <link rel="preload" href="/css/tailwind.css" as="style">
+  <link href="/css/tailwind.css" rel="stylesheet">
+
+  <!-- LightGallery CSS (loaded normally — JS is required for it to work anyway) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
+
+  <!-- LightGallery JS — no defer, so globals are available on DOMContentLoaded -->
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/thumbnail/lg-thumbnail.min.js"></script>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .sticky-sidebar {
+      position: sticky;
+      top: 80px; /* FIX (minor): tie to a CSS var if navbar height changes, e.g. var(--navbar-height, 80px) */
+      align-self: flex-start;
+    }
+
+    .thumb-btn.active {
+      border-color: #2563eb;
+    }
+
+    .spec-row + .spec-row {
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .img-counter {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      pointer-events: none;
+      letter-spacing: 0.03em;
+    }
+  </style>
+
+</head>
+
+<body class="bg-gray-50 text-gray-900 pt-14">
+
+  <%- include('partials/navbar') %>
+
+  <main class="max-w-7xl mx-auto px-4 py-6">
+
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+      <a href="/cars" class="hover:text-blue-600 transition">Cars</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-700"><%= car.year %> <%= car.make %> <%= car.model %></span>
+    </nav>
+
+    <!-- Page title -->
+    <h1 class="text-3xl font-bold mb-6">
+      <%= car.year %> <%= car.make %> <%= car.model %>
+    </h1>
+
+    <!-- Main layout: wide gallery + sticky sidebar -->
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <!-- LEFT: Gallery + description + video (65%) -->
+      <div class="w-full lg:w-[65%]">
+
+        <!-- Main carousel -->
+        <div id="lightgallery" class="relative">
+
+          <% if (car.galleryImages && car.galleryImages.length) { %>
+
+            <div
+              id="gallery-scroll"
+              class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar rounded-2xl shadow-md gallery-scroll"
+            >
+
+              <% car.galleryImages.forEach((img, index) => { %>
+
+                <div
+                  class="min-w-full snap-center"
+                  role="group"
+                  aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>"
+                >
+
+                  <a
+                    href="<%= img.manifest.sources.jpg.slice(-1)[0].url %>"
+                    data-src="<%= img.manifest.sources.jpg.slice(-1)[0].url %>"
+                    data-responsive="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                    data-srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                    data-sizes="100vw"
+                    class="gallery-item block group"
+                  >
+
+                    <picture>
+
+                      <source
+                        type="image/avif"
+                        srcset="<%= img.manifest.sources.avif.srcset %>"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 820px"
+                      >
+
+                      <source
+                        type="image/webp"
+                        srcset="<%= img.manifest.sources.webp.srcset %>"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 820px"
+                      >
+
+                      <img
+                        src="<%= img.fallback %>"
+                        srcset="<%= img.manifest.sources.jpg.srcset %>"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 820px"
+                        alt="<%= img.alt || `${car.make} ${car.model}` %>"
+                        class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="<%= index === 0 ? 'eager' : 'lazy' %>"
+                        fetchpriority="<%= index === 0 ? 'high' : 'auto' %>"
+                        style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
+                      >
+
+                    </picture>
+
+                  </a>
+
+                </div>
+
+              <% }) %>
+
+            </div>
+
+            <!-- Image counter -->
+            <!-- FIX (a11y): initialised with textContent via JS on load so screen readers pick up the initial state -->
+            <div class="img-counter" id="img-counter" aria-live="polite"></div>
+
+          <% } else { %>
+
+            <p class="text-gray-500 p-4">No images available for this car.</p>
+
+          <% } %>
+
+        </div>
+
+        <!-- Thumbnails -->
+        <% if (car.galleryImages && car.galleryImages.length) { %>
+
+          <div class="flex gap-2 mt-4 overflow-x-auto no-scrollbar pb-1">
+
+            <% car.galleryImages.forEach((img, index) => { %>
+
+              <button
+                onclick="scrollToImage(<%= index %>)"
+                class="thumb-btn flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-blue-400 transition <%= index === 0 ? 'active' : '' %>"
+                aria-label="View image <%= index + 1 %>"
+              >
+
+                <picture>
+
+                  <!-- FIX (critical): use .srcset string, consistent with main gallery -->
+                  <source
+                    type="image/avif"
+                    srcset="<%= img.manifest.sources.avif.srcset %>"
+                  >
+
+                  <source
+                    type="image/webp"
+                    srcset="<%= img.manifest.sources.webp.srcset %>"
+                  >
+
+                  <img
+                    src="<%= img.fallback %>"
+                    alt="Thumbnail <%= index + 1 %>"
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  >
+
+                </picture>
+
+              </button>
+
+            <% }) %>
+
+          </div>
+
+        <% } %>
+
+        <!-- Description -->
+        <% if (car.description) { %>
+
+          <div class="mt-8">
+            <h2 class="text-xl font-semibold mb-3">About this car</h2>
+            <p class="text-gray-600 leading-relaxed"><%= car.description %></p>
+          </div>
+
+        <% } %>
+
+        <!-- Video -->
+        <% if (car.youtubeUrl) { %>
+
+          <div class="mt-8">
+            <h2 class="text-xl font-semibold mb-3">Video</h2>
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
+              <!--
+                FIX (logic): robust YouTube embed URL parser.
+                Handles watch?v=, youtu.be/, and strips extra params like &t=30s.
+              -->
+              <iframe
+                class="absolute inset-0 w-full h-full"
+                src="<%=
+                  (function(url) {
+                    try {
+                      var parsed = new URL(url);
+                      var id = parsed.searchParams.get('v') || parsed.pathname.replace('/', '');
+                      return 'https://www.youtube.com/embed/' + id;
+                    } catch(e) {
+                      return url.replace('watch?v=', 'embed/');
+                    }
+                  })(car.youtubeUrl)
+                %>"
+                title="<%= car.year %> <%= car.make %> <%= car.model %> video"
+                frameborder="0"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+
+        <% } %>
+
+      </div>
+
+      <!-- RIGHT: Sticky sidebar (35%) -->
+      <div class="w-full lg:w-[35%]">
+        <div class="sticky-sidebar bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+
+          <!-- Price -->
+          <div class="px-6 py-5 border-b border-gray-100">
+            <p class="text-sm text-gray-400 uppercase tracking-wide mb-1">Asking price</p>
+            <p class="text-3xl font-bold text-gray-900">
+              £<%= car.price.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %>
+            </p>
+          </div>
+
+          <!-- Key specs -->
+          <div class="px-6 py-2">
+
+            <div class="spec-row flex justify-between py-3 text-sm">
+              <span class="text-gray-600">Make</span>
+              <span class="font-medium text-gray-900"><%= car.make %></span>
+            </div>
+
+            <div class="spec-row flex justify-between py-3 text-sm">
+              <span class="text-gray-600">Model</span>
+              <span class="font-medium text-gray-900"><%= car.model %></span>
+            </div>
+
+            <div class="spec-row flex justify-between py-3 text-sm">
+              <span class="text-gray-600">Year</span>
+              <span class="font-medium text-gray-900"><%= car.year %></span>
+            </div>
+
+            <div class="spec-row flex justify-between py-3 text-sm">
+              <span class="text-gray-600">Mileage</span>
+              <span class="font-medium text-gray-900"><%= car.mileage.toLocaleString() %> miles</span>
+            </div>
+
+            <div class="spec-row flex justify-between py-3 text-sm">
+              <span class="text-gray-600">Condition</span>
+              <span class="font-medium text-gray-900"><%= car.condition %></span>
+            </div>
+
+            <!-- VIN: muted, reference data -->
+            <div class="spec-row flex justify-between items-center py-3 text-sm">
+              <span class="text-gray-600">VIN</span>
+              <span class="text-gray-500 font-mono text-xs tracking-wide"><%= car.vin %></span>
+            </div>
+
+          </div>
+
+          <!-- CTA -->
+          <!-- FIX (safety): encodeURIComponent on all mailto: subject interpolations -->
+          <div class="px-6 py-5">
+            <a
+              href="mailto:info@autogalleria.com?subject=<%= encodeURIComponent(`Enquiry: ${car.year} ${car.make} ${car.model} (${car.vin})`) %>"
+              class="block w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white text-center font-semibold py-3 rounded-xl shadow transition"
+            >
+              Enquire Now
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <%- include('partials/whatsapp-chat') %>
+
+  </main>
+
+  <script>
+
+    // FIX (safety): parse to safe integers — prevents JS syntax errors from null/non-numeric DB values
+    const totalImages = parseInt('<%= car.galleryImages ? car.galleryImages.length : 0 %>', 10) || 0;
+
+    const galleryScroll = document.getElementById('gallery-scroll');
+    const counter = document.getElementById('img-counter');
+    const thumbBtns = document.querySelectorAll('.thumb-btn');
+
+    // FIX (a11y): set initial counter state so screen readers announce it on load
+    if (counter && totalImages > 0) {
+      counter.textContent = `1 / ${totalImages}`;
+    }
+
+    // FIX (logic): wrap in requestAnimationFrame so clientWidth is settled before scrolling
+    function scrollToImage(index) {
+      requestAnimationFrame(function() {
+        if (!galleryScroll) return;
+        const width = galleryScroll.clientWidth;
+        galleryScroll.scrollTo({ left: width * index, behavior: 'smooth' });
+      });
+    }
+
+    // FIX (critical): null-check galleryScroll before attaching listener
+    if (galleryScroll) {
+      galleryScroll.addEventListener('scroll', function() {
+        // FIX (critical): guard against clientWidth being 0 (e.g. hidden/removed element)
+        const width = galleryScroll.clientWidth;
+        if (!width) return;
+
+        const index = Math.round(galleryScroll.scrollLeft / width);
+        if (counter) counter.textContent = `${index + 1} / ${totalImages}`;
+        thumbBtns.forEach(function(btn, i) {
+          btn.classList.toggle('active', i === index);
+        });
+      }, { passive: true });
+    }
+
+    // FIX (critical): lgZoom / lgThumbnail loaded without defer, so they are
+    // reliably available here. Guard with existence check as a belt-and-braces measure.
+    document.addEventListener('DOMContentLoaded', function() {
+      var lgContainer = document.getElementById('lightgallery');
+      if (!lgContainer || typeof lightGallery === 'undefined') return;
+
+      lightGallery(lgContainer, {
+        plugins: [
+          typeof lgZoom !== 'undefined' ? lgZoom : null,
+          typeof lgThumbnail !== 'undefined' ? lgThumbnail : null,
+        ].filter(Boolean),
+        selector: 'a',
+        download: false,
+      });
+    });
+
+  </script>
+
+</body>
+</html>

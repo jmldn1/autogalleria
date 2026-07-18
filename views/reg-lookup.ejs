@@ -1,0 +1,115 @@
+  <section class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+  <div class="w-full max-w-md">
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-4">
+        🔍
+      </div>
+      <h1 class="text-4xl font-bold text-white mb-2">
+        Vehicle Lookup
+      </h1>
+      <p class="text-slate-400">Enter a UK registration number</p>
+    </div>
+
+    <!-- Form -->
+    <form id="regForm" class="mb-6">
+      <div class="relative">
+        <input
+          id="regInput"
+          type="text"
+          placeholder="AB12ABC"
+          class="w-full px-6 py-4 rounded-xl bg-slate-700/50 border-2 border-slate-600 text-white uppercase tracking-widest font-semibold focus:outline-none focus:border-blue-500"
+        />
+        <button
+          type="submit"
+          id="submitBtn"
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white"
+        >
+          →
+        </button>
+      </div>
+    </form>
+
+    <!-- Error -->
+    <div id="errorBox" class="hidden mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm"></div>
+
+    <!-- Result -->
+    <div id="resultBox" class="hidden space-y-4">
+      <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">
+        Vehicle found
+      </div>
+
+      <div class="p-6 rounded-xl bg-slate-700/50 border border-slate-600 space-y-4">
+        <h2 id="vehicleTitle" class="text-3xl font-bold text-white"></h2>
+        <p id="vehicleModel" class="text-xl text-blue-300 font-semibold"></p>
+
+        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-600 text-sm">
+          <div><span class="text-slate-400">Color</span><br><span id="color"></span></div>
+          <div><span class="text-slate-400">Fuel</span><br><span id="fuel"></span></div>
+          <div><span class="text-slate-400">Transmission</span><br><span id="trans"></span></div>
+          <div><span class="text-slate-400">Registration</span><br><span id="regOut" class="font-mono font-bold"></span></div>
+        </div>
+      </div>
+
+      <button
+        id="resetBtn"
+        class="w-full py-3 rounded-lg bg-slate-600 hover:bg-slate-500 text-white font-semibold"
+      >
+        Search again
+      </button>
+    </div>
+
+  </div>
+</section>
+<script>
+const form = document.getElementById('regForm');
+const input = document.getElementById('regInput');
+const errorBox = document.getElementById('errorBox');
+const resultBox = document.getElementById('resultBox');
+
+const title = document.getElementById('vehicleTitle');
+const model = document.getElementById('vehicleModel');
+const color = document.getElementById('color');
+const fuel = document.getElementById('fuel');
+const trans = document.getElementById('trans');
+const regOut = document.getElementById('regOut');
+const resetBtn = document.getElementById('resetBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const reg = input.value.toUpperCase().trim();
+  errorBox.classList.add('hidden');
+  resultBox.classList.add('hidden');
+
+  try {
+    const res = await fetch('/api/lookup', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ reg })
+});
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error);
+
+    title.textContent = `${data.year} ${data.make}`;
+    model.textContent = data.model;
+    color.textContent = data.color;
+    fuel.textContent = data.fuelType;
+    trans.textContent = data.transmission;
+    regOut.textContent = reg;
+
+    resultBox.classList.remove('hidden');
+  } catch (err) {
+    errorBox.textContent = err.message;
+    errorBox.classList.remove('hidden');
+  }
+});
+
+resetBtn.addEventListener('click', () => {
+  input.value = '';
+  resultBox.classList.add('hidden');
+  errorBox.classList.add('hidden');
+});
+</script>

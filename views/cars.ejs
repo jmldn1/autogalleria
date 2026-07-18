@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Auto Galleria</title>
+    <meta
+      name="description"
+      content="Browse our current stock of premium used cars. Every listing includes detailed information and high-quality responsive images."
+    />
+    <link href="/css/tailwind.css" rel="stylesheet" />
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <%- include('partials/navbar') %>
+
+    <main class="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-24 sm:px-6 lg:px-8">
+      <section class="relative mb-10 overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-900 text-white shadow-xl">
+        <div class="absolute inset-0">
+          <% const heroCar = cars[0]; %>
+          <% const heroSources = heroCar?.image?.sources || {}; %>
+          <% const heroAvifSrcset = heroSources.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const heroWebpSrcset = heroSources.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const heroJpgSrcset = heroSources.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const heroFallbackSrc = heroCar?.image?.fallback || heroSources.jpg?.[0]?.url || heroSources.webp?.[0]?.url || heroSources.avif?.[0]?.url; %>
+          <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrcset) { %>
+            <picture>
+              <% if (heroAvifSrcset) { %>
+                <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="100vw" />
+              <% } %>
+              <% if (heroWebpSrcset) { %>
+                <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="100vw" />
+              <% } %>
+              <img
+                src="<%= heroFallbackSrc %>"
+                srcset="<%= heroJpgSrcset %>"
+                sizes="100vw"
+                alt="<%= heroCar?.image?.alt || 'Featured vehicle' %>"
+                class="h-full w-full object-cover"
+                loading="eager"
+              />
+            </picture>
+          <% } %>
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/75 to-slate-900/20"></div>
+        </div>
+
+        <div class="relative flex flex-col gap-4 px-6 py-16 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:py-20">
+          <div class="max-w-2xl">
+            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Available now</p>
+            <h1 class="mt-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Our current car stock</h1>
+            <p class="mt-4 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
+              Discover hand-picked vehicles ready for viewing, with high-quality responsive images and key details at a glance.
+            </p>
+          </div>
+
+          <a
+            href="/"
+            class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:border-blue-400 hover:bg-blue-500/20"
+          >
+            Back to home
+          </a>
+        </div>
+      </section>
+
+      <% if (!cars.length) { %>
+        <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+          <h2 class="text-xl font-semibold">No cars available right now</h2>
+          <p class="mt-2 text-slate-600">Please check back soon for fresh stock.</p>
+        </div>
+      <% } else { %>
+        <section class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <% cars.forEach(car => { %>
+            <article class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <a href="/car/<%= car.slug || car._id %>" class="block">
+                <% const sources = car.image?.sources || {}; %>
+                <% const avifSrcset = sources.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+                <% const webpSrcset = sources.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+                <% const jpgSrcset = sources.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+                <% const fallbackSrc = car.image?.fallback || sources.jpg?.[0]?.url || sources.webp?.[0]?.url || sources.avif?.[0]?.url; %>
+                <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
+                  <picture>
+                    <% if (avifSrcset) { %>
+                      <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+                    <% } %>
+                    <% if (webpSrcset) { %>
+                      <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+                    <% } %>
+                    <img
+                      src="<%= fallbackSrc %>"
+                      srcset="<%= jpgSrcset %>"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      alt="<%= car.image?.alt %>"
+                      class="h-56 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                  </picture>
+                <% } else { %>
+                  <div class="flex h-56 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">
+                    No image available
+                  </div>
+                <% } %>
+
+                <div class="p-6">
+                  <div class="mb-3 flex items-start justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500"><%= car.year || 'New arrival' %></p>
+                      <h2 class="text-xl font-semibold text-slate-900"><%= car.make %> <%= car.model %></h2>
+                    </div>
+                    <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                      £<%= Number(car.price).toLocaleString() %>
+                    </span>
+                  </div>
+
+                  <div class="mb-4 flex flex-wrap gap-2 text-sm text-slate-600">
+                    <% if (car.mileage) { %>
+                      <span class="rounded-full bg-slate-100 px-3 py-1"><%= Number(car.mileage).toLocaleString() %> miles</span>
+                    <% } %>
+                    <% if (car.condition) { %>
+                      <span class="rounded-full bg-slate-100 px-3 py-1"><%= car.condition %></span>
+                    <% } %>
+                  </div>
+
+                  <% if (car.description) { %>
+                    <p class="line-clamp-3 text-sm leading-6 text-slate-600"><%= car.description %></p>
+                  <% } %>
+
+                  <div class="mt-5 flex items-center justify-between text-sm font-medium text-blue-600">
+                    <span>View details</span>
+                    <span aria-hidden="true">→</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          <% }) %>
+        </section>
+      <% } %>
+    </main>
+
+    <%- include('partials/footer') %>
+  </body>
+</html>
