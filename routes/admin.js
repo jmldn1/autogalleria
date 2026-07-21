@@ -462,11 +462,16 @@ router.post('/cars/:id/delete', isAdmin, async (req, res) => {
 // ---------------------- BLOGS ----------------------
 router.get('/blogs', isAdmin, async (req, res) => {
   const blogs = await Blog.find().sort({ createdAt: -1 });
-  res.render('admin/blogs', { blogs });
+  res.render('admin/blogs', { 
+    user: req.user,
+    blogs 
+  });
 });
 
 router.get('/blogs/new', isAdmin, (req, res) => {
-  res.render('admin/add-blog');
+  res.render('admin/add-blog', {
+    user: req.user
+  });
 });
 
 router.post('/blogs', isAdmin, async (req, res) => {
@@ -476,7 +481,10 @@ router.post('/blogs', isAdmin, async (req, res) => {
 
 router.get('/blogs/edit/:id', isAdmin, async (req, res) => {
   const blog = await Blog.findById(req.params.id);
-  res.render('admin/edit-blog', { blog });
+  res.render('admin/edit-blog', {
+    user: req.user,
+    blog
+  });
 });
 
 router.post('/blogs/edit/:id', isAdmin, async (req, res) => {
