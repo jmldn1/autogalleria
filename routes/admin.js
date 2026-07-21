@@ -21,16 +21,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ---------------------- HELPERS ----------------------
-async function handleImageUpload(file, folder, prefix, sizes, clean = true) {
+async function handleImageUpload(file, folder, prefix, sizes) {
   if (!file) return null;
 
   const outDir = path.join('public/images', folder);
   fs.mkdirSync(outDir, { recursive: true });
 
-  if (clean) {
-    // Remove old files only when replacing the whole folder content.
-    fs.readdirSync(outDir).forEach(f => fs.unlinkSync(path.join(outDir, f)));
-  }
+  // Remove old files (optional: only if replacing all images in folder)
+  fs.readdirSync(outDir).forEach(f => fs.unlinkSync(path.join(outDir, f)));
 
   const result = await processImage(file.path, outDir, prefix, sizes);
   fs.unlinkSync(file.path); // Remove original
@@ -462,97 +460,28 @@ router.post('/cars/:id/delete', isAdmin, async (req, res) => {
 });
 
 // ---------------------- BLOGS ----------------------
-router.get('/blog', isAdmin, (req, res) => {
-  res.redirect('/admin/blogs');
-});
-
 router.get('/blogs', isAdmin, async (req, res) => {
   const blogs = await Blog.find().sort({ createdAt: -1 });
-  res.render('admin/blogs', { user: req.user, blogs });
+  res.render('admin/blogs', { blogs });
 });
 
 router.get('/blogs/new', isAdmin, (req, res) => {
-  res.render('admin/add-blog', { user: req.user });
+  res.render('admin/add-blog');
 });
 
-router.post('/blogs', isAdmin, upload.single('coverImageFile'), async (req, res) => {
-  try {
-    const blogData = { ...req.body };
-
-    if (req.file) {
-      const imageData = await handleImageUpload(req.file, `blog/${Date.now()}`, 'cover', SIZES.hero);
-      blogData.coverImage = imageData.imagePath;
-      blogData.placeholder = imageData.placeholder;
-      blogData.imageManifest = imageData.imageManifest;
-    } else if (req.body.coverImage) {
-      blogData.coverImage = req.body.coverImage;
-      blogData.placeholder = undefined;
-      blogData.imageManifest = undefined;
-    }
-
-    await Blog.create(blogData);
-    res.redirect('/admin/blogs');
-  } catch (err) {
-    console.error('Create blog error:', err);
-    res.redirect('/admin/blogs');
-  }
-});
-
-router.post('/blogs/upload-image', isAdmin, upload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided.' });
-    }
-
-    const folder = req.body.blogId ? `blog/${req.body.blogId}` : `blog/temp-${Date.now()}`;
-    const prefix = `inline-${path.parse(req.file.filename).name}`;
-    const imageData = await handleImageUpload(req.file, folder, prefix, SIZES.gallery, false);
-
-    return res.json({
-      url: `${imageData.imagePath}.jpg`,
-      placeholder: imageData.placeholder,
-      imageManifest: imageData.imageManifest
-    });
-  } catch (err) {
-    console.error('Upload inline blog image error:', err);
-    res.status(500).json({ error: err.message || 'Upload failed.' });
-  }
+router.post('/blogs', isAdmin, async (req, res) => {
+  await Blog.create(req.body);
+  res.redirect('/admin/blogs');
 });
 
 router.get('/blogs/edit/:id', isAdmin, async (req, res) => {
   const blog = await Blog.findById(req.params.id);
-  res.render('admin/edit-blog', { user: req.user, blog });
+  res.render('admin/edit-blog', { blog });
 });
 
-router.post('/blogs/edit/:id', isAdmin, upload.single('coverImageFile'), async (req, res) => {
-  try {
-    const blog = await Blog.findById(req.params.id);
-    if (!blog) return res.redirect('/admin/blogs');
-
-    const updateData = { ...req.body };
-
-    if (req.file) {
-      const imageData = await handleImageUpload(req.file, `blog/${blog._id}`, 'cover', SIZES.hero);
-      updateData.coverImage = imageData.imagePath;
-      updateData.placeholder = imageData.placeholder;
-      updateData.imageManifest = imageData.imageManifest;
-    } else if (req.body.coverImage) {
-      updateData.coverImage = req.body.coverImage;
-      updateData.placeholder = undefined;
-      updateData.imageManifest = undefined;
-    } else {
-      // Preserve existing cover image if no new image or URL was provided
-      delete updateData.coverImage;
-      delete updateData.placeholder;
-      delete updateData.imageManifest;
-    }
-
-    await Blog.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    res.redirect('/admin/blogs');
-  } catch (err) {
-    console.error('Update blog error:', err);
-    res.redirect(`/admin/blogs/edit/${req.params.id}`);
-  }
+router.post('/blogs/edit/:id', isAdmin, async (req, res) => {
+  await Blog.findByIdAndUpdate(req.params.id, req.body);
+  res.redirect('/admin/blogs');
 });
 
 router.post('/blogs/delete/:id', isAdmin, async (req, res) => {
