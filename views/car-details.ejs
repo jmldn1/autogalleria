@@ -107,17 +107,24 @@
       </div>
       <!-- Right: Car Info -->
       <div class="flex flex-col gap-4">
-        <p class="text-lg"><%= car.description %></p>
-        <ul class="space-y-2 text-gray-700">
-          <li><strong>Make:</strong> <%= car.make %></li>
-          <li><strong>Model:</strong> <%= car.model %></li>
-          <li><strong>Year:</strong> <%= car.year %></li>
-          <li><strong>VIN:</strong> <%= car.vin %></li>
-          <li><strong>Price:</strong> £<%= car.price.toFixed(2) %></li>
-          <li><strong>Mileage:</strong> <%= car.mileage.toLocaleString() %> miles</li>
-          <li><strong>Condition:</strong> <%= car.condition %></li>
-        </ul>
-        <button class="bg-blue-600 text-white px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition w-fit">Enquire Now</button>
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <p class="text-lg leading-relaxed text-gray-700"><%= car.description %></p>
+          <ul class="mt-6 space-y-3 text-gray-700">
+            <li><strong>Make:</strong> <%= car.make %></li>
+            <li><strong>Model:</strong> <%= car.model %></li>
+            <li><strong>Year:</strong> <%= car.year %></li>
+            <li><strong>VIN:</strong> <%= car.vin %></li>
+            <li><strong>Price:</strong> £<%= car.price.toFixed(2) %></li>
+            <li><strong>Mileage:</strong> <%= car.mileage.toLocaleString() %> miles</li>
+            <li><strong>Condition:</strong> <%= car.condition %></li>
+          </ul>
+        </div>
+
+        <div class="bg-blue-600 text-white rounded-3xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold">Interested in this vehicle?</h2>
+          <p class="mt-2 text-blue-50">Contact us for a viewing or more information.</p>
+          <button class="mt-5 bg-white text-blue-700 px-6 py-3 rounded-xl shadow hover:bg-gray-100 transition w-fit">Enquire Now</button>
+        </div>
       </div>
     </div>
     <!-- Video -->
@@ -136,6 +143,7 @@
       </div>
     <% } %>
   </main>
+    <%- include('partials/footer') %>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const swiperThumbs = new Swiper(".mySwiper", {

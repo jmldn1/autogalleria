@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <% const metaDescription = (car.overview || car.description || `Buy this ${car.year} ${car.make} ${car.model}.`).slice(0, 155); %>
+  <% const heroImage = car.galleryImages && car.galleryImages.length ? car.galleryImages[0].fallback : '/images/og-default.jpg'; %>
+  <% const canonicalUrl = `https://autogalleria.co.uk/cars/${car.slug || car._id}`; %>
+
+  <title><%= car.year %> <%= car.make %> <%= car.model %> | Auto Galleria</title>
+  <meta name="description" content="<%= metaDescription %>">
+  <link rel="canonical" href="<%= canonicalUrl %>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="<%= car.year %> <%= car.make %> <%= car.model %> | Auto Galleria">
+  <meta property="og:description" content="<%= metaDescription %>">
+  <meta property="og:image" content="<%= heroImage %>">
+  <meta property="og:url" content="<%= canonicalUrl %>">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= car.year %> <%= car.make %> <%= car.model %> | Auto Galleria">
+  <meta name="twitter:description" content="<%= metaDescription %>">
+  <meta name="twitter:image" content="<%= heroImage %>">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Vehicle",
+    "name": "<%= car.year %> <%= car.make %> <%= car.model %>",
+    "brand": "<%= car.make %>",
+    "model": "<%= car.model %>",
+    "vehicleModelDate": "<%= car.year %>",
+    "vehicleIdentificationNumber": "<%= car.vin %>",
+    "mileageFromOdometer": {
+      "@type": "QuantitativeValue",
+      "value": <%= car.mileage || 0 %>,
+      "unitCode": "SMI"
+    },
+    "itemCondition": "https://schema.org/UsedCondition",
+    "image": "<%= heroImage %>",
+    "offers": {
+      "@type": "Offer",
+      "price": "<%= (car.price || 0).toFixed(2) %>",
+      "priceCurrency": "GBP",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <!-- Tailwind -->
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+  <!-- LightGallery -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/thumbnail/lg-thumbnail.min.js" defer></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <%- include('partials/navbar') %>
+
+  <main class="max-w-6xl mx-auto p-4 pt-20">
+    <!-- Car Title -->
+    <h1 class="text-3xl font-bold mb-4"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+
+    <!-- Gallery -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Left: Swiper Gallery -->
+      <div>
+        <div class="swiper mySwiper2 rounded-2xl overflow-hidden shadow-lg">
+          <div class="swiper-wrapper" id="lightgallery">
+            <% if (car.galleryImages && car.galleryImages.length) { %>
+              <% car.galleryImages.forEach((img, index) => { %>
+                <% const altText = (img.alt || `${car.make} ${car.model}`).replace(/"/g, '&quot;'); %>
+                <div class="swiper-slide" role="group" aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>">
+                  <a
+                    href="<%= img.fallback %>"
+                    data-src="<%= img.fallback %>"
+                    data-lg-size="1200-900"
+                    data-sub-html='<h4><%= car.make %> <%= car.model %></h4><p><%= altText %></p>'
+                    class="gallery-item block"
+                  >
+                    <picture>
+                      <source
+                        type="image/avif"
+                        srcset="<%= img.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                        sizes="(max-width: 600px) 300px, (max-width: 1200px) 600px, 1200px"
+                      >
+                      <source
+                        type="image/webp"
+                        srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                        sizes="(max-width: 600px) 300px, (max-width: 1200px) 600px, 1200px"
+                      >
+                      <img
+                        src="<%= img.fallback %>"
+                        srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                        sizes="(max-width: 600px) 300px, (max-width: 1200px) 600px, 1200px"
+                        alt="<%= altText %>"
+                        width="1200"
+                        height="900"
+                        class="w-full h-[400px] object-cover"
+                        loading="<%= index === 0 ? 'eager' : 'lazy' %>"
+                        <% if (index === 0) { %>fetchpriority="high"<% } %>
+                        style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
+                      >
+                    </picture>
+                  </a>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p class="text-gray-500 p-4">No images available for this car.</p>
+            <% } %>
+          </div>
+          <!-- Arrows -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+
+        <!-- Thumbnails -->
+        <% if (car.galleryImages && car.galleryImages.length) { %>
+          <div class="swiper mySwiper mt-4">
+            <div class="swiper-wrapper">
+              <% car.galleryImages.forEach(img => { %>
+                <div class="swiper-slide cursor-pointer">
+                  <picture>
+                    <source
+                      type="image/avif"
+                      srcset="<%= img.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="96px"
+                    >
+                    <source
+                      type="image/webp"
+                      srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="96px"
+                    >
+                    <img
+                      src="<%= img.fallback %>"
+                      srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="96px"
+                      alt="Thumbnail: <%= car.make %> <%= car.model %>"
+                      width="96"
+                      height="96"
+                      class="w-full h-24 object-cover rounded-lg"
+                      loading="lazy"
+                      style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
+                    >
+                  </picture>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Right: Car Info -->
+      <div class="flex flex-col gap-4">
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <p class="text-lg leading-relaxed text-gray-700"><%= car.description %></p>
+
+          <dl class="mt-6 grid grid-cols-2 gap-y-3 text-gray-700">
+            <dt class="font-semibold">Make</dt>
+            <dd><%= car.make %></dd>
+
+            <dt class="font-semibold">Model</dt>
+            <dd><%= car.model %></dd>
+
+            <dt class="font-semibold">Year</dt>
+            <dd><%= car.year %></dd>
+
+            <dt class="font-semibold">VIN</dt>
+            <dd><%= car.vin ? car.vin.slice(0, -4).replace(/./g, '•') + car.vin.slice(-4) : 'N/A' %></dd>
+
+            <dt class="font-semibold">Price</dt>
+            <dd>£<%= (car.price || 0).toFixed(2) %></dd>
+
+            <dt class="font-semibold">Mileage</dt>
+            <dd><%= (car.mileage || 0).toLocaleString() %> miles</dd>
+
+            <dt class="font-semibold">Condition</dt>
+            <dd><%= car.condition %></dd>
+          </dl>
+        </div>
+
+        <div class="bg-blue-600 text-white rounded-3xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold">Interested in this vehicle?</h2>
+          <p class="mt-2 text-blue-50">Contact us for a viewing or more information.</p>
+          <a
+            href="/enquire?carId=<%= car._id %>"
+            class="mt-5 inline-block bg-white text-blue-700 px-6 py-3 rounded-xl shadow hover:bg-gray-100 transition w-fit"
+          >
+            Enquire Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video -->
+    <% 
+      let embedUrl = null;
+      if (car.youtubeUrl) {
+        const match = car.youtubeUrl.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
+        if (match) embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+      }
+    %>
+    <% if (embedUrl) { %>
+      <div class="mt-12">
+        <h2 class="text-2xl font-semibold mb-4">Car Video</h2>
+        <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg">
+          <iframe
+            class="w-full h-full"
+            src="<%= embedUrl %>"
+            title="<%= car.year %> <%= car.make %> <%= car.model %> walkaround video"
+            loading="lazy"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    <% } %>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const galleryWrapper = document.getElementById("lightgallery");
+      if (!galleryWrapper || !galleryWrapper.children.length) return;
+
+      const swiperThumbs = new Swiper(".mySwiper", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+      });
+      const swiperMain = new Swiper(".mySwiper2", {
+        spaceBetween: 10,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        thumbs: {
+          swiper: swiperThumbs,
+        },
+      });
+      lightGallery(galleryWrapper, {
+        plugins: [lgZoom, lgThumbnail],
+        selector: "a",
+        download: false,
+      });
+    });
+  </script>
+</body>
+</html>
