@@ -14,7 +14,10 @@ module.exports = {
         NODE_ENV: "production",
         PORT: 4000,
         MONGO_URI: process.env.MONGO_URI,        // your Atlas URI
-        SESSION_SECRET: process.env.SESSION_SECRET
+        SESSION_SECRET: process.env.SESSION_SECRET,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+        OPENAI_SECRET_KEY: process.env.OPENAI_SECRET_KEY,
+        OPENAI_MODEL: process.env.OPENAI_MODEL
       },
       error_file: "/var/www/neptune/logs/pm2/neptune-error.log",
       out_file: "/var/www/neptune/logs/pm2/neptune-out.log",

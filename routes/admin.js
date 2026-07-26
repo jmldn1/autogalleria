@@ -80,8 +80,16 @@ async function handleMultipleImageUploads(files, folder, sizes) {
 
 async function openaiChatCompletion(body) {
   return new Promise((resolve, reject) => {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) return reject(new Error('Missing OPENAI_API_KEY'));
+    const apiKey = (
+      process.env.OPENAI_API_KEY
+      || process.env.OPENAI_SECRET_KEY
+      || process.env.OPENAI_KEY
+      || ''
+    ).trim();
+
+    if (!apiKey) {
+      return reject(new Error('Missing OpenAI key. Set OPENAI_API_KEY (or OPENAI_SECRET_KEY).'));
+    }
 
     const requestBody = JSON.stringify(body);
     const options = {
@@ -174,7 +182,11 @@ Example output:
 
 async function generateBlogDraft(title, excerpt, topic) {
   const modelName = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-  const prompt = `Write a polished, SEO-friendly blog post draft for Auto Galleria. The post should sound helpful, trustworthy, and conversion-focused. Return plain text only, with a short title, a brief intro paragraph, 3-4 informative sections, and a closing paragraph. Do not include markdown headers unless they are simple plain text lines.
+  const prompt = `Write a helpful, trustworthy blog post for Auto Galleria — a premium used car dealership based in the UK.
+
+Tone: warm, knowledgeable, and conversational. British English spelling throughout. Avoid American sales clichés or overly pushy language.
+Structure: a short engaging title, a brief intro (2-3 sentences), 3-4 informative sections with plain-text section headings, and a clear closing paragraph with a subtle call to action.
+Length: 400-550 words. Return plain text only — no markdown, no bullet points unless clearly appropriate.
 
 Title: ${title || 'Blog post'}
 Excerpt: ${excerpt || 'A helpful guide for car buyers and sellers.'}
@@ -183,11 +195,41 @@ Topic: ${topic || 'general automotive advice'}`;
   const response = await openaiChatCompletion({
     model: modelName,
     messages: [
-      { role: 'system', content: 'You are a helpful copywriter for automotive blog content.' },
+      { role: 'system', content: 'You are an experienced automotive copywriter for a premium British used car dealership. You write in clear, friendly British English — informative without being salesy, and always trustworthy.' },
       { role: 'user', content: prompt }
     ],
-    temperature: 0.75,
-    max_tokens: 700
+    temperature: 0.7,
+    max_tokens: 800
+  });
+
+  const text = response.choices?.[0]?.message?.content || '';
+  return text.trim();
+}
+
+async function generateCarDescription(details) {
+  const modelName = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
+  const prompt = `Write a vehicle listing description for Auto Galleria, a premium used car dealership in the UK.
+
+Tone: confident, warm, and professional. British English spelling. Honest and specific — no hollow superlatives or American-style hype.
+Structure: an engaging one-sentence opener that names the car, 2-3 sentences on key specs and appeal, one sentence on condition/mileage, and a clear closing line encouraging enquiry.
+Length: 100-140 words. Return plain text only.
+
+Make: ${details.make}
+Model: ${details.model}
+Year: ${details.year}
+Fuel Type: ${details.fuelType || 'Not specified'}
+Transmission: ${details.transmission || 'Not specified'}
+Condition: ${details.condition || 'Not specified'}
+Mileage: ${details.mileage ? details.mileage + ' miles' : 'Not specified'}`;
+
+  const response = await openaiChatCompletion({
+    model: modelName,
+    messages: [
+      { role: 'system', content: 'You write premium automotive listing copy for a respected UK used car dealership. Your descriptions are honest, specific, and written in polished British English. You never use hollow phrases like "don\'t miss out" or "stunning example".' },
+      { role: 'user', content: prompt }
+    ],
+    temperature: 0.65,
+    max_tokens: 320
   });
 
   const text = response.choices?.[0]?.message?.content || '';
@@ -393,6 +435,30 @@ router.get('/cars/new', isAdmin, (req, res) => {
   res.render('admin/car-form', { user: req.user, car: {}, action: '/admin/cars', method: 'POST' });
 });
 
+router.post('/cars/ai-assist', isAdmin, async (req, res) => {
+  try {
+    const { make, model, year, fuelType, transmission, condition, mileage } = req.body || {};
+    if (!make || !model || !year) {
+      return res.status(400).json({ error: 'Make, model, and year are required.' });
+    }
+
+    const description = await generateCarDescription({
+      make,
+      model,
+      year,
+      fuelType,
+      transmission,
+      condition,
+      mileage
+    });
+
+    res.json({ description });
+  } catch (err) {
+    console.error('❌ Car AI assist failed:', err);
+    res.status(500).json({ error: err.message || 'AI generation failed' });
+  }
+});
+
 router.post(
   '/cars',
   isAdmin,
@@ -568,9 +634,47 @@ router.get('/blogs/edit/:id', isAdmin, async (req, res) => {
   });
 });
 
-router.post('/blogs/edit/:id', isAdmin, async (req, res) => {
-  await Blog.findByIdAndUpdate(req.params.id, req.body);
-  res.redirect('/admin/blogs');
+router.post('/blogs/edit/:id', isAdmin, upload.fields([
+  { name: 'coverImageFile', maxCount: 1 },
+  { name: 'inlineImageFile', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).send('Blog not found');
+    }
+
+    // Update basic fields
+    blog.title = req.body.title?.trim() || blog.title;
+    blog.excerpt = req.body.excerpt?.trim() || blog.excerpt;
+    blog.content = req.body.content?.trim() || blog.content;
+
+    // Handle slug uniqueness
+    if (req.body.slug && req.body.slug.trim() !== blog.slug) {
+      const slugExists = await Blog.findOne({ slug: req.body.slug.trim(), _id: { $ne: blog._id } });
+      if (slugExists) {
+        return res.status(400).send('Slug already exists');
+      }
+      blog.slug = req.body.slug.trim();
+    }
+
+    // Handle cover image file upload
+    if (req.files?.coverImageFile?.[0]) {
+      const imgData = await handleImageUpload(req.files.coverImageFile[0], `blogs/${blog._id}`, 'cover', SIZES.hero);
+      blog.coverImage = imgData.imagePath;
+      blog.imageManifest = imgData.imageManifest;
+      blog.placeholder = imgData.placeholder;
+    } else if (req.body.coverImage && req.body.coverImage.trim()) {
+      // Use URL if no file upload
+      blog.coverImage = req.body.coverImage.trim();
+    }
+
+    await blog.save();
+    res.redirect('/admin/blogs');
+  } catch (err) {
+    console.error('❌ Edit blog error:', err);
+    res.status(500).send('Error updating blog');
+  }
 });
 
 router.post('/blogs/delete/:id', isAdmin, async (req, res) => {
