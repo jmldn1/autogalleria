@@ -172,6 +172,28 @@ Example output:
   };
 }
 
+async function generateBlogDraft(title, excerpt, topic) {
+  const modelName = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
+  const prompt = `Write a polished, SEO-friendly blog post draft for Auto Galleria. The post should sound helpful, trustworthy, and conversion-focused. Return plain text only, with a short title, a brief intro paragraph, 3-4 informative sections, and a closing paragraph. Do not include markdown headers unless they are simple plain text lines.
+
+Title: ${title || 'Blog post'}
+Excerpt: ${excerpt || 'A helpful guide for car buyers and sellers.'}
+Topic: ${topic || 'general automotive advice'}`;
+
+  const response = await openaiChatCompletion({
+    model: modelName,
+    messages: [
+      { role: 'system', content: 'You are a helpful copywriter for automotive blog content.' },
+      { role: 'user', content: prompt }
+    ],
+    temperature: 0.75,
+    max_tokens: 700
+  });
+
+  const text = response.choices?.[0]?.message?.content || '';
+  return text.trim();
+}
+
 // ---------------------- DASHBOARD ----------------------
 router.get('/dashboard', isAdmin, async (req, res) => {
   try {
@@ -474,9 +496,68 @@ router.get('/blogs/new', isAdmin, (req, res) => {
   });
 });
 
-router.post('/blogs', isAdmin, async (req, res) => {
-  await Blog.create(req.body);
-  res.redirect('/admin/blogs');
+router.post('/blogs/upload-image', isAdmin, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image provided' });
+    }
+
+    const imgData = await handleImageUpload(req.file, `blogs/inline/${Date.now()}`, 'inline', SIZES.hero);
+    const imageUrl = imgData?.imageManifest?.sources?.avif?.[0]?.url
+      || imgData?.imageManifest?.sources?.webp?.[0]?.url
+      || imgData?.imageManifest?.sources?.jpg?.[0]?.url
+      || imgData?.imagePath;
+
+    res.json({ url: imageUrl });
+  } catch (err) {
+    console.error('❌ Blog inline image upload failed:', err);
+    res.status(500).json({ error: 'Image upload failed' });
+  }
+});
+
+router.post('/blogs/ai-assist', isAdmin, async (req, res) => {
+  try {
+    const { title, excerpt, topic } = req.body || {};
+    if (!title && !excerpt && !topic) {
+      return res.status(400).json({ error: 'Please provide a title, excerpt, or topic.' });
+    }
+
+    const draft = await generateBlogDraft(title, excerpt, topic);
+    res.json({ content: draft });
+  } catch (err) {
+    console.error('❌ Blog AI assist failed:', err);
+    res.status(500).json({ error: err.message || 'AI generation failed' });
+  }
+});
+
+router.post('/blogs', isAdmin, upload.fields([
+  { name: 'coverImageFile', maxCount: 1 },
+  { name: 'inlineImageFile', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    const blogData = {
+      ...req.body,
+      slug: (req.body.slug || '').trim() || await generateUniqueSlug(req.body.title || 'blog', Blog)
+    };
+
+    const blog = await Blog.create(blogData);
+
+    if (req.files?.coverImageFile?.[0]) {
+      const imgData = await handleImageUpload(req.files.coverImageFile[0], `blogs/${blog._id}`, 'cover', SIZES.hero);
+      blog.coverImage = imgData.imagePath;
+      blog.imageManifest = imgData.imageManifest;
+      blog.placeholder = imgData.placeholder;
+      await blog.save();
+    } else if (req.body.coverImage) {
+      blog.coverImage = req.body.coverImage;
+      await blog.save();
+    }
+
+    res.redirect('/admin/blogs');
+  } catch (err) {
+    console.error('❌ Create blog error:', err);
+    res.status(500).send('Error creating blog');
+  }
 });
 
 router.get('/blogs/edit/:id', isAdmin, async (req, res) => {
