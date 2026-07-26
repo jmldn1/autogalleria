@@ -10,7 +10,6 @@ const Car = require('../models/Car');
 const Blog = require('../models/Blog');
 const PageView = require('../models/PageView');
 const { processImage, buildImageManifest, SIZES } = require('../utils/imageService');
-const slugify = require('slugify');
 const generateUniqueSlug = require('../utils/slugifyUnique');
 
 // ---------------------- MULTER SETUP ----------------------
@@ -473,13 +472,10 @@ router.post(
     try {
       console.log('Received car form submission');
 
-      // Auto-generate a unique, SEO-friendly slug
-      let baseSlug = slugify(`${req.body.make} ${req.body.model} ${req.body.year}`, { lower: true, strict: true });
-      let slug = baseSlug;
-      let counter = 1;
-      while (await Car.findOne({ slug })) {
-        slug = `${baseSlug}-${counter++}`;
-      }
+      // Generate a unique slug from the requested slug, or from car identity fields.
+      const requestedSlug = (req.body.slug || '').trim();
+      const slugSource = requestedSlug || `${req.body.make || ''} ${req.body.model || ''} ${req.body.year || ''}`;
+      const slug = await generateUniqueSlug(slugSource, Car);
 
       const galleryImages = await handleMultipleImageUploads(req.files.galleryImages || [], '', SIZES.car);
 
@@ -533,8 +529,13 @@ router.post(
         }))
       ];
 
+      const { existingImages: _existingImages, slug: inputSlug, ...body } = req.body;
+      const slugSource = (inputSlug || '').trim() || `${body.make || ''} ${body.model || ''} ${body.year || ''}`;
+      const slug = await generateUniqueSlug(slugSource, Car, { excludeId: car._id });
+
       const carData = {
-        ...req.body,
+        ...body,
+        slug,
         galleryImages
       };
 
@@ -657,6 +658,9 @@ router.post('/blogs/edit/:id', isAdmin, upload.fields([
     blog.title = req.body.title?.trim() || blog.title;
     blog.excerpt = req.body.excerpt?.trim() || blog.excerpt;
     blog.content = req.body.content?.trim() || blog.content;
+    if (req.body.layout && ['feature', 'standard', 'magazine'].includes(req.body.layout)) {
+      blog.layout = req.body.layout;
+    }
 
     // Normalize slug from user input and keep it unique.
     if (req.body.slug && req.body.slug.trim()) {
