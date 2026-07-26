@@ -194,7 +194,7 @@ app.get("/cars", async (req, res) => {
     const cars = await Car.find().sort({ updatedAt: -1, createdAt: -1 }).lean();
 
     const normalizedCars = cars.map((car) => {
-      const firstImage = car.galleryImages?.[0];
+      const firstImage = car.galleryImages?.[0] || car.images?.[0];
       const imageManifest = firstImage?.manifest?.sources;
       const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
       const image = {

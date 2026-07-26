@@ -28,8 +28,30 @@
     <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
       <% blogs.forEach(blog => { %>
         <a href="/blog/<%= blog.slug %>" class="block bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
-          <% if (blog.coverImage) { %>
-            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="w-full h-48 object-cover" />
+          <% const sources = blog.imageManifest?.sources; %>
+          <% const avifSrcset = sources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const webpSrcset = sources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const jpgSrcset = sources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
+          <% const jpgSrc = sources?.jpg?.[sources?.jpg?.length - 1]?.url; %>
+          <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
+            <picture>
+              <% if (avifSrcset) { %>
+                <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+              <% } %>
+              <% if (webpSrcset) { %>
+                <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+              <% } %>
+              <img
+                src="<%= jpgSrc || blog.coverImage %>"
+                srcset="<%= jpgSrcset %>"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                alt="<%= blog.title %>"
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+            </picture>
+          <% } else if (blog.coverImage) { %>
+            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="w-full h-48 object-cover" loading="lazy" />
           <% } %>
           <div class="p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-2"><%= blog.title %></h2>

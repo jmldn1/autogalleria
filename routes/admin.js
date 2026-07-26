@@ -39,8 +39,11 @@ async function handleImageUpload(file, folder, prefix, sizes) {
     throw new Error('Generated URL is not web-accessible');
   }
 
+  const pickLargest = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+  const fallbackUrl = pickLargest(manifest.sources.jpg) || pickLargest(manifest.sources.webp) || pickLargest(manifest.sources.avif);
+
   return {
-    imagePath: `${publicBaseURL}/${prefix}`,
+    imagePath: fallbackUrl,
     placeholder: result.placeholder,
     imageManifest: manifest,
     variantsCount: result.variants.length
@@ -66,8 +69,11 @@ async function handleMultipleImageUploads(files, folder, sizes) {
       throw new Error('Generated URL is not web-accessible');
     }
 
+    const pickLargest = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+    const fallbackUrl = pickLargest(manifest.sources.jpg) || pickLargest(manifest.sources.webp) || pickLargest(manifest.sources.avif);
+
     results.push({
-      imagePath: `${publicBaseURL}/${prefix}`,
+      imagePath: fallbackUrl,
       placeholder: result.placeholder,
       imageManifest: manifest,
       variantsCount: result.variants.length,
@@ -601,9 +607,12 @@ router.post('/blogs', isAdmin, upload.fields([
   { name: 'inlineImageFile', maxCount: 1 }
 ]), async (req, res) => {
   try {
+    const requestedSlug = (req.body.slug || '').trim();
+    const slugSource = requestedSlug || req.body.title || 'blog';
+
     const blogData = {
       ...req.body,
-      slug: (req.body.slug || '').trim() || await generateUniqueSlug(req.body.title || 'blog', Blog)
+      slug: await generateUniqueSlug(slugSource, Blog)
     };
 
     const blog = await Blog.create(blogData);
@@ -649,13 +658,10 @@ router.post('/blogs/edit/:id', isAdmin, upload.fields([
     blog.excerpt = req.body.excerpt?.trim() || blog.excerpt;
     blog.content = req.body.content?.trim() || blog.content;
 
-    // Handle slug uniqueness
-    if (req.body.slug && req.body.slug.trim() !== blog.slug) {
-      const slugExists = await Blog.findOne({ slug: req.body.slug.trim(), _id: { $ne: blog._id } });
-      if (slugExists) {
-        return res.status(400).send('Slug already exists');
-      }
-      blog.slug = req.body.slug.trim();
+    // Normalize slug from user input and keep it unique.
+    if (req.body.slug && req.body.slug.trim()) {
+      const normalizedSlug = await generateUniqueSlug(req.body.slug.trim(), Blog, { excludeId: blog._id });
+      blog.slug = normalizedSlug;
     }
 
     // Handle cover image file upload
