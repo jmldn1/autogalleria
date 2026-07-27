@@ -130,8 +130,8 @@
                 >
 
                   <a
-                    href="<%= img.manifest.sources.jpg.slice(-1)[0].url %>"
-                    data-src="<%= img.manifest.sources.jpg.slice(-1)[0].url %>"
+                    href="<%= img.lightboxSrc || img.fallback || img.manifest.sources.jpg.slice(-1)[0].url %>"
+                    data-src="<%= img.lightboxSrc || img.fallback || img.manifest.sources.jpg.slice(-1)[0].url %>"
                     data-responsive="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                     data-srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                     data-sizes="100vw"

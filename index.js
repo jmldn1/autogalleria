@@ -42,6 +42,49 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
+function extractYouTubeVideoId(url) {
+  if (!url || typeof url !== 'string') return null;
+
+  try {
+    const parsed = new URL(url.trim());
+    const host = parsed.hostname.replace(/^www\./, '');
+
+    if ((host === 'youtube.com' || host === 'm.youtube.com') && parsed.searchParams.get('v')) {
+      return parsed.searchParams.get('v');
+    }
+
+    if (host === 'youtu.be') {
+      return parsed.pathname.split('/').filter(Boolean)[0] || null;
+    }
+
+    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+      const segments = parsed.pathname.split('/').filter(Boolean);
+      const embedIndex = segments.findIndex((segment) => segment === 'embed' || segment === 'shorts');
+
+      if (embedIndex !== -1) {
+        return segments[embedIndex + 1] || null;
+      }
+    }
+  } catch (err) {
+    const fallbackMatch = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
+    return fallbackMatch ? fallbackMatch[1] : null;
+  }
+
+  return null;
+}
+
+function buildYouTubeVideoData(url) {
+  const videoId = extractYouTubeVideoId(url);
+
+  if (!videoId) return null;
+
+  return {
+    id: videoId,
+    embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`,
+    thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+  };
+}
+
 app.use(async (req, res, next) => {
   // Track only frontend page visits, skip assets and admin/api routes.
   const skip = req.method !== 'GET'
@@ -226,16 +269,139 @@ app.get("/cars", async (req, res) => {
 // Car details route
 app.get("/car/:slug", async (req, res) => {
   try {
-    const car = await Car.findOne({ slug: req.params.slug });
-    if (!car) return res.status(404).send("Car not found");
+    const carDoc = await Car.findOne({ slug: req.params.slug }).lean();
+    const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+
+    if (!carDoc) return res.status(404).send("Car not found");
+
+    const galleryImages = (carDoc.galleryImages || []).map((img) => {
+      const sources = img?.manifest?.sources || {};
+
+      return {
+        ...img,
+        lightboxSrc: buildFallback(sources.webp) || buildFallback(sources.jpg) || buildFallback(sources.avif) || img?.fallback || null,
+      };
+    });
+
+    const car = {
+      ...carDoc,
+      galleryImages,
+      video: buildYouTubeVideoData(carDoc.youtubeUrl),
+    };
+
+    const buildCardImage = (vehicle) => {
+      const firstImage = vehicle.galleryImages?.[0] || vehicle.images?.[0];
+      const imageManifest = firstImage?.manifest?.sources;
+
+      return {
+        sources: {
+          avif: imageManifest?.avif || [],
+          webp: imageManifest?.webp || [],
+          jpg: imageManifest?.jpg || [],
+        },
+        fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
+        alt: firstImage?.alt || `${vehicle.make || "Vehicle"} ${vehicle.model || ""}`.trim(),
+      };
+    };
+
+    const cardSelect = "slug make model year price mileage condition galleryImages";
+
+    const relatedByMake = await Car.find({
+      _id: { $ne: carDoc._id },
+      make: carDoc.make,
+    })
+      .select(cardSelect)
+      .sort({ updatedAt: -1, createdAt: -1 })
+      .limit(3)
+      .lean();
+
+    let relatedCars = relatedByMake;
+
+    if (relatedCars.length < 3) {
+      const missingCount = 3 - relatedCars.length;
+      const excludeIds = [carDoc._id, ...relatedCars.map((item) => item._id)];
+      const fallbackCars = await Car.find({ _id: { $nin: excludeIds } })
+        .select(cardSelect)
+        .sort({ updatedAt: -1, createdAt: -1 })
+        .limit(missingCount)
+        .lean();
+
+      relatedCars = [...relatedCars, ...fallbackCars];
+    }
+
+    relatedCars = relatedCars.map((relatedCar) => ({
+      ...relatedCar,
+      image: buildCardImage(relatedCar),
+    }));
 
     res.render("car-details", {
       car,
-      gallery: car.galleryImages || []
+      gallery: galleryImages,
+      relatedCars,
     });
   } catch (err) {
     console.error("Car details error:", err);
     res.status(500).send("Server error");
+  }
+});
+
+// Car enquiry route
+app.post("/car/:slug/enquire", async (req, res) => {
+  try {
+    const { name, email, phone, message } = req.body;
+
+    if (!name || !name.trim() || !email || !email.trim()) {
+      return res.status(400).json({ success: false, message: "Name and email are required." });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.status(400).json({ success: false, message: "Please enter a valid email address." });
+    }
+
+    const carDoc = await Car.findOne({ slug: req.params.slug }).select("_id slug make model year").lean();
+
+    const lead = new Lead({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone ? phone.trim() : undefined,
+      message: message ? message.trim() : undefined,
+      car: carDoc ? `${carDoc.year} ${carDoc.make} ${carDoc.model}` : req.params.slug,
+      carId: carDoc ? carDoc._id : undefined,
+      carSlug: req.params.slug,
+    });
+
+    await lead.save();
+
+    const nodemailer = require("nodemailer");
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
+    });
+
+    const carLabel = carDoc ? `${carDoc.year} ${carDoc.make} ${carDoc.model}` : req.params.slug;
+    const carUrl = `https://autogalleria.co.uk/car/${req.params.slug}`;
+
+    await transporter.sendMail({
+      from: `"Auto Galleria Enquiries" <${process.env.GMAIL_USER}>`,
+      to: process.env.GMAIL_TO,
+      replyTo: `"${name.trim()}" <${email.trim()}>`,
+      subject: `New Car Enquiry — ${carLabel}`,
+      html: `
+        <h2 style="margin-bottom:8px">New Enquiry — ${carLabel}</h2>
+        <p><a href="${carUrl}">${carUrl}</a></p>
+        <hr style="margin:16px 0">
+        <p><strong>Name:</strong> ${name.trim()}</p>
+        <p><strong>Email:</strong> ${email.trim()}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${phone.trim()}</p>` : ""}
+        ${message ? `<p><strong>Message:</strong> ${message.trim()}</p>` : ""}
+      `,
+    });
+
+    return res.json({ success: true, message: "Thank you — we'll be in touch shortly." });
+  } catch (err) {
+    console.error("Car enquiry error:", err);
+    return res.status(500).json({ success: false, message: "Something went wrong. Please try again." });
   }
 });
 

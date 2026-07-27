@@ -1,46 +1,123 @@
-<nav class="mb-6 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+<%
+  const rawTitle = (pageTitle || '').toString().toLowerCase();
+  const title = rawTitle.trim();
+  const isActive = (key) => {
+    if (key === 'dashboard') return title === 'dashboard';
+    if (key === 'landings') return title.includes('landing');
+    if (key === 'cars') return title.includes('car');
+    if (key === 'blogs') return title.includes('blog');
+    return false;
+  };
+  const navClass = (key) =>
+    isActive(key)
+      ? 'rounded-lg bg-blue-100 px-3 py-2 font-medium text-blue-700'
+      : 'rounded-lg px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600';
+  const userName = user && user.name ? user.name : 'Admin';
+  const userInitial = userName.charAt(0).toUpperCase();
+%>
+
+<nav id="admin-nav" class="mb-6 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm" aria-label="Admin navigation">
   <div class="flex items-center justify-between gap-3">
-    <div class="flex items-center gap-3">
-      <a href="/admin/dashboard" class="text-lg font-semibold text-blue-600">Auto Galleria Admin</a>
+    <div class="min-w-0 flex items-center gap-3">
+      <a href="/admin/dashboard" class="truncate text-lg font-semibold text-blue-600">Auto Galleria Admin</a>
       <span class="hidden text-sm text-gray-500 sm:inline">/</span>
-      <span class="text-sm text-gray-600"><%= pageTitle || 'Admin' %></span>
+      <span class="truncate text-sm text-gray-600"><%= pageTitle || 'Admin' %></span>
     </div>
+
     <div class="flex items-center gap-3">
-      <button type="button" class="inline-flex items-center rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 md:hidden" onclick="this.nextElementSibling.classList.toggle('hidden')">
-        ☰ Menu
+      <button
+        id="admin-menu-button"
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 md:hidden"
+        aria-label="Toggle admin menu"
+        aria-expanded="false"
+        aria-controls="admin-mobile-menu"
+      >
+        <span id="admin-menu-label">Menu</span>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
       </button>
-      <div class="hidden flex-col gap-2 text-sm md:flex md:flex-row md:items-center">
-        <a href="/admin/dashboard" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Dashboard</a>
-        <a href="/admin/landings" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Landings</a>
-        <a href="/admin/cars" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Cars</a>
-        <a href="/admin/blogs" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Blog</a>
-        <a href="/logout" class="rounded px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
+
+      <div class="hidden text-sm md:flex md:items-center md:gap-2">
+        <a href="/admin/dashboard" class="<%= navClass('dashboard') %>">Dashboard</a>
+        <a href="/admin/landings" class="<%= navClass('landings') %>">Landings</a>
+        <a href="/admin/cars" class="<%= navClass('cars') %>">Cars</a>
+        <a href="/admin/blogs" class="<%= navClass('blogs') %>">Blog</a>
+        <a href="/logout" class="rounded-lg px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
       </div>
-      <div class="hidden items-center gap-2 rounded-full bg-gray-50 px-3 py-2 sm:flex">
+
+      <div class="hidden items-center gap-2 rounded-full bg-gray-50 px-3 py-2 md:flex">
         <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
-          <%= (user && user.name ? user.name : 'A').charAt(0).toUpperCase() %>
+          <%= userInitial %>
         </div>
         <div class="text-sm">
-          <div class="font-medium text-gray-800"><%= user && user.name ? user.name : 'Admin' %></div>
+          <div class="font-medium text-gray-800"><%= userName %></div>
           <div class="text-xs text-gray-500">Signed in</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="mt-3 hidden flex-col gap-2 border-t border-gray-100 pt-3 text-sm md:hidden">
-    <div class="mb-2 flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2">
+
+  <div id="admin-mobile-menu" class="mt-3 hidden border-t border-gray-100 pt-3 md:hidden">
+    <div class="mb-3 flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2">
       <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
-        <%= (user && user.name ? user.name : 'A').charAt(0).toUpperCase() %>
+        <%= userInitial %>
       </div>
       <div>
-        <div class="font-medium text-gray-800"><%= user && user.name ? user.name : 'Admin' %></div>
+        <div class="font-medium text-gray-800"><%= userName %></div>
         <div class="text-xs text-gray-500">Signed in</div>
       </div>
     </div>
-    <a href="/admin/dashboard" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Dashboard</a>
-    <a href="/admin/landings" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Landings</a>
-    <a href="/admin/cars" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Cars</a>
-    <a href="/admin/blogs" class="rounded px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Blog</a>
-    <a href="/logout" class="rounded px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
+    <div class="flex flex-col gap-2 text-sm">
+      <a href="/admin/dashboard" class="<%= navClass('dashboard') %>">Dashboard</a>
+      <a href="/admin/landings" class="<%= navClass('landings') %>">Landings</a>
+      <a href="/admin/cars" class="<%= navClass('cars') %>">Cars</a>
+      <a href="/admin/blogs" class="<%= navClass('blogs') %>">Blog</a>
+      <a href="/logout" class="rounded-lg px-3 py-2 text-red-600 hover:bg-red-50">Logout</a>
+    </div>
   </div>
 </nav>
+
+<script>
+  (function () {
+    const nav = document.getElementById('admin-nav');
+    const menuBtn = document.getElementById('admin-menu-button');
+    const menuLabel = document.getElementById('admin-menu-label');
+    const mobileMenu = document.getElementById('admin-mobile-menu');
+
+    if (!nav || !menuBtn || !mobileMenu || !menuLabel) return;
+
+    let open = false;
+
+    function setOpen(nextState) {
+      open = Boolean(nextState);
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuLabel.textContent = open ? 'Close' : 'Menu';
+      mobileMenu.classList.toggle('hidden', !open);
+    }
+
+    menuBtn.addEventListener('click', function () {
+      setOpen(!open);
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!open) return;
+      if (!nav.contains(event.target)) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && open) {
+        setOpen(false);
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 768) {
+        setOpen(false);
+      }
+    });
+  })();
+</script>

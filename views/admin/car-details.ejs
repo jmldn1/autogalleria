@@ -8,23 +8,32 @@
     <!-- Make -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Make</label>
-      <input type="text" name="make" value="<%= car.make %>" required
+      <input id="make" type="text" name="make" value="<%= car.make %>" required
              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
 
     <!-- Model -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Model</label>
-      <input type="text" name="model" value="<%= car.model %>" required
+      <input id="model" type="text" name="model" value="<%= car.model %>" required
              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
 
     <!-- Year -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
-      <input type="number" name="year" value="<%= car.year %>" required
+        <input id="year" type="number" name="year" value="<%= car.year %>" required
              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
+
+      <!-- Slug -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+        <input id="slug" type="text" name="slug" value="<%= car.slug || '' %>"
+               class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="auto-generated-from-make-model-year">
+        <p class="text-xs text-gray-500 mt-1">Auto-updates from Make, Model, and Year unless edited manually.</p>
+      </div>
 
     <!-- Price -->
     <div>
@@ -39,6 +48,52 @@
       <textarea name="description" rows="4"
                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= car.description %></textarea>
     </div>
+
+  <script>
+    const makeInput = document.getElementById('make');
+    const modelInput = document.getElementById('model');
+    const yearInput = document.getElementById('year');
+    const slugInput = document.getElementById('slug');
+    let slugEditedManually = false;
+
+    function toSlug(value) {
+      return (value || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    }
+
+    function buildSlug() {
+      return toSlug([
+        makeInput?.value || '',
+        modelInput?.value || '',
+        yearInput?.value || ''
+      ].filter(Boolean).join(' '));
+    }
+
+    if (slugInput && makeInput && modelInput && yearInput) {
+      if (!slugInput.value.trim()) slugInput.value = buildSlug();
+
+      slugInput.addEventListener('input', () => {
+        const generated = buildSlug();
+        const current = slugInput.value.trim();
+        slugEditedManually = current.length > 0 && current !== generated;
+      });
+
+      slugInput.addEventListener('blur', () => {
+        slugInput.value = toSlug(slugInput.value);
+      });
+
+      [makeInput, modelInput, yearInput].forEach((field) => {
+        field.addEventListener('input', () => {
+          if (slugEditedManually) return;
+          slugInput.value = buildSlug();
+        });
+      });
+    }
+  </script>
 
     <!-- Main Image -->
     <div>

@@ -13,13 +13,9 @@
 
 <body class="bg-gray-50 text-gray-900 antialiased">
 
-  <!-- Header -->
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <h1 class="text-lg font-semibold">Admin Panel</h1>
-      <a href="/" class="text-sm text-gray-600 hover:text-gray-900">View Site</a>
-    </div>
-  </header>
+  <div class="max-w-5xl mx-auto px-3 pt-3 sm:px-6 sm:pt-6">
+    <%- include('partials/nav', { pageTitle: 'Add Blog', user }) %>
+  </div>
 
   <main class="min-h-screen">
     <div class="max-w-5xl mx-auto p-3 sm:p-6">
@@ -71,6 +67,17 @@
               <textarea id="excerpt" name="excerpt" rows="4"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
                 placeholder="Short summary for blog listings"></textarea>
+            </div>
+
+            <!-- Layout -->
+            <div>
+              <label for="layout" class="block text-sm font-medium text-gray-700 mb-2">Page Layout</label>
+              <select id="layout" name="layout" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                <option value="feature" selected>Featured hero layout</option>
+                <option value="standard">Standard article layout</option>
+                <option value="magazine">Magazine style layout</option>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">Featured gives you the richer hero treatment; magazine uses a clean editorial article style.</p>
             </div>
 
           </div>
