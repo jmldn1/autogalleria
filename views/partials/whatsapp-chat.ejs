@@ -1,6 +1,7 @@
+<% if (adminWhatsAppNumber) { %>
 <div class="fixed bottom-4 right-4 flex flex-col sm:flex-row items-center gap-3 z-50">
   <!-- WhatsApp Button -->
-  <a href="https://wa.me/<%= process.env.ADMIN_WHATSAPP %>?text=Hi!%20I'm%20interested..."
+  <a href="https://wa.me/<%= adminWhatsAppNumber %>"
      target="_blank" rel="noopener"
      aria-label="Chat with us on WhatsApp"
      class="flex items-center justify-center w-14 h-14 rounded-full shadow-lg bg-[#25D366] hover:bg-[#20b954] transition">
@@ -32,3 +33,4 @@
     </svg>
   </button>
 </div>
+<% } %>

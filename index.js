@@ -85,6 +85,25 @@ function buildYouTubeVideoData(url) {
   };
 }
 
+function normalizeWhatsAppNumber(value) {
+  const digits = (value || '').toString().replace(/\D/g, '');
+
+  if (!digits) return '';
+
+  return digits.startsWith('00') ? digits.slice(2) : digits;
+}
+
+const adminWhatsAppNumber = normalizeWhatsAppNumber(process.env.ADMIN_WHATSAPP);
+
+if (!adminWhatsAppNumber) {
+  console.warn('ADMIN_WHATSAPP is missing or invalid. WhatsApp chat links will be hidden.');
+}
+
+app.use((req, res, next) => {
+  res.locals.adminWhatsAppNumber = adminWhatsAppNumber;
+  next();
+});
+
 app.use(async (req, res, next) => {
   // Track only frontend page visits, skip assets and admin/api routes.
   const skip = req.method !== 'GET'
