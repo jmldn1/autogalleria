@@ -28,15 +28,14 @@
       <button
         id="admin-menu-button"
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 md:hidden"
+        class="flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-lg hover:bg-gray-100 transition md:hidden"
         aria-label="Toggle admin menu"
         aria-expanded="false"
         aria-controls="admin-mobile-menu"
       >
-        <span id="admin-menu-label">Menu</span>
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
+        <span id="admin-bar-1" class="block w-5 h-0.5 bg-gray-700 transition-all duration-300 origin-center"></span>
+        <span id="admin-bar-2" class="block w-5 h-0.5 bg-gray-700 transition-all duration-300 origin-center"></span>
+        <span id="admin-bar-3" class="block w-5 h-0.5 bg-gray-700 transition-all duration-300 origin-center"></span>
       </button>
 
       <div class="hidden text-sm md:flex md:items-center md:gap-2">
@@ -81,43 +80,49 @@
 
 <script>
   (function () {
-    const nav = document.getElementById('admin-nav');
-    const menuBtn = document.getElementById('admin-menu-button');
-    const menuLabel = document.getElementById('admin-menu-label');
+    const nav        = document.getElementById('admin-nav');
+    const menuBtn    = document.getElementById('admin-menu-button');
     const mobileMenu = document.getElementById('admin-mobile-menu');
+    const bar1       = document.getElementById('admin-bar-1');
+    const bar2       = document.getElementById('admin-bar-2');
+    const bar3       = document.getElementById('admin-bar-3');
 
-    if (!nav || !menuBtn || !mobileMenu || !menuLabel) return;
+    if (!nav || !menuBtn || !mobileMenu) return;
 
     let open = false;
 
     function setOpen(nextState) {
       open = Boolean(nextState);
       menuBtn.setAttribute('aria-expanded', String(open));
-      menuLabel.textContent = open ? 'Close' : 'Menu';
       mobileMenu.classList.toggle('hidden', !open);
+
+      if (open) {
+        bar1.style.transform = 'translateY(8px) rotate(45deg)';
+        bar2.style.opacity   = '0';
+        bar3.style.transform = 'translateY(-8px) rotate(-45deg)';
+      } else {
+        bar1.style.transform = '';
+        bar2.style.opacity   = '1';
+        bar3.style.transform = '';
+      }
     }
 
-    menuBtn.addEventListener('click', function () {
-      setOpen(!open);
+    menuBtn.addEventListener('click', function () { setOpen(!open); });
+
+    mobileMenu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () { setOpen(false); });
     });
 
-    document.addEventListener('click', function (event) {
-      if (!open) return;
-      if (!nav.contains(event.target)) {
-        setOpen(false);
-      }
+    document.addEventListener('click', function (e) {
+      if (open && !nav.contains(e.target)) setOpen(false);
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && open) {
-        setOpen(false);
-      }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && open) setOpen(false);
     });
 
     window.addEventListener('resize', function () {
-      if (window.innerWidth >= 768) {
-        setOpen(false);
-      }
+      if (window.innerWidth >= 768) setOpen(false);
     });
   })();
 </script>
