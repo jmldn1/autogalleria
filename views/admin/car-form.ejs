@@ -265,7 +265,7 @@
                 <div class="relative group" data-existing-image-card>
                   <img src="<%= img.fallback %>" alt="Gallery Image <%= index + 1 %>" 
                        class="w-full h-32 object-cover rounded-lg border-2 border-gray-200">
-                  <button type="button" onclick="removeExistingImage(<%= index %>)" data-remove-existing-image
+                  <button type="button" data-remove-existing-image data-existing-image-index="<%= index %>"
                           class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -439,7 +439,7 @@
       const removeButton = card.querySelector('[data-remove-existing-image]');
       const label = card.querySelector('.absolute.bottom-2.left-2');
       if (removeButton) {
-        removeButton.setAttribute('onclick', `removeExistingImage(${i})`);
+        removeButton.setAttribute('data-existing-image-index', String(i));
       }
       if (label) {
         label.textContent = `Image ${i + 1}`;
@@ -455,6 +455,15 @@
       existingImagesContainer.remove();
     }
   }
+
+  document.querySelectorAll('[data-remove-existing-image]').forEach((button) => {
+    button.addEventListener('click', function () {
+      const index = Number(this.getAttribute('data-existing-image-index'));
+      if (!Number.isNaN(index)) {
+        removeExistingImage(index);
+      }
+    });
+  });
 </script>
 <script>
 function normaliseYouTubeUrl() {
