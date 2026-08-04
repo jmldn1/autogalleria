@@ -7,11 +7,8 @@
   <link href="/css/tailwind.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800">
+<%- include('partials/nav', { pageTitle: 'Blogs', user }) %>
   <main class="mx-auto max-w-7xl p-6">
-    <div class="mx-auto max-w-7xl">
-      <%- include('partials/nav', { pageTitle: 'Blogs', user }) %>
-    </div>
-
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-2xl font-bold">Manage Blogs</h1>
