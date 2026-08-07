@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>autogalleria | App Design Showcase</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/tailwind.css" />
   <style>
     .device-screen {
       background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.03));
@@ -60,7 +60,20 @@
     <div class="relative bg-white rounded-2xl p-6 bezel">
       <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner">
         <div class="bg-black device-screen aspect-video">
-          <img id="pc-screenshot" class="screenshot" src="/images/hero-bg-1600x900.jpg" alt="PC Screenshot" />
+          <picture class="w-full h-full block">
+            <source type="image/avif" srcset="/images/hero-bg-480x840.avif 480w, /images/hero-bg-800x1400.avif 800w, /images/hero-bg-1600x900.avif 1600w" sizes="(max-width: 640px) 100vw, 75vw">
+            <source type="image/webp" srcset="/images/hero-bg-480x840.webp 480w, /images/hero-bg-800x1400.webp 800w, /images/hero-bg-1600x900.webp 1600w" sizes="(max-width: 640px) 100vw, 75vw">
+            <img id="pc-screenshot"
+                 class="screenshot"
+                 src="/images/hero-bg-1600x900.jpg"
+                 srcset="/images/hero-bg-480x840.jpg 480w, /images/hero-bg-800x1400.jpg 800w, /images/hero-bg-1600x900.jpg 1600w"
+                 sizes="(max-width: 640px) 100vw, 75vw"
+                 alt="PC Screenshot"
+                 width="1600"
+                 height="900"
+                 loading="lazy"
+                 decoding="async" />
+          </picture>
         </div>
       </div>
       <div class="mt-4 flex justify-center">
@@ -81,7 +94,20 @@
         </div>
         <!-- Phone screen with proper aspect ratio -->
         <div class="device-screen aspect-9/19">
-          <img id="phone-screenshot" class="screenshot rounded-xl" src="/images/hero-bg-480x840.jpg" alt="Phone Screenshot" />
+          <picture class="w-full h-full block">
+            <source type="image/avif" srcset="/images/hero-bg-480x840.avif 480w, /images/hero-bg-800x1400.avif 800w" sizes="(max-width: 640px) 100vw, 25vw">
+            <source type="image/webp" srcset="/images/hero-bg-480x840.webp 480w, /images/hero-bg-800x1400.webp 800w" sizes="(max-width: 640px) 100vw, 25vw">
+            <img id="phone-screenshot"
+                 class="screenshot rounded-xl"
+                 src="/images/hero-bg-480x840.jpg"
+                 srcset="/images/hero-bg-480x840.jpg 480w, /images/hero-bg-800x1400.jpg 800w"
+                 sizes="(max-width: 640px) 100vw, 25vw"
+                 alt="Phone Screenshot"
+                 width="480"
+                 height="840"
+                 loading="lazy"
+                 decoding="async" />
+          </picture>
         </div>
       </div>
       <div class="mt-4 flex justify-center">
@@ -95,7 +121,7 @@
 <!-- Trusted By Section -->
 <section class="py-16 px-6 bg-gray-50">
   <div class="max-w-6xl mx-auto text-center">
-    <p class="text-sm uppercase tracking-wide text-gray-500 mb-8">Trusted By</p>
+    <p class="text-sm uppercase tracking-wide text-gray-500 mb-8">Available On</p>
     <div class="flex flex-wrap justify-center gap-10 md:gap-16">
       <!-- Example logos (swap with your own SVGs or PNGs) -->
       <img src="/images/fiverr.svg" alt="Fiverr" 
@@ -111,23 +137,58 @@
 </section>
 
 <!-- Stats + Features Section -->
+<!-- Why Choose Us -->
 <section class="py-20 px-6 bg-white border-t border-gray-100">
   <div class="max-w-6xl mx-auto">
-    <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center mb-16">
-      <div>
-        <p class="text-4xl font-bold text-blue-600">25+</p>
-        <p class="mt-2 text-gray-600">Projects Delivered</p>
-      </div>
-      <div>
-        <p class="text-4xl font-bold text-blue-600">50+</p>
-        <p class="mt-2 text-gray-600">UI Kits Designed</p>
-      </div>
-      <div>
-        <p class="text-4xl font-bold text-blue-600">5k+</p>
-        <p class="mt-2 text-gray-600">Theme Downloads</p>
-      </div>
+
+    <div class="text-center mb-14">
+      <h2 class="text-3xl font-bold text-gray-900">
+        Built for Performance
+      </h2>
+      <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+        Every website is designed to be fast, responsive, secure and easy to
+        use—providing a professional experience on every device.
+      </p>
     </div>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+
+      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
+        <div class="text-4xl mb-4">📱</div>
+        <h3 class="text-xl font-semibold mb-3">Mobile First</h3>
+        <p class="text-gray-600">
+          Designed to look and perform beautifully on phones, tablets and desktops.
+        </p>
+      </div>
+
+      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
+        <div class="text-4xl mb-4">⚡</div>
+        <h3 class="text-xl font-semibold mb-3">Fast Loading</h3>
+        <p class="text-gray-600">
+          Optimised images, clean code and modern development practices for excellent performance.
+        </p>
+      </div>
+
+      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
+        <div class="text-4xl mb-4">🔍</div>
+        <h3 class="text-xl font-semibold mb-3">SEO Ready</h3>
+        <p class="text-gray-600">
+          Built with semantic HTML, accessibility and search engine optimisation in mind.
+        </p>
+      </div>
+
+      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
+        <div class="text-4xl mb-4">🛠️</div>
+        <h3 class="text-xl font-semibold mb-3">Custom Built</h3>
+        <p class="text-gray-600">
+          Tailored solutions developed around your business requirements rather than generic templates.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
 
   </div>
@@ -136,10 +197,10 @@
  <section class="py-16 px-6 bg-gray-50"> 
   <div class="max-w-6xl mx-auto text-center mb-12"> 
     <h2 class="text-3xl font-bold">Products & Templates</h2> 
-    <p class="text-gray-600">Browse my ready-to-use UI kits and templates.</p> 
+    <p class="text-gray-600">Browse my ready-to-use webpages and templates.</p> 
   </div> <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto"> 
-    <% const products = [ { title: 'SaaS Dashboard Kit', file: 'product1', link: '#' },
-     { title: 'Mobile Banking UI', file: 'product2', link: '#' }, { title: 'E-commerce App', file: 'product3', link: '#' } ]; %>
+    <% const products = [ { title: 'Homepages', file: 'product1', link: '#' },
+     { title: 'Landing Pages', file: 'product2', link: '#' }, { title: 'Complete Websites', file: 'product3', link: '#' } ]; %>
       <% products.forEach((p, index) => { %> <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"> 
         <picture> <!-- AVIF --> <source type="image/avif" srcset="/images/<%= p.file %>-400.avif" media="(max-width: 640px)"> 
           <source type="image/avif" srcset="/images/<%= p.file %>-600.avif 600w, /images/<%= p.file %>-800.avif 800w, /images/<%= p.file %>-1200.avif 1200w" sizes="(max-width: 1024px) 50vw, 33vw"> <!-- WebP --> 
@@ -157,39 +218,111 @@
       </div> 
     </section>
 
+  <!-- Service Description Section -->
+  <section class="py-16 px-6 bg-white border-t border-gray-100">
+    <div class="max-w-6xl mx-auto grid gap-10 lg:grid-cols-2 items-center">
+      <div class="overflow-hidden rounded-3xl shadow-lg border border-gray-100">
+        <picture>
+          <source type="image/avif" srcset="/images/product3-1200.avif">
+          <source type="image/webp" srcset="/images/product3-1200.webp">
+          <img
+            src="/images/product3-1200.jpg"
+            alt="Custom website design and development service"
+            class="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+          >
+        </picture>
+      </div>
 
-  <!-- Showcase Section -->
-  <section id="showcase" class="py-16 px-6 bg-white">
-    <h2 class="text-3xl font-bold text-center mb-12">Showcase</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div>
+        <p class="text-sm uppercase tracking-wide text-blue-600 font-semibold mb-3">More Than Templates</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Custom Design and Web Services for Your Brand</h2>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          In addition to ready-made templates, I provide tailored design and development services to help your business stand out.
+          From landing pages to complete websites, every project is built to convert visitors, load quickly, and look polished on every screen size.
+        </p>
 
-      <% const screenshots = [
-        { file: 'screenshot1', alt: 'App Screenshot 1' },
-        { file: 'screenshot2', alt: 'App Screenshot 2' },
-        { file: 'screenshot3', alt: 'App Screenshot 3' }
-      ]; %>
-
-      <% screenshots.forEach((s, index) => { %>
-        <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 transition">
-          <picture>
-            <source type="image/avif" srcset="/images/<%= s.file %>-400.avif" media="(max-width: 640px)">
-            <source type="image/avif" srcset="/images/<%= s.file %>-600.avif 600w, /images/<%= s.file %>-800.avif 800w, /images/<%= s.file %>-1200.avif 1200w" sizes="(max-width: 1024px) 50vw, 33vw">
-
-            <source type="image/webp" srcset="/images/<%= s.file %>-400.webp" media="(max-width: 640px)">
-            <source type="image/webp" srcset="/images/<%= s.file %>-600.webp 600w, /images/<%= s.file %>-800.webp 800w, /images/<%= s.file %>-1200.webp 1200w" sizes="(max-width: 1024px) 50vw, 33vw">
-
-            <img src="/images/<%= s.file %>-1200.jpg"
-                 srcset="/images/<%= s.file %>-400.jpg 400w, /images/<%= s.file %>-600.jpg 600w, /images/<%= s.file %>-800.jpg 800w, /images/<%= s.file %>-1200.jpg 1200w"
-                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                 alt="<%= s.alt %>"
-                 class="w-full h-full object-cover"
-                 loading="<%= index < 2 ? 'eager' : 'lazy' %>"
-                 fetchpriority="<%= index < 2 ? 'high' : 'auto' %>"
-                 style="background: url('/images/<%= s.file %>-400.jpg') center/cover blur(20px);">
-          </picture>
+        <div class="grid gap-4 sm:grid-cols-2 mb-8">
+          <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+            <h3 class="font-semibold text-gray-900 mb-1">Strategic Layouts</h3>
+            <p class="text-sm text-gray-600">Clear page structure designed to guide users toward enquiry and sales.</p>
+          </div>
+          <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+            <h3 class="font-semibold text-gray-900 mb-1">Performance Focused</h3>
+            <p class="text-sm text-gray-600">Lightweight pages with optimised assets for a smooth browsing experience.</p>
+          </div>
+          <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+            <h3 class="font-semibold text-gray-900 mb-1">SEO Friendly Build</h3>
+            <p class="text-sm text-gray-600">Semantic structure and clean markup to improve search visibility.</p>
+          </div>
+          <div class="rounded-2xl bg-gray-50 border border-gray-100 p-4">
+            <h3 class="font-semibold text-gray-900 mb-1">Ongoing Support</h3>
+            <p class="text-sm text-gray-600">Updates, refinements, and improvements after launch when needed.</p>
+          </div>
         </div>
-      <% }) %>
 
+        <a href="/sell-your-LHD" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition">
+          Discuss Your Project
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Conversion Showcase Section -->
+  <section id="showcase" class="py-16 px-6 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900">Recent Work Style and What You Can Expect</h2>
+        <p class="text-gray-600 mt-3 max-w-2xl mx-auto">
+          I combine premium automotive visuals with conversion-focused page structure so your website looks sharp and generates enquiries.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 items-stretch">
+        <div class="rounded-3xl overflow-hidden border border-gray-100 shadow-lg bg-slate-900 text-white flex flex-col">
+          <picture class="block">
+            <source type="image/avif" srcset="/images/hero-bg-1600x900.avif">
+            <source type="image/webp" srcset="/images/hero-bg-1600x900.webp">
+            <img
+              src="/images/hero-bg-1600x900.jpg"
+              alt="Premium automotive visual style"
+              class="w-full h-72 object-cover"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-2">Visual Direction That Matches Your Brand</h3>
+            <p class="text-slate-200 mb-5">
+              Strong imagery builds attention quickly, while clean layout and call-to-action placement turns visitors into qualified leads.
+            </p>
+            <a href="/sell-your-LHD" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Start Your Enquiry</a>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <article class="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+            <img src="/images/product1-1200.jpg" alt="Homepage design sample" class="w-full h-32 object-cover rounded-xl mb-4" loading="lazy" decoding="async">
+            <h3 class="font-semibold text-gray-900 mb-2">Homepage Systems</h3>
+            <p class="text-sm text-gray-600">Clear above-the-fold messaging, trust cues and strong enquiry prompts.</p>
+          </article>
+
+          <article class="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+            <img src="/images/product2-1200.jpg" alt="Landing page sample" class="w-full h-32 object-cover rounded-xl mb-4" loading="lazy" decoding="async">
+            <h3 class="font-semibold text-gray-900 mb-2">Landing Pages</h3>
+            <p class="text-sm text-gray-600">Single-goal pages designed to increase contact form completion.</p>
+          </article>
+
+          <article class="rounded-2xl border border-gray-100 bg-gray-50 p-5 sm:col-span-2">
+            <img src="/images/product3-1200.jpg" alt="Complete website sample" class="w-full h-40 object-cover rounded-xl mb-4" loading="lazy" decoding="async">
+            <h3 class="font-semibold text-gray-900 mb-2">Complete Website Builds</h3>
+            <p class="text-sm text-gray-600 mb-4">Mobile-first, fast-loading and SEO-ready websites tailored to your inventory and enquiry flow.</p>
+            <a href="/sell-your-LHD" class="inline-block px-4 py-2 bg-gray-900 text-white rounded-xl hover:bg-black transition">Discuss Your Project</a>
+          </article>
+        </div>
+      </div>
     </div>
   </section>
 
