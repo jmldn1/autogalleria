@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Professional web design for premium automotive, startup, and personal brands with fast, polished, conversion-focused sites." />
   <title>autogalleria | App Design Showcase</title>
   <link rel="stylesheet" href="/css/tailwind.css" />
   <style>
@@ -38,35 +39,47 @@
              fetchpriority="high">
       </picture>
 
-      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="absolute inset-0 bg-black/55"></div>
     </div>
-    <div class="relative z-10">
-      <h1 class="text-4xl md:text-6xl font-bold mb-4">autogalleria</h1>
-      <p class="text-lg md:text-xl mb-6">Clean UI Designs and Websites</p>
-      <a href="#showcase" class="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow-lg hover:bg-blue-700 transition">View My Work</a>
+    <div class="relative z-10 max-w-3xl">
+      <p class="text-sm uppercase tracking-[0.3em] text-blue-200 mb-4">Web design for premium brands</p>
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">Beautiful websites that feel premium and convert.</h1>
+      <p class="text-lg md:text-xl mb-8 text-gray-100/95 max-w-2xl mx-auto">I create fast, polished digital experiences for automotive businesses, startups, and personal brands that want to stand out.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#showcase" class="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow-lg hover:bg-blue-700 transition">See Recent Work</a>
+        <a href="/sell-your-LHD" class="px-6 py-3 border border-white/70 text-white rounded-2xl hover:bg-white/10 transition">Start Your Project</a>
+      </div>
     </div>
   </section>
 
   <!-- Mockup Section with Overlap -->
-  <main class="max-w-6xl mx-auto px-6 py-16">
-    <header class="mb-8 text-center">
-      <h2 class="text-3xl font-bold">PC + Mobile</h2>
-      <p class="text-sm text-slate-500">Fully responsive SEO friendly super fast web solutions.</p>
+  <main id="showcase" class="max-w-6xl mx-auto px-6 py-16">
+    <header class="mb-10 text-center max-w-3xl mx-auto">
+      <p class="text-sm uppercase tracking-[0.25em] text-blue-600 font-semibold mb-3">Design preview</p>
+      <h2 class="text-3xl font-bold text-gray-900">A polished experience across desktop and mobile</h2>
+      <p class="mt-3 text-slate-600">From first impression to enquiry flow, every screen is designed to feel clear, premium and easy to navigate.</p>
     </header>
 
 <section class="relative flex justify-center items-center">
+  <% 
+    // Change mockupVariant to 'a', 'b', etc. after processing uploads with matching names.
+    // Keep 'hero' to use existing hero-bg files as fallback.
+    const mockupVariant = 'a';
+    const pcMockupBase = mockupVariant === 'hero' ? 'hero-bg' : `pc-mockup-${mockupVariant}`;
+    const phoneMockupBase = mockupVariant === 'hero' ? 'hero-bg' : `phone-mockup-${mockupVariant}`;
+  %>
   <!-- Desktop / Laptop mockup -->
   <figure class="w-full max-w-3xl">
     <div class="relative bg-white rounded-2xl p-6 bezel">
       <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner">
         <div class="bg-black device-screen aspect-video">
           <picture class="w-full h-full block">
-            <source type="image/avif" srcset="/images/hero-bg-480x840.avif 480w, /images/hero-bg-800x1400.avif 800w, /images/hero-bg-1600x900.avif 1600w" sizes="(max-width: 640px) 100vw, 75vw">
-            <source type="image/webp" srcset="/images/hero-bg-480x840.webp 480w, /images/hero-bg-800x1400.webp 800w, /images/hero-bg-1600x900.webp 1600w" sizes="(max-width: 640px) 100vw, 75vw">
+            <source type="image/avif" srcset="/images/<%= pcMockupBase %>-800x450.avif 800w, /images/<%= pcMockupBase %>-1200x675.avif 1200w, /images/<%= pcMockupBase %>-1600x900.avif 1600w" sizes="(max-width: 640px) 100vw, 75vw">
+            <source type="image/webp" srcset="/images/<%= pcMockupBase %>-800x450.webp 800w, /images/<%= pcMockupBase %>-1200x675.webp 1200w, /images/<%= pcMockupBase %>-1600x900.webp 1600w" sizes="(max-width: 640px) 100vw, 75vw">
             <img id="pc-screenshot"
                  class="screenshot"
-                 src="/images/hero-bg-1600x900.jpg"
-                 srcset="/images/hero-bg-480x840.jpg 480w, /images/hero-bg-800x1400.jpg 800w, /images/hero-bg-1600x900.jpg 1600w"
+                 src="/images/<%= pcMockupBase %>-1600x900.jpg"
+                 srcset="/images/<%= pcMockupBase %>-800x450.jpg 800w, /images/<%= pcMockupBase %>-1200x675.jpg 1200w, /images/<%= pcMockupBase %>-1600x900.jpg 1600w"
                  sizes="(max-width: 640px) 100vw, 75vw"
                  alt="PC Screenshot"
                  width="1600"
@@ -95,12 +108,12 @@
         <!-- Phone screen with proper aspect ratio -->
         <div class="device-screen aspect-9/19">
           <picture class="w-full h-full block">
-            <source type="image/avif" srcset="/images/hero-bg-480x840.avif 480w, /images/hero-bg-800x1400.avif 800w" sizes="(max-width: 640px) 100vw, 25vw">
-            <source type="image/webp" srcset="/images/hero-bg-480x840.webp 480w, /images/hero-bg-800x1400.webp 800w" sizes="(max-width: 640px) 100vw, 25vw">
+            <source type="image/avif" srcset="/images/<%= phoneMockupBase %>-480x840.avif 480w, /images/<%= phoneMockupBase %>-800x1400.avif 800w" sizes="(max-width: 640px) 100vw, 25vw">
+            <source type="image/webp" srcset="/images/<%= phoneMockupBase %>-480x840.webp 480w, /images/<%= phoneMockupBase %>-800x1400.webp 800w" sizes="(max-width: 640px) 100vw, 25vw">
             <img id="phone-screenshot"
                  class="screenshot rounded-xl"
-                 src="/images/hero-bg-480x840.jpg"
-                 srcset="/images/hero-bg-480x840.jpg 480w, /images/hero-bg-800x1400.jpg 800w"
+                 src="/images/<%= phoneMockupBase %>-480x840.jpg"
+                 srcset="/images/<%= phoneMockupBase %>-480x840.jpg 480w, /images/<%= phoneMockupBase %>-800x1400.jpg 800w"
                  sizes="(max-width: 640px) 100vw, 25vw"
                  alt="Phone Screenshot"
                  width="480"
@@ -121,17 +134,17 @@
 <!-- Trusted By Section -->
 <section class="py-16 px-6 bg-gray-50">
   <div class="max-w-6xl mx-auto text-center">
-    <p class="text-sm uppercase tracking-wide text-gray-500 mb-8">Available On</p>
+    <p class="text-sm uppercase tracking-[0.25em] text-gray-500 mb-8">Trusted by ambitious brands</p>
     <div class="flex flex-wrap justify-center gap-10 md:gap-16">
       <!-- Example logos (swap with your own SVGs or PNGs) -->
       <img src="/images/fiverr.svg" alt="Fiverr" 
-           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+         class="h-10 transition duration-300">
       <img src="/images/logo-upwork.svg" alt="Upwork" 
-           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+         class="h-10 transition duration-300">
       <img src="/images/logo-envato.svg" alt="Envato" 
-           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+         class="h-10 transition duration-300">
       <img src="/images/logo-dribble.svg" alt="Dribbble" 
-           class="h-10 filter grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100">
+         class="h-10 transition duration-300">
     </div>
   </div>
 </section>
@@ -142,43 +155,61 @@
   <div class="max-w-6xl mx-auto">
 
     <div class="text-center mb-14">
+      <p class="text-sm uppercase tracking-[0.25em] text-blue-600 font-semibold mb-3">Why it works</p>
       <h2 class="text-3xl font-bold text-gray-900">
-        Built for Performance
+        A strong foundation for growth
       </h2>
       <p class="mt-4 max-w-2xl mx-auto text-gray-600">
-        Every website is designed to be fast, responsive, secure and easy to
-        use—providing a professional experience on every device.
+        Every website is built to look sharp, load quickly and guide visitors toward the next step with confidence.
       </p>
     </div>
 
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
 
-      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
-        <div class="text-4xl mb-4">📱</div>
+      <div class="bg-white rounded-2xl p-8 border border-blue-100 hover:shadow-lg transition">
+        <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect>
+            <line x1="11" y1="18" x2="13" y2="18"></line>
+          </svg>
+        </div>
         <h3 class="text-xl font-semibold mb-3">Mobile First</h3>
         <p class="text-gray-600">
           Designed to look and perform beautifully on phones, tablets and desktops.
         </p>
       </div>
 
-      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
-        <div class="text-4xl mb-4">⚡</div>
+      <div class="bg-white rounded-2xl p-8 border border-amber-100 hover:shadow-lg transition">
+        <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="13 2 5 14 12 14 11 22 19 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
         <h3 class="text-xl font-semibold mb-3">Fast Loading</h3>
         <p class="text-gray-600">
           Optimised images, clean code and modern development practices for excellent performance.
         </p>
       </div>
 
-      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
-        <div class="text-4xl mb-4">🔍</div>
+      <div class="bg-white rounded-2xl p-8 border border-emerald-100 hover:shadow-lg transition">
+        <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="6"></circle>
+            <line x1="20" y1="20" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
         <h3 class="text-xl font-semibold mb-3">SEO Ready</h3>
         <p class="text-gray-600">
           Built with semantic HTML, accessibility and search engine optimisation in mind.
         </p>
       </div>
 
-      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-lg transition">
-        <div class="text-4xl mb-4">🛠️</div>
+      <div class="bg-white rounded-2xl p-8 border border-rose-100 hover:shadow-lg transition">
+        <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.7 6.3a4.7 4.7 0 0 0 3.1 6.2l-7.9 7.9a2 2 0 1 1-2.8-2.8l7.9-7.9a4.7 4.7 0 0 0 6.2-3.1l-3.1 1-2.4-2.4z"></path>
+          </svg>
+        </div>
         <h3 class="text-xl font-semibold mb-3">Custom Built</h3>
         <p class="text-gray-600">
           Tailored solutions developed around your business requirements rather than generic templates.
@@ -190,17 +221,15 @@
   </div>
 </section>
 
-
-  </div>
-</section>
-<!-- Products & Templates Section --> 
+<!-- Flexible Options Section --> 
  <section class="py-16 px-6 bg-gray-50"> 
   <div class="max-w-6xl mx-auto text-center mb-12"> 
-    <h2 class="text-3xl font-bold">Products & Templates</h2> 
-    <p class="text-gray-600">Browse my ready-to-use webpages and templates.</p> 
+    <p class="text-sm uppercase tracking-[0.25em] text-blue-600 font-semibold mb-3">Flexible options</p>
+    <h2 class="text-3xl font-bold">Choose a fast launch or a fully tailored build</h2> 
+    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Use a polished template to get online quickly, or commission a custom website with the exact structure and content flow you need.</p> 
   </div> <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto"> 
-    <% const products = [ { title: 'Homepages', file: 'product1', link: '#' },
-     { title: 'Landing Pages', file: 'product2', link: '#' }, { title: 'Complete Websites', file: 'product3', link: '#' } ]; %>
+    <% const products = [ { title: 'Launch-ready homepages', file: 'product1', link: '#', description: 'A strong first impression with clear messaging and a fast setup.' },
+     { title: 'Conversion-focused landing pages', file: 'product2', link: '#', description: 'Single-page solutions designed to guide visitors toward one clear action.' }, { title: 'Custom full-site builds', file: 'product3', link: '#', description: 'Tailored layouts, content structure and user flow for larger projects.' } ]; %>
       <% products.forEach((p, index) => { %> <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden"> 
         <picture> <!-- AVIF --> <source type="image/avif" srcset="/images/<%= p.file %>-400.avif" media="(max-width: 640px)"> 
           <source type="image/avif" srcset="/images/<%= p.file %>-600.avif 600w, /images/<%= p.file %>-800.avif 800w, /images/<%= p.file %>-1200.avif 1200w" sizes="(max-width: 1024px) 50vw, 33vw"> <!-- WebP --> 
@@ -211,8 +240,8 @@
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="<%= p.title %>" 
           class="w-full h-48 object-cover" loading="<%= index < 2 ? 'eager' : 'lazy' %>" fetchpriority="<%= index < 2 ? 'high' : 'auto' %>" 
           style="background: url('/images/<%= p.file %>-400.jpg') center/cover blur(20px);"> 
-        </picture> <div class="p-6"> <h3 class="font-semibold text-lg mb-2"><%= p.title %></h3> 
-          <a href="<%= p.link %>" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"> View Details </a> 
+        </picture> <div class="p-6"> <h3 class="font-semibold text-lg mb-2"><%= p.title %></h3> <p class="text-sm text-gray-600"><%= p.description %></p>
+          <a href="<%= p.link %>" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"> View Details </a> 
         </div> 
         </div> <% }) %> 
       </div> 
@@ -315,26 +344,46 @@
             <p class="text-sm text-gray-600">Single-goal pages designed to increase contact form completion.</p>
           </article>
 
-          <article class="rounded-2xl border border-gray-100 bg-gray-50 p-5 sm:col-span-2">
-            <img src="/images/product3-1200.jpg" alt="Complete website sample" class="w-full h-40 object-cover rounded-xl mb-4" loading="lazy" decoding="async">
+          <article class="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+            <img src="/images/product3-1200.jpg" alt="Complete website sample" class="w-full h-32 object-cover rounded-xl mb-4" loading="lazy" decoding="async">
             <h3 class="font-semibold text-gray-900 mb-2">Complete Website Builds</h3>
             <p class="text-sm text-gray-600 mb-4">Mobile-first, fast-loading and SEO-ready websites tailored to your inventory and enquiry flow.</p>
             <a href="/sell-your-LHD" class="inline-block px-4 py-2 bg-gray-900 text-white rounded-xl hover:bg-black transition">Discuss Your Project</a>
+          </article>
+
+          <article class="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-5">
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-indigo-200 bg-white text-indigo-700 mb-4">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v3"></path>
+                <path d="M12 18v3"></path>
+                <path d="M3 12h3"></path>
+                <path d="M18 12h3"></path>
+                <path d="M6.6 6.6l2.1 2.1"></path>
+                <path d="M15.3 15.3l2.1 2.1"></path>
+                <path d="M17.4 6.6l-2.1 2.1"></path>
+                <path d="M8.7 15.3l-2.1 2.1"></path>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-2">AI-Assisted Admin Copy</h3>
+            <p class="text-sm text-gray-600">Faster content workflows with assisted text generation for listings, blog drafts and landing page sections.</p>
           </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
+  <!-- Closing CTA -->
   <section class="py-16 px-6 bg-gray-50 text-center">
-    <h2 class="text-3xl font-bold mb-6">About Me</h2>
-    <p class="max-w-2xl mx-auto text-lg mb-6">
-      I design sleek, modern app interfaces that focus on user experience. My work is available on Fiverr and ThemeForest, helping businesses and creators showcase their apps in the best light.
-    </p>
-    <div class="flex justify-center gap-4">
-      <a href="https://www.fiverr.com/sellers/autogalleria" target="_blank" class="px-6 py-3 bg-green-600 text-white rounded-2xl shadow hover:bg-green-700 transition">Hire Me on Fiverr</a>
-      <a href="https://themeforest.net/user/autogalleria" target="_blank" class="px-6 py-3 bg-gray-800 text-white rounded-2xl shadow hover:bg-gray-900 transition">View on ThemeForest</a>
+    <div class="max-w-3xl mx-auto rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+      <p class="text-sm uppercase tracking-[0.25em] text-blue-600 font-semibold mb-3">Ready when you are</p>
+      <h2 class="text-3xl font-bold mb-6 text-gray-900">Ready to make your next website feel as sharp as your brand?</h2>
+      <p class="max-w-2xl mx-auto text-lg mb-8 text-gray-600">
+        I create polished, high-converting digital experiences for businesses that want more than a basic template.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/sell-your-LHD" class="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition">Book a Discovery Call</a>
+        <a href="https://www.fiverr.com/sellers/autogalleria" target="_blank" class="px-6 py-3 bg-gray-800 text-white rounded-2xl shadow hover:bg-gray-900 transition">See Fiverr Profile</a>
+      </div>
     </div>
   </section>
 
