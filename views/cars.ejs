@@ -1,3 +1,12 @@
+<%
+  const heroCar = cars[0];
+  const heroSources = heroCar?.image?.sources || {};
+  const heroAvifSrcset = heroSources.avif?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const heroWebpSrcset = heroSources.webp?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const heroJpgSrcset = heroSources.jpg?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const heroFallbackSrc = heroCar?.image?.fallback || heroSources.jpg?.[0]?.url || heroSources.webp?.[0]?.url || heroSources.avif?.[0]?.url;
+  const heroPreloadSrcset = heroAvifSrcset || heroWebpSrcset || heroJpgSrcset;
+%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,19 +18,23 @@
       content="Browse our current stock of premium used cars. Every listing includes detailed information and high-quality responsive images."
     />
     <link href="/css/tailwind.css" rel="stylesheet" />
+    <% if (heroPreloadSrcset) { %>
+      <link
+        rel="preload"
+        as="image"
+        href="<%= heroFallbackSrc %>"
+        imagesrcset="<%= heroPreloadSrcset %>"
+        imagesizes="100vw"
+        fetchpriority="high"
+      />
+    <% } %>
   </head>
   <body class="bg-slate-50 text-slate-900">
     <%- include('partials/navbar') %>
 
-    <main class="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-24 sm:px-6 lg:px-8">
-      <section class="relative mb-10 overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-900 text-white shadow-xl">
+    <main class="flex min-h-screen flex-col">
+      <section class="relative mb-10 overflow-hidden border-b border-slate-200 bg-slate-900 text-white shadow-none">
         <div class="absolute inset-0">
-          <% const heroCar = cars[0]; %>
-          <% const heroSources = heroCar?.image?.sources || {}; %>
-          <% const heroAvifSrcset = heroSources.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const heroWebpSrcset = heroSources.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const heroJpgSrcset = heroSources.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const heroFallbackSrc = heroCar?.image?.fallback || heroSources.jpg?.[0]?.url || heroSources.webp?.[0]?.url || heroSources.avif?.[0]?.url; %>
           <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrcset) { %>
             <picture>
               <% if (heroAvifSrcset) { %>
@@ -37,13 +50,15 @@
                 alt="<%= heroCar?.image?.alt || 'Featured vehicle' %>"
                 class="h-full w-full object-cover"
                 loading="eager"
+                fetchpriority="high"
+                decoding="async"
               />
             </picture>
           <% } %>
           <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/75 to-slate-900/20"></div>
         </div>
 
-        <div class="relative flex flex-col gap-4 px-6 py-16 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:py-20">
+        <div class="relative mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-20 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:py-24">
           <div class="max-w-2xl">
             <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Available now</p>
             <h1 class="mt-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Our current car stock</h1>
@@ -61,6 +76,7 @@
         </div>
       </section>
 
+      <div class="mx-auto flex w-full max-w-7xl flex-col px-4 py-8 sm:px-6 lg:px-8">
       <% if (!cars.length) { %>
         <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
           <h2 class="text-xl font-semibold">No cars available right now</h2>
@@ -133,6 +149,7 @@
           <% }) %>
         </section>
       <% } %>
+      </div>
     </main>
 
     <%- include('partials/footer') %>
