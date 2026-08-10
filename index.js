@@ -13,6 +13,7 @@ const Landing = require("./models/Landing");
 const Car = require("./models/Car");   
 const Blog = require("./models/Blog");
 const PageView = require("./models/PageView");
+const Lead = require("./models/Lead");
 
 // Routes
 const adminRoutes = require("./routes/admin");
@@ -94,6 +95,33 @@ function normalizeWhatsAppNumber(value) {
 }
 
 const adminWhatsAppNumber = normalizeWhatsAppNumber(process.env.ADMIN_WHATSAPP);
+
+const contactRateWindowMs = 15 * 60 * 1000;
+const contactRateMaxAttempts = 5;
+const contactRateStore = new Map();
+const hasGmailMailConfig = Boolean(
+  process.env.GMAIL_USER && process.env.GMAIL_PASS && process.env.GMAIL_TO
+);
+
+if (!hasGmailMailConfig) {
+  console.warn("Contact email notifications are disabled. Set GMAIL_USER, GMAIL_PASS, and GMAIL_TO to enable them.");
+}
+
+function isContactRateLimited(ip) {
+  const now = Date.now();
+  const key = ip || "unknown";
+  const existing = contactRateStore.get(key) || [];
+  const recent = existing.filter((ts) => now - ts < contactRateWindowMs);
+
+  if (recent.length >= contactRateMaxAttempts) {
+    contactRateStore.set(key, recent);
+    return true;
+  }
+
+  recent.push(now);
+  contactRateStore.set(key, recent);
+  return false;
+}
 
 if (!adminWhatsAppNumber) {
   console.warn('ADMIN_WHATSAPP is missing or invalid. WhatsApp chat links will be hidden.');
@@ -187,6 +215,78 @@ app.get("/logout", (req, res) => {
 
 // Homepage
 app.get("/", (req, res) => res.render("index", { title: "Welcome to Auto Galleria" }));
+
+// Contact page
+app.get("/contact", (req, res) => {
+  res.render("contact", {
+    title: "Contact",
+    sent: req.query.sent === "1",
+    error: req.query.error === "1",
+    rateLimited: req.query.rate === "1",
+  });
+});
+
+app.post("/contact", async (req, res) => {
+  try {
+    const { name, email, phone, message, companyWebsite } = req.body;
+
+    // Honeypot field: real users never fill this, bots often do.
+    if (companyWebsite && companyWebsite.trim()) {
+      return res.redirect("/contact?sent=1");
+    }
+
+    if (isContactRateLimited(req.ip)) {
+      return res.redirect("/contact?rate=1");
+    }
+
+    if (!name || !name.trim() || !email || !email.trim() || !message || !message.trim()) {
+      return res.redirect("/contact?error=1");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.redirect("/contact?error=1");
+    }
+
+    const lead = new Lead({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone ? phone.trim() : undefined,
+      message: message.trim(),
+      car: "Website Enquiry",
+    });
+
+    await lead.save();
+
+    if (hasGmailMailConfig) {
+      const nodemailer = require("nodemailer");
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
+      });
+
+      await transporter.sendMail({
+        from: `"Auto Galleria Enquiries" <${process.env.GMAIL_USER}>`,
+        to: process.env.GMAIL_TO,
+        replyTo: `"${name.trim()}" <${email.trim()}>`,
+        subject: "New Website Enquiry",
+        html: `
+          <h2 style="margin-bottom:8px">New Website Enquiry</h2>
+          <hr style="margin:16px 0">
+          <p><strong>Name:</strong> ${name.trim()}</p>
+          <p><strong>Email:</strong> ${email.trim()}</p>
+          ${phone ? `<p><strong>Phone:</strong> ${phone.trim()}</p>` : ""}
+          <p><strong>Message:</strong> ${message.trim()}</p>
+        `,
+      });
+    }
+
+    return res.redirect("/contact?sent=1");
+  } catch (err) {
+    console.error("Contact form error:", err);
+    return res.redirect("/contact?error=1");
+  }
+});
 
 // SEO-friendly Landing page route
 app.get("/sell-your-:slug", async (req, res) => {

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Auto Galleria for premium web design, landing page builds, and complete website projects." />
+  <title>Contact | Auto Galleria</title>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-linear-to-br from-slate-900 via-blue-900 to-slate-800"></div>
+    <div class="absolute -top-24 -left-16 h-64 w-64 rounded-full bg-blue-500/30 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6 py-20 md:py-24 text-white">
+      <p class="text-xs uppercase tracking-[0.3em] text-blue-200 mb-4">Contact</p>
+      <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-3xl">Let's plan a website that looks premium and performs.</h1>
+      <p class="mt-5 text-lg text-slate-200 max-w-2xl">Tell me what you need and I will get back to you with a practical next step for your project.</p>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-6 py-14 md:py-16">
+    <div class="grid gap-10 lg:grid-cols-5">
+      <section class="lg:col-span-3 rounded-3xl border border-slate-200 bg-white p-6 md:p-8 shadow-sm">
+        <% if (sent) { %>
+          <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+            Thanks, your message has been sent. We will be in touch shortly.
+          </div>
+        <% } %>
+
+        <% if (error) { %>
+          <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800">
+            Please check your details and try again.
+          </div>
+        <% } %>
+
+        <% if (rateLimited) { %>
+          <div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800">
+            Too many attempts in a short time. Please wait a few minutes and try again.
+          </div>
+        <% } %>
+
+        <h2 class="text-2xl font-semibold text-slate-900">Project Enquiry</h2>
+        <p class="mt-2 text-slate-600">Share a little context so we can suggest the best page structure and delivery plan.</p>
+
+        <form class="mt-8 space-y-5" action="/contact" method="POST">
+          <div class="hidden" aria-hidden="true">
+            <label for="companyWebsite">Company website</label>
+            <input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div>
+            <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Name</label>
+            <input id="name" name="name" type="text" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="Your full name" />
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
+              <input id="email" name="email" type="email" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="you@example.com" />
+            </div>
+
+            <div>
+              <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">Phone (optional)</label>
+              <input id="phone" name="phone" type="text" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="+44 ..." />
+            </div>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-slate-700 mb-2">Project details</label>
+            <textarea id="message" name="message" rows="6" required class="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="Tell us about your goals, timeline, and the type of site you need."></textarea>
+          </div>
+
+          <button type="submit" class="inline-flex items-center rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">Send Enquiry</button>
+        </form>
+      </section>
+
+      <aside class="lg:col-span-2 space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-slate-900">What happens next</h3>
+          <ol class="mt-4 space-y-3 text-sm text-slate-600 list-decimal list-inside">
+            <li>We review your requirements and priorities.</li>
+            <li>You get a clear recommendation and scope.</li>
+            <li>We agree timeline and begin the build.</li>
+          </ol>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-slate-900">Prefer marketplace channels?</h3>
+          <div class="mt-4 flex flex-col gap-3">
+            <a href="https://www.fiverr.com/sellers/autogalleria" target="_blank" rel="noopener" class="rounded-xl bg-emerald-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-emerald-700">Fiverr Profile</a>
+            <a href="https://themeforest.net/user/autogalleria" target="_blank" rel="noopener" class="rounded-xl bg-slate-800 px-4 py-3 text-center font-semibold text-white transition hover:bg-slate-900">ThemeForest Profile</a>
+          </div>
+        </div>
+
+        <a href="/" class="inline-flex text-sm font-medium text-blue-700 hover:text-blue-900 transition">← Back to homepage</a>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>
