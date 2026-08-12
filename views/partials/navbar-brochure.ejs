@@ -1,0 +1,142 @@
+<nav id="brochure-nav"
+     role="navigation"
+     aria-label="Brochure Navigation"
+  class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.94)_55%,rgba(30,41,59,0.88)_100%)] border-b border-white/10 shadow-[0_8px_30px_rgba(2,6,23,0.25)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+    <a href="/" class="text-white text-lg font-semibold tracking-wide" aria-label="Auto Galleria brochure home">
+      Auto Galleria
+    </a>
+
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-100">
+      <a href="/" class="brochure-nav-link text-white hover:text-blue-300 transition-colors duration-300">Home</a>
+      <a href="#showcase" class="brochure-nav-link text-white hover:text-blue-300 transition-colors duration-300">Showcase</a>
+      <a href="/cars" class="brochure-nav-link text-white hover:text-blue-300 transition-colors duration-300">Demo Cars</a>
+      <a href="/blog" class="brochure-nav-link text-white hover:text-blue-300 transition-colors duration-300">Demo Blog</a>
+      <a href="/contact" class="brochure-nav-link text-white hover:text-blue-300 transition-colors duration-300">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/contact"
+         class="hidden sm:inline-flex bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
+        Start Project
+      </a>
+
+      <button id="brochure-menu-btn"
+              class="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-lg hover:bg-white/10 transition"
+              aria-label="Toggle brochure menu"
+              aria-expanded="false"
+              aria-controls="brochure-mobile-menu">
+        <span id="brochure-bar-1" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+        <span id="brochure-bar-2" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+        <span id="brochure-bar-3" class="block w-5 h-0.5 bg-white transition-all duration-300 origin-center"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="brochure-mobile-menu" class="md:hidden hidden border-t border-white/10 bg-slate-900/95">
+    <div class="px-4 py-4 flex flex-col gap-1 text-sm font-medium text-white">
+      <a href="/" class="brochure-mobile-link px-3 py-2.5 rounded-lg hover:bg-white/10 transition">Home</a>
+      <a href="#showcase" class="brochure-mobile-link px-3 py-2.5 rounded-lg hover:bg-white/10 transition">Showcase</a>
+      <a href="/cars" class="brochure-mobile-link px-3 py-2.5 rounded-lg hover:bg-white/10 transition">Demo Cars</a>
+      <a href="/blog" class="brochure-mobile-link px-3 py-2.5 rounded-lg hover:bg-white/10 transition">Demo Blog</a>
+      <a href="/contact" class="brochure-mobile-link px-3 py-2.5 rounded-lg hover:bg-white/10 transition">Contact</a>
+      <a href="/contact" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold px-4 py-2.5 rounded-lg transition">
+        Start Project
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+(function () {
+  const nav = document.getElementById('brochure-nav');
+  const menuBtn = document.getElementById('brochure-menu-btn');
+  const mobileMenu = document.getElementById('brochure-mobile-menu');
+  const bar1 = document.getElementById('brochure-bar-1');
+  const bar2 = document.getElementById('brochure-bar-2');
+  const bar3 = document.getElementById('brochure-bar-3');
+  const navLinks = document.querySelectorAll('.brochure-nav-link');
+  const mobileLinks = document.querySelectorAll('.brochure-mobile-link');
+
+  if (!nav || !menuBtn || !mobileMenu || !bar1 || !bar2 || !bar3) return;
+
+  let menuOpen = false;
+  let lastScrollY = window.scrollY;
+  let hidden = false;
+  let ticking = false;
+
+  nav.style.transition = 'background-image 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease, transform 0.3s ease';
+
+  function updateGlass() {
+    const maxScroll = 120;
+    const scrollY = Math.min(window.scrollY, maxScroll);
+    const opacity = Math.min(0.95, 0.8 + (scrollY / maxScroll) * 0.15);
+
+    nav.style.backgroundColor = `rgba(2, 6, 23, ${opacity})`;
+    nav.style.backgroundImage = `linear-gradient(180deg, rgba(2, 6, 23, ${0.98 - scrollY / maxScroll * 0.05}) 0%, rgba(15, 23, 42, ${0.94 - scrollY / maxScroll * 0.03}) 55%, rgba(30, 41, 59, ${0.88 - scrollY / maxScroll * 0.02}) 100%)`;
+    nav.style.backdropFilter = `blur(${Math.min(16, 6 + scrollY / maxScroll * 10)}px)`;
+    nav.style.borderColor = 'rgba(255,255,255,0.12)';
+
+    navLinks.forEach((link) => {
+      link.classList.remove('text-gray-700');
+      link.classList.add('text-white');
+    });
+  }
+
+  function handleScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (!menuOpen) {
+          const y = window.scrollY;
+
+          if (y < 80) {
+            nav.style.transform = 'translateY(0)';
+            hidden = false;
+          } else if (y > lastScrollY && !hidden) {
+            nav.style.transform = 'translateY(-100%)';
+            hidden = true;
+          } else if (y < lastScrollY && hidden) {
+            nav.style.transform = 'translateY(0)';
+            hidden = false;
+          }
+
+          lastScrollY = y;
+        }
+
+        updateGlass();
+        ticking = false;
+      });
+
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  menuBtn.addEventListener('click', function () {
+    menuOpen = !menuOpen;
+    menuBtn.setAttribute('aria-expanded', String(menuOpen));
+    mobileMenu.classList.toggle('hidden', !menuOpen);
+
+    bar1.style.transform = menuOpen ? 'translateY(8px) rotate(45deg)' : '';
+    bar2.style.opacity = menuOpen ? '0' : '';
+    bar3.style.transform = menuOpen ? 'translateY(-8px) rotate(-45deg)' : '';
+
+    nav.style.transform = 'translateY(0)';
+    updateGlass();
+  });
+
+  mobileLinks.forEach((link) => {
+    link.addEventListener('click', function () {
+      menuOpen = false;
+      menuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.add('hidden');
+      bar1.style.transform = '';
+      bar2.style.opacity = '';
+      bar3.style.transform = '';
+    });
+  });
+
+  updateGlass();
+})();
+</script>

@@ -1,0 +1,48 @@
+<footer class="bg-slate-900 text-slate-200 mt-16 border-t border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="grid gap-10 md:grid-cols-3 text-sm">
+      <div>
+        <h3 class="text-lg font-semibold text-white mb-3">Auto Galleria</h3>
+        <p class="text-slate-300 leading-relaxed">
+          Brochure pages for web design services, product showcases, and conversion-focused website builds.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-semibold text-white mb-4 tracking-wide">Brochure</h4>
+        <ul class="space-y-2">
+          <li><a href="/" class="text-slate-300 hover:text-white transition">Home</a></li>
+          <li><a href="/#showcase" class="text-slate-300 hover:text-white transition">Showcase</a></li>
+          <li><a href="/contact" class="text-slate-300 hover:text-white transition">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-semibold text-white mb-4 tracking-wide">Demo Pages</h4>
+        <ul class="space-y-2 text-slate-300">
+          <li><a href="/cars" class="hover:text-white transition">Cars Demo</a></li>
+          <li><a href="/blog" class="hover:text-white transition">Blog Demo</a></li>
+          <li class="pt-2">
+            <a href="/contact" class="inline-block text-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition">
+              Start a project
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-300">
+      <p>© <span id="brochure-footer-year"></span> Auto Galleria. All rights reserved.</p>
+      <div class="flex gap-5 mt-3 sm:mt-0">
+        <a href="/privacy" class="hover:text-white transition">Privacy</a>
+        <a href="/terms" class="hover:text-white transition">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('brochure-footer-year').textContent = new Date().getFullYear();
+</script>

@@ -20,8 +20,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
+  <%- include('partials/navbar-brochure') %>
+
   <!-- Hero Section with Responsive Background Image -->
-  <section class="relative min-h-screen flex flex-col justify-center items-center text-center text-white p-6">
+  <section class="relative min-h-screen pt-14 md:pt-16 flex flex-col justify-center items-center text-center text-white p-6">
     <div class="absolute inset-0">
       <picture>
         <source srcset="/images/hero-bg-480x840.avif" type="image/avif" media="(max-width: 640px)">
@@ -312,24 +314,7 @@
     </div>
   </section>
 
-<!-- Footer with Landing Page Links -->
-<footer class="bg-white border-t border-gray-100 text-center py-8">
-  <!-- Landing Pages Links -->
-  <div class="mb-6">
-    <p class="text-sm text-gray-500 mb-2">Explore Our Services:</p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="/contact" class="text-blue-600 hover:text-blue-800 text-sm transition">Contact</a>
-      <!-- Add more landing pages here -->
-    </div>
-  </div>
-
-  <!-- Standard Footer Text -->
-  <p class="text-sm text-gray-500">&copy; <span id="year"></span> Auto Galleria. All rights reserved.</p>
-</footer>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+<%- include('partials/footer-brochure') %>
 
 
 </body>
