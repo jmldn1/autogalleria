@@ -16,9 +16,7 @@
     <meta property="og:image" content="<%= ogImage %>">
     <meta property="og:image:alt" content="<%= landing.heroAltText || landing.make + ' ' + landing.model %>">
   <% } %>
-  <link rel="preload" href="/css/tailwind.css" as="style">
-  <link href="/css/tailwind.css" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="/css/tailwind.css"></noscript>
+  <link rel="stylesheet" href="/css/tailwind.css">
   
   <script type="application/ld+json">
 {
@@ -835,7 +833,13 @@ if (continueBtn) {
           const sources = item.imageManifest && item.imageManifest.sources;
           const avifSrcset = sources && sources.avif ? sources.avif.map(img => `${img.url} ${img.w}w`).join(', ') : '';
           const webpSrcset = sources && sources.webp ? sources.webp.map(img => `${img.url} ${img.w}w`).join(', ') : '';
-          const fallbackUrl = sources && sources.webp && sources.webp[0] ? sources.webp[0].url : '/images/default-car.webp';
+          const fallbackImage =
+            (sources && sources.webp && sources.webp[0]) ||
+            (sources && sources.jpg && sources.jpg[0]) ||
+            null;
+          const fallbackUrl = fallbackImage ? fallbackImage.url : '/images/default-car.webp';
+          const fallbackWidth = fallbackImage && fallbackImage.w ? fallbackImage.w : 300;
+          const fallbackHeight = fallbackImage && fallbackImage.h ? fallbackImage.h : 225;
         %>
         <article class="w-full bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden">
           <a href="/sell-your-<%= item.slug %>" class="block">
@@ -846,7 +850,7 @@ if (continueBtn) {
               <% if (webpSrcset) { %>
                 <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw">
               <% } %>
-              <img src="<%= fallbackUrl %>" alt="Sell a <%= item.make %> <%= item.model %>" class="w-full h-48 object-cover" loading="lazy">
+              <img src="<%= fallbackUrl %>" alt="Sell a <%= item.make %> <%= item.model %>" width="<%= fallbackWidth %>" height="<%= fallbackHeight %>" class="w-full h-48 object-cover" loading="lazy">
             </picture>
           </a>
           <div class="p-6">

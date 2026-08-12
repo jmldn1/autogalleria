@@ -1,0 +1,72 @@
+<div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+  <div id="chat-bot-panel" class="hidden w-80 max-w-[calc(100vw-2rem)] rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-slate-900">Auto Galleria Assistant</p>
+        <p class="text-sm text-slate-600">Need a website idea, a quote, or help shaping your next project?</p>
+      </div>
+      <button type="button" id="chat-bot-close" class="rounded-full p-1 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Close chat assistant">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mt-4 rounded-2xl bg-slate-50 p-3">
+      <div class="rounded-2xl bg-white p-3 shadow-sm">
+        <p class="text-sm font-semibold text-slate-900">Hi, I’m here to help.</p>
+        <p class="mt-1 text-sm text-slate-600">I can guide you through premium web design, landing pages, and full site builds.</p>
+      </div>
+      <div class="mt-3 space-y-2 text-sm text-slate-600">
+        <div class="rounded-xl border border-slate-200 bg-white p-2">• Fast, polished designs for automotive and modern brands</div>
+        <div class="rounded-xl border border-slate-200 bg-white p-2">• Clear conversion-focused layouts and enquiry flow</div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+      <a href="/sell-your-LHD" class="flex-1 rounded-xl bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-blue-700">Start a project</a>
+      <a href="#showcase" class="flex-1 rounded-xl border border-slate-200 px-4 py-2 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50">View work</a>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    id="chat-bot-toggle"
+    aria-label="Open chat assistant"
+    aria-expanded="false"
+    class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-sky-600 to-blue-700 text-white shadow-lg transition hover:scale-105 hover:shadow-xl"
+  >
+    <%- include('partials/chatBubble', { size: 'w-7 h-7', className: 'text-white' }) %>
+  </button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var toggle = document.getElementById('chat-bot-toggle');
+    var panel = document.getElementById('chat-bot-panel');
+    var close = document.getElementById('chat-bot-close');
+
+    if (!toggle || !panel) return;
+
+    function setOpen(open) {
+      panel.classList.toggle('hidden', !open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(panel.classList.contains('hidden'));
+    });
+
+    if (close) {
+      close.addEventListener('click', function () {
+        setOpen(false);
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      if (!panel.classList.contains('hidden') && !panel.contains(event.target) && event.target !== toggle) {
+        setOpen(false);
+      }
+    });
+  });
+</script>

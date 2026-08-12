@@ -5,6 +5,15 @@
 
 <%
   const heroAlt = heroImage.alt || (typeof landing !== 'undefined' && landing ? `Photo of ${landing.make} ${landing.model}` : '');
+  const heroFallback =
+    (heroImage.sources && heroImage.sources.jpg && heroImage.sources.jpg[2]) ||
+    (heroImage.sources && heroImage.sources.jpg && heroImage.sources.jpg[0]) ||
+    (heroImage.sources && heroImage.sources.webp && heroImage.sources.webp[0]) ||
+    (heroImage.sources && heroImage.sources.avif && heroImage.sources.avif[0]) ||
+    null;
+  const heroSrc = heroFallback ? heroFallback.url : heroImage.base;
+  const heroWidth = heroFallback && heroFallback.w ? heroFallback.w : 1600;
+  const heroHeight = heroFallback && heroFallback.h ? heroFallback.h : 900;
 %>
 <picture class="absolute inset-0 z-0">
   <!-- AVIF sources -->
@@ -25,9 +34,11 @@
 
   <!-- Fallback JPG -->
   <img
-    src="<%= heroImage.sources.jpg[2].url %>" 
+    src="<%= heroSrc %>"
     srcset="<%= heroImage.sources.jpg.map(img => `${img.url} ${img.w}w`).join(', ') %>"
     sizes="(max-width: 640px) 480px, (max-width: 1024px) 800px, (max-width: 1440px) 1200px, (max-width: 1920px) 1600px, 2400px"
+    width="<%= heroWidth %>"
+    height="<%= heroHeight %>"
     alt="<%= heroAlt %>"
     aria-hidden="<%= heroAlt ? 'false' : 'true' %>"
     class="absolute inset-0 w-full h-full object-cover"
