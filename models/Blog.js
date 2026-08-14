@@ -5,7 +5,6 @@ const blogSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true }, // SEO-friendly URL
   excerpt: { type: String },
   content: { type: String, required: true },
-  layout: { type: String, enum: ["feature", "standard", "magazine"], default: "feature" },
   coverImage: { type: String }, // URL or file path
   imageManifest: { type: Object },
   placeholder: { type: String }

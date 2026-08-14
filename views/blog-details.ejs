@@ -9,8 +9,6 @@
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
 <%
-  const layout = blog.layout || 'feature';
-  const isMagazine = layout === 'magazine';
   const publishedDate = blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'long',
@@ -23,159 +21,59 @@
   const heroJpgSrcset = heroSources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', ');
   const heroJpgSrc = heroSources?.jpg?.[heroSources?.jpg?.length - 1]?.url || blog.coverImage;
 %>
-<body class="<%= isMagazine ? 'bg-stone-50' : 'bg-linear-to-b from-slate-950 via-slate-900 to-slate-50' %> text-gray-800 antialiased">
+<body class="bg-slate-50 text-slate-800 antialiased">
 
   <%- include('partials/navbar') %>
 
-  <% if (layout === 'standard') { %>
-    <header class="border-b border-white/10 bg-slate-950 text-white">
-      <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.3fr_0.7fr] lg:px-8 lg:py-20">
-        <div class="flex flex-col justify-center">
-          <div class="mb-4 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-400">
-            <span>Blog</span>
-            <span class="h-1 w-1 rounded-full bg-slate-600"></span>
-            <span><%= publishedDate %></span>
-            <span class="h-1 w-1 rounded-full bg-slate-600"></span>
-            <span><%= readingTime %> min read</span>
-          </div>
-          <h1 class="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"><%= blog.title %></h1>
-          <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300"><%= blog.excerpt %></p>
+  <main class="pb-16 pt-14 sm:pt-16">
+    <header class="border-b border-slate-200 bg-white">
+      <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <a href="/blog" class="text-sm font-medium text-blue-700 transition hover:text-blue-900">Back to blog</a>
+        <div class="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Auto Galleria Blog</div>
+        <h1 class="mt-3 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl"><%= blog.title %></h1>
+        <% if (blog.excerpt) { %>
+          <p class="mt-5 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl"><%= blog.excerpt %></p>
+        <% } %>
+        <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
+          <span><%= publishedDate %></span>
+          <span aria-hidden="true" class="text-slate-300">|</span>
+          <span><%= readingTime %> min read</span>
         </div>
-        <div class="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30">
+      </div>
+    </header>
+
+    <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc || blog.coverImage) { %>
+      <div class="mx-auto max-w-6xl px-4 pt-8 sm:px-6 lg:px-8">
+        <div class="aspect-video overflow-hidden rounded-lg bg-slate-200">
           <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc) { %>
             <picture>
               <% if (heroAvifSrcset) { %>
-                <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="(max-width: 1024px) 100vw, 40vw">
+                <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="(max-width: 768px) 100vw, 1152px">
               <% } %>
               <% if (heroWebpSrcset) { %>
-                <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="(max-width: 1024px) 100vw, 40vw">
+                <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="(max-width: 768px) 100vw, 1152px">
               <% } %>
-              <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="(max-width: 1024px) 100vw, 40vw" alt="<%= blog.title %>" class="h-full w-full object-cover" />
+              <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="(max-width: 768px) 100vw, 1152px" alt="<%= blog.title %>" class="h-full w-full object-cover" />
             </picture>
-          <% } else if (blog.coverImage) { %>
-            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="h-full w-full object-cover" />
           <% } else { %>
-            <div class="flex min-h-80 items-center justify-center bg-slate-800 text-slate-300">No cover image</div>
+            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="h-full w-full object-cover" />
           <% } %>
         </div>
       </div>
-    </header>
-  <% } else if (layout === 'magazine') { %>
-    <header class="border-b border-stone-200 bg-stone-100 text-stone-900">
-      <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div class="max-w-3xl">
-          <div class="mb-4 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-stone-500">
-            <span>Magazine</span>
-            <span class="h-1 w-1 rounded-full bg-stone-400"></span>
-            <span><%= publishedDate %></span>
-            <span class="h-1 w-1 rounded-full bg-stone-400"></span>
-            <span><%= readingTime %> min read</span>
-          </div>
-          <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl"><%= blog.title %></h1>
-          <p class="mt-5 max-w-2xl text-lg leading-8 text-stone-700"><%= blog.excerpt %></p>
-        </div>
+    <% } %>
+
+    <article class="mx-auto max-w-3xl px-4 pb-4 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+      <div class="prose prose-lg max-w-none prose-headings:scroll-mt-28 prose-headings:font-semibold prose-a:text-blue-700 hover:prose-a:underline prose-img:rounded-lg prose-p:leading-8 prose-li:leading-8">
+        <%- blog.content %>
       </div>
-    </header>
-  <% } else { %>
-    <header class="relative overflow-hidden border-b border-white/10 bg-slate-950 text-white">
-      <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc) { %>
-        <picture class="absolute inset-0 h-full w-full">
-          <% if (heroAvifSrcset) { %>
-            <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="100vw">
-          <% } %>
-          <% if (heroWebpSrcset) { %>
-            <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="100vw">
-          <% } %>
-          <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="100vw" alt="<%= blog.title %>" class="h-full w-full object-cover opacity-25" />
-        </picture>
-      <% } else if (blog.coverImage) { %>
-        <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="absolute inset-0 h-full w-full object-cover opacity-25" />
-      <% } %>
-      <div class="absolute inset-0 bg-linear-to-b from-slate-950/40 via-slate-950/70 to-slate-50"></div>
-      <div class="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div class="max-w-3xl">
-          <div class="mb-4 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-300">
-            <span>Blog</span>
-            <span class="h-1 w-1 rounded-full bg-slate-400"></span>
-            <span><%= publishedDate %></span>
-            <span class="h-1 w-1 rounded-full bg-slate-400"></span>
-            <span><%= readingTime %> min read</span>
-          </div>
-          <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"><%= blog.title %></h1>
-          <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-200"><%= blog.excerpt %></p>
-        </div>
-      </div>
-    </header>
-  <% } %>
+    </article>
 
-  <main class="relative <%= isMagazine ? 'pt-8' : '-mt-10' %>">
-    <div class="mx-auto grid <%= isMagazine ? 'max-w-5xl lg:grid-cols-1' : 'max-w-7xl lg:grid-cols-[1fr_280px]' %> gap-8 px-4 pb-16 sm:px-6 lg:px-8">
-      <article class="rounded-3xl bg-white p-6 <%= isMagazine ? 'ring-1 ring-stone-200 shadow-lg' : 'shadow-[0_24px_80px_rgba(15,23,42,0.12)]' %> sm:p-8 lg:p-10">
-        <div class="mb-8 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-          <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700"><%= publishedDate %></span>
-          <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700"><%= readingTime %> min read</span>
-          <span class="rounded-full bg-blue-50 px-3 py-1 text-blue-700">Auto Galleria</span>
-        </div>
-
-        <% if (isMagazine && (heroAvifSrcset || heroWebpSrcset || heroJpgSrc || blog.coverImage)) { %>
-          <div class="mb-8 overflow-hidden rounded-2xl bg-stone-100">
-            <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrcset) { %>
-              <picture>
-                <% if (heroAvifSrcset) { %>
-                  <source type="image/avif" srcset="<%= heroAvifSrcset %>" sizes="100vw">
-                <% } %>
-                <% if (heroWebpSrcset) { %>
-                  <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="100vw">
-                <% } %>
-                <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="100vw" alt="<%= blog.title %>" class="h-full w-full object-cover" />
-              </picture>
-            <% } else if (blog.coverImage) { %>
-              <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="h-full w-full object-cover" />
-            <% } %>
-          </div>
-        <% } %>
-
-        <div class="prose prose-lg max-w-none prose-headings:scroll-mt-28 prose-headings:font-semibold prose-a:text-blue-600 hover:prose-a:underline prose-img:rounded-2xl prose-img:shadow-lg prose-p:leading-8 prose-li:leading-8">
-          <%- blog.content %>
-        </div>
-      </article>
-
-      <% if (!isMagazine) { %>
-      <aside class="space-y-6 lg:sticky lg:top-24 lg:self-start">
-        <div class="rounded-3xl bg-slate-900 p-6 text-white shadow-xl shadow-slate-950/20">
-          <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Post details</div>
-          <h2 class="mt-3 text-xl font-semibold"><%= blog.title %></h2>
-          <p class="mt-4 text-sm leading-7 text-slate-300"><%= blog.excerpt || blog.title %></p>
-          <div class="mt-6 space-y-3 text-sm text-slate-200">
-            <div class="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
-              <span>Published</span>
-              <span class="text-right"><%= publishedDate %></span>
-            </div>
-            <div class="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
-              <span>Read time</span>
-              <span><%= readingTime %> min</span>
-            </div>
-            <div class="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
-              <span>Layout</span>
-              <span class="capitalize"><%= layout %></span>
-            </div>
-          </div>
-        </div>
-
-        <% if (heroJpgSrc) { %>
-          <div class="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-slate-200">
-            <img src="<%= heroJpgSrc %>" alt="<%= blog.title %>" class="h-56 w-full object-cover">
-          </div>
-        <% } %>
-      </aside>
-      <% } %>
-    </div>
-
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 class="text-2xl font-bold text-gray-900 mb-8">Related Posts</h2>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <% if (relatedBlogs.length) { %>
+      <section class="mx-auto mt-12 max-w-6xl border-t border-slate-200 px-4 pt-12 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-950">Related posts</h2>
+        <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <% relatedBlogs.forEach(r => { %>
-          <a href="/blog/<%= r.slug %>" class="block bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
+          <a href="/blog/<%= r.slug %>" class="group block overflow-hidden rounded-lg border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-md">
             <% const rSources = r.imageManifest?.sources; %>
             <% const rAvifSrcset = rSources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
             <% const rWebpSrcset = rSources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
@@ -189,19 +87,22 @@
                 <% if (rWebpSrcset) { %>
                   <source type="image/webp" srcset="<%= rWebpSrcset %>" sizes="100vw">
                 <% } %>
-                <img src="<%= rJpgSrc %>" srcset="<%= rJpgSrcset %>" sizes="100vw" alt="<%= r.title %>" class="w-full h-48 object-cover">
+                <img src="<%= rJpgSrc %>" srcset="<%= rJpgSrcset %>" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="<%= r.title %>" class="h-48 w-full object-cover">
               </picture>
             <% } else if (r.coverImage) { %>
-              <img src="<%= r.coverImage %>" alt="<%= r.title %>" class="w-full h-48 object-cover">
+              <img src="<%= r.coverImage %>" alt="<%= r.title %>" class="h-48 w-full object-cover">
             <% } %>
-            <div class="p-6">
-              <h3 class="font-semibold text-lg mb-2"><%= r.title %></h3>
-              <p class="text-gray-600 text-sm"><%= r.excerpt %></p>
+            <div class="p-5">
+              <h3 class="text-lg font-semibold text-slate-950 transition group-hover:text-blue-700"><%= r.title %></h3>
+              <% if (r.excerpt) { %>
+                <p class="mt-2 text-sm leading-6 text-slate-600"><%= r.excerpt %></p>
+              <% } %>
             </div>
           </a>
         <% }) %>
-      </div>
-    </section>
+        </div>
+      </section>
+    <% } %>
   </main>
 
   <%- include('partials/footer') %>

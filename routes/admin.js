@@ -658,9 +658,6 @@ router.post('/blogs/edit/:id', isAdmin, upload.fields([
     blog.title = req.body.title?.trim() || blog.title;
     blog.excerpt = req.body.excerpt?.trim() || blog.excerpt;
     blog.content = req.body.content?.trim() || blog.content;
-    if (req.body.layout && ['feature', 'standard', 'magazine'].includes(req.body.layout)) {
-      blog.layout = req.body.layout;
-    }
 
     // Normalize slug from user input and keep it unique.
     if (req.body.slug && req.body.slug.trim()) {
