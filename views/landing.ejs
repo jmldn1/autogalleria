@@ -88,7 +88,7 @@
   <span class="text-cyan-400"><%= landing.make %> <%= landing.model %></span>
 </h1>
       
-      <p class="text-gray-200">Enter your registration number</p>
+      <p id="lookupSubtitle" class="text-gray-200">Enter your registration number</p>
     </div>
 
     <!-- Form -->
@@ -113,7 +113,7 @@
         </button>
       </div>
     </form>
-      <p class="mt-2 text-xs text-gray-300 text-center flex items-center justify-center gap-1">
+      <p id="lookupTrust" class="mt-2 text-xs text-gray-300 text-center flex items-center justify-center gap-1">
   🔒 Secure lookup • No data stored or shared
 </p>
     <!-- Error -->
@@ -197,6 +197,8 @@ const regOut = document.getElementById('regOut');
 const resultStatus = document.getElementById('resultStatus');
 const lookupNotice = document.getElementById('lookupNotice');
 const resetBtn = document.getElementById('resetBtn');
+const lookupSubtitle = document.getElementById('lookupSubtitle');
+const lookupTrust = document.getElementById('lookupTrust');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -262,6 +264,9 @@ form.addEventListener('submit', async (e) => {
     }
 
     resultBox.classList.remove('hidden');
+    form.classList.add('hidden');
+    lookupTrust.classList.add('hidden');
+    lookupSubtitle.textContent = "Here's your vehicle";
 
     // Pass vehicle data to the lead form section below
     if (typeof window.setLeadVehicle === 'function') {
@@ -283,8 +288,11 @@ form.addEventListener('submit', async (e) => {
 
 resetBtn.addEventListener('click', () => {
   input.value = '';
+  form.classList.remove('hidden');
+  lookupTrust.classList.remove('hidden');
   resultBox.classList.add('hidden');
   errorBox.classList.add('hidden');
+  lookupSubtitle.textContent = 'Enter your registration number';
 });
 
 const continueBtn = document.getElementById('continueBtn');
@@ -669,6 +677,7 @@ if (continueBtn) {
     document.getElementById('regInput').value = '';
     document.getElementById('resultBox').classList.add('hidden');
     document.getElementById('errorBox').classList.add('hidden');
+    document.getElementById('lookupSubtitle').textContent = 'Enter your registration number';
     // Reset lead form state
     leadForm.reset();
     clearErrors();
