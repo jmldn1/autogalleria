@@ -7,12 +7,12 @@
   <link rel="stylesheet" href="/css/tailwind.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
 
 <%- include('partials/nav', { pageTitle: 'Dashboard', user }) %>
 
 <!-- MAIN DASHBOARD -->
-<main class="max-w-7xl mx-auto p-6 space-y-8">
+<main class="flex-1 mx-auto w-full max-w-7xl p-6 space-y-8">
 
   <!-- Dashboard Title -->
   <h2 class="text-2xl font-bold">Dashboard</h2>
@@ -38,6 +38,30 @@
       <h3 class="font-semibold text-lg mb-2">Blog</h3>
       <p class="text-gray-600 mb-4">Manage blog posts.</p>
       <a href="/admin/blogs" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
+    </div>
+  </div>
+
+  <!-- Action Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-sm">
+      <p class="text-xs font-semibold uppercase tracking-wide text-amber-700">Needs follow-up</p>
+      <p class="mt-2 text-3xl font-bold text-amber-900"><%= metrics.followUpNeeded %></p>
+      <p class="mt-1 text-sm text-amber-700">Leads already overdue</p>
+    </div>
+    <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 shadow-sm">
+      <p class="text-xs font-semibold uppercase tracking-wide text-blue-700">Due this week</p>
+      <p class="mt-2 text-3xl font-bold text-blue-900"><%= metrics.dueThisWeek %></p>
+      <p class="mt-1 text-sm text-blue-700">Follow-up tasks coming up</p>
+    </div>
+    <div class="rounded-lg border border-green-200 bg-green-50 p-4 shadow-sm">
+      <p class="text-xs font-semibold uppercase tracking-wide text-green-700">New leads</p>
+      <p class="mt-2 text-3xl font-bold text-green-900"><%= metrics.newLeads %></p>
+      <p class="mt-1 text-sm text-green-700">Unreviewed enquiries</p>
+    </div>
+    <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 shadow-sm">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-700">Missing notes</p>
+      <p class="mt-2 text-3xl font-bold text-slate-900"><%= metrics.noNotes %></p>
+      <p class="mt-1 text-sm text-slate-700">Leads without internal notes</p>
     </div>
   </div>
 
@@ -115,6 +139,42 @@
     </div>
   </div>
 
+  <!-- Follow-up Queue -->
+  <div class="bg-white p-6 rounded shadow">
+    <div class="mb-4 flex items-center justify-between gap-3">
+      <h3 class="text-lg font-semibold">Follow-up queue</h3>
+      <a href="/admin/leads?filter=followup" class="text-sm font-medium text-blue-600 hover:text-blue-800">View all</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% if (followUpQueue && followUpQueue.length) { %>
+            <% followUpQueue.forEach(lead => { %>
+              <tr class="hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap"><%= lead.name %></td>
+                <td class="px-6 py-4 whitespace-nowrap"><%= lead.car %></td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700"><%= lead.status %></span></td>
+                <td class="px-6 py-4 whitespace-nowrap"><%= new Date(lead.followUpAt).toLocaleDateString('en-GB') %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">No follow-up tasks scheduled.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Top Pages -->
   <div class="bg-white p-6 rounded shadow">
     <div class="flex items-center justify-between mb-4">
@@ -149,7 +209,10 @@
 
   <!-- Recent Leads Table -->
   <div class="bg-white p-6 rounded shadow">
-    <h3 class="text-lg font-semibold mb-4">Recent Leads</h3>
+    <div class="mb-4 flex items-center justify-between gap-3">
+      <h3 class="text-lg font-semibold">Recent Leads</h3>
+      <a href="/admin/leads" class="text-sm font-medium text-blue-600 hover:text-blue-800">View all leads</a>
+    </div>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -184,23 +247,14 @@
 
 </main>
 
+<%- include('partials/footer') %>
+
+<script id="lead-trend-data" type="application/json"><%- JSON.stringify(leadTrend || []) %></script>
+<script id="heatmap-data" type="application/json"><%- JSON.stringify(heatmap || []) %></script>
 <script>
-  const rawLeads = JSON.parse(<%- JSON.stringify(JSON.stringify(leads || [])) %>);
-  const parsedLeads = rawLeads
-    .map(lead => ({
-      ...lead,
-      date: new Date(lead.date)
-    }))
-    .sort((a, b) => a.date - b.date);
-
-  const leadCountsByDay = parsedLeads.reduce((acc, lead) => {
-    const label = lead.date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
-    acc[label] = (acc[label] || 0) + 1;
-    return acc;
-  }, {});
-
-  const lineLabels = Object.keys(leadCountsByDay);
-  const lineData = lineLabels.map(label => leadCountsByDay[label]);
+  const rawLeadTrend = JSON.parse(document.getElementById('lead-trend-data').textContent);
+  const lineLabels = rawLeadTrend.map(item => new Date(`${item.date}T00:00:00`).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+  const lineData = rawLeadTrend.map(item => item.count);
 
   const ctxLine = document.getElementById('lineChart').getContext('2d');
   new Chart(ctxLine, {
@@ -226,7 +280,7 @@
   });
 
   // Heatmap from page view data
-  const rawHeatmap = JSON.parse(<%- JSON.stringify(JSON.stringify(heatmap || [])) %>);
+  const rawHeatmap = JSON.parse(document.getElementById('heatmap-data').textContent);
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const heatData = rawHeatmap.map(item => ({
     x: item.hour,

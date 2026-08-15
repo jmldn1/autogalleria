@@ -377,7 +377,8 @@ router.post("/enquiry", async (req, res) => {
     reg,
     name,
     email,
-    phone
+      phone,
+      sourceSlug
   } = req.body;
 
   if (
@@ -405,6 +406,8 @@ router.post("/enquiry", async (req, res) => {
       phone,
 
       car: reg,
+      sourceType: 'vehicle-lookup',
+      sourceSlug: sourceSlug || undefined,
 
       date: new Date()
     });

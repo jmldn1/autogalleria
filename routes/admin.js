@@ -9,6 +9,7 @@ const Landing = require('../models/Landing');
 const Car = require('../models/Car');
 const Blog = require('../models/Blog');
 const PageView = require('../models/PageView');
+const Lead = require('../models/Lead');
 const { processImage, buildImageManifest, SIZES } = require('../utils/imageService');
 const generateUniqueSlug = require('../utils/slugifyUnique');
 
@@ -244,8 +245,6 @@ Mileage: ${details.mileage ? details.mileage + ' miles' : 'Not specified'}`;
 // ---------------------- DASHBOARD ----------------------
 router.get('/dashboard', isAdmin, async (req, res) => {
   try {
-    const Lead = require('../models/Lead');
-
     const leads = await Lead.find()
       .sort({ createdAt: -1 })
       .limit(5)
@@ -265,6 +264,22 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       { $group: { _id: '$path', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 5 }
+    ]);
+
+    const leadTrendStart = new Date();
+    leadTrendStart.setDate(leadTrendStart.getDate() - 29);
+    leadTrendStart.setHours(0, 0, 0, 0);
+    const leadTrend = await Lead.aggregate([
+      { $match: { createdAt: { $gte: leadTrendStart } } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'Europe/London' }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
     ]);
 
     const heatmap = await PageView.aggregate([
@@ -290,6 +305,29 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       count: item.count
     }));
 
+    const today = new Date();
+    const thisWeek = new Date();
+    thisWeek.setDate(thisWeek.getDate() + 7);
+
+    const followUpQueue = await Lead.find({
+      status: { $nin: ['won', 'lost', 'archived'] },
+      followUpAt: { $ne: null },
+      followUpAt: { $lte: thisWeek }
+    }).sort({ followUpAt: 1 }).limit(5).lean();
+
+    const followUpNeeded = await Lead.countDocuments({
+      status: { $nin: ['won', 'lost', 'archived'] },
+      followUpAt: { $ne: null, $lte: today }
+    });
+
+    const dueThisWeek = await Lead.countDocuments({
+      status: { $nin: ['won', 'lost', 'archived'] },
+      followUpAt: { $ne: null, $gte: today, $lte: thisWeek }
+    });
+
+    const newLeads = await Lead.countDocuments({ status: 'new' });
+    const noNotes = await Lead.countDocuments({ notes: { $exists: true, $in: ['', null] } });
+
     res.render('admin/dashboard', {
       user: req.user,
       leads,
@@ -297,9 +335,21 @@ router.get('/dashboard', isAdmin, async (req, res) => {
         totalLeads,
         totalCars,
         totalBlogs,
-        totalPageViews
+        totalPageViews,
+        followUpNeeded,
+        dueThisWeek,
+        newLeads,
+        noNotes
       },
+      followUpQueue: followUpQueue.map(item => ({
+        id: item._id,
+        name: item.name,
+        car: item.car || 'General enquiry',
+        status: item.status || 'new',
+        followUpAt: item.followUpAt
+      })),
       topPages: topPages.map(item => ({ path: item._id, count: item.count })),
+      leadTrend: leadTrend.map(item => ({ date: item._id, count: item.count })),
       heatmap: heatmapPoints,
       heatmapRangeLabel: 'Last 7 days'
     });
@@ -314,13 +364,119 @@ router.get('/dashboard', isAdmin, async (req, res) => {
         totalLeads: 0,
         totalCars: 0,
         totalBlogs: 0,
-        totalPageViews: 0
+        totalPageViews: 0,
+        followUpNeeded: 0,
+        dueThisWeek: 0,
+        newLeads: 0,
+        noNotes: 0
       },
+      followUpQueue: [],
       topPages: [],
+      leadTrend: [],
       heatmap: [],
       heatmapRangeLabel: 'Last 7 days'
     });
   }
+});
+
+// ---------------------- LEADS ----------------------
+function buildLeadFilterQuery(params) {
+  const search = (params.search || '').trim();
+  const query = {};
+
+  if (search) {
+    const expression = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    query.$or = [
+      { name: expression },
+      { email: expression },
+      { phone: expression },
+      { car: expression },
+      { sourceSlug: expression },
+      { message: expression }
+    ];
+  }
+
+  const filter = (params.filter || '').trim().toLowerCase();
+  if (filter === 'followup') {
+    query.followUpAt = { $ne: null };
+  }
+  if (filter === 'overdue') {
+    query.followUpAt = { $lt: new Date() };
+    query.status = { $nin: ['won', 'lost', 'archived'] };
+  }
+  if (filter === 'new') {
+    query.status = 'new';
+  }
+
+  if (params.status) query.status = params.status;
+  if (params.from || params.to) {
+    query.createdAt = {};
+    if (params.from) query.createdAt.$gte = new Date(`${params.from}T00:00:00.000Z`);
+    if (params.to) query.createdAt.$lte = new Date(`${params.to}T23:59:59.999Z`);
+  }
+
+  return query;
+}
+
+router.get('/leads', isAdmin, async (req, res) => {
+  const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+  const limit = 25;
+  const search = (req.query.search || '').trim();
+  const status = (req.query.status || '').trim();
+  const filter = (req.query.filter || '').trim();
+  const sort = req.query.sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 };
+  const query = buildLeadFilterQuery(req.query);
+
+  const [leads, total] = await Promise.all([
+    Lead.find(query).sort(sort).skip((page - 1) * limit).limit(limit).lean(),
+    Lead.countDocuments(query)
+  ]);
+
+  res.render('admin/leads', {
+    user: req.user,
+    leads,
+    filters: {
+      search,
+      status,
+      filter: req.query.filter || '',
+      sort: req.query.sort === 'oldest' ? 'oldest' : 'newest',
+      from: req.query.from || '',
+      to: req.query.to || ''
+    },
+    pagination: { page, limit, total, pages: Math.max(1, Math.ceil(total / limit)) }
+  });
+});
+
+router.post('/leads/:id/update', isAdmin, async (req, res) => {
+  const allowedStatuses = ['new', 'contacted', 'qualified', 'in progress', 'won', 'lost', 'archived'];
+  const update = {
+    status: allowedStatuses.includes(req.body.status) ? req.body.status : 'new',
+    notes: (req.body.notes || '').trim(),
+    followUpAt: req.body.followUpAt ? new Date(req.body.followUpAt) : undefined,
+  };
+  if (update.status === 'contacted') update.lastContactedAt = new Date();
+  await Lead.findByIdAndUpdate(req.params.id, update);
+  res.redirect(req.get('Referrer') || '/admin/leads');
+});
+
+router.get('/leads/export.csv', isAdmin, async (req, res) => {
+  const leads = await Lead.find(buildLeadFilterQuery(req.query)).sort({ createdAt: -1 }).lean();
+  const escapeCsv = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+  const rows = [
+    ['Date', 'Name', 'Email', 'Phone', 'Vehicle', 'Source', 'Status', 'Follow-up', 'Notes'],
+    ...leads.map(lead => [
+      lead.createdAt || lead.date,
+      lead.name,
+      lead.email,
+      lead.phone,
+      lead.car,
+      lead.sourceSlug ? `${lead.sourceType || 'unknown'}:${lead.sourceSlug}` : lead.sourceType,
+      lead.status || 'new',
+      lead.followUpAt,
+      lead.notes
+    ])
+  ];
+  res.type('text/csv').attachment('autogalleria-leads.csv').send(rows.map(row => row.map(escapeCsv).join(',')).join('\n'));
 });
 
 // ---------------------- LANDINGS ----------------------
@@ -433,7 +589,21 @@ router.post('/landing/generate-copy', isAdmin, async (req, res) => {
 // ---------------------- CARS ----------------------
 router.get('/cars', isAdmin, async (req, res) => {
   const cars = await Car.find().sort({ createdAt: -1 });
-  res.render('admin/cars', { user: req.user, cars });
+  const pageViewCounts = await PageView.aggregate([
+    { $match: { path: { $regex: '^/car/' } } },
+    { $group: { _id: '$path', views: { $sum: 1 } } }
+  ]);
+
+  const viewCountMap = Object.fromEntries(
+    pageViewCounts.map(({ _id, views }) => [_id, views])
+  );
+
+  const carsWithViews = cars.map((car) => ({
+    ...car.toObject(),
+    views: viewCountMap[`/car/${car.slug}`] || 0
+  }));
+
+  res.render('admin/cars', { user: req.user, cars: carsWithViews });
 });
 
 router.get('/cars/new', isAdmin, (req, res) => {
@@ -557,9 +727,23 @@ router.post('/cars/:id/delete', isAdmin, async (req, res) => {
 // ---------------------- BLOGS ----------------------
 router.get('/blogs', isAdmin, async (req, res) => {
   const blogs = await Blog.find().sort({ createdAt: -1 });
+  const pageViewCounts = await PageView.aggregate([
+    { $match: { path: { $regex: '^/blog/' } } },
+    { $group: { _id: '$path', views: { $sum: 1 } } }
+  ]);
+
+  const viewCountMap = Object.fromEntries(
+    pageViewCounts.map(({ _id, views }) => [_id, views])
+  );
+
+  const blogsWithViews = blogs.map((blog) => ({
+    ...blog.toObject(),
+    views: viewCountMap[`/blog/${blog.slug}`] || 0
+  }));
+
   res.render('admin/blogs', { 
     user: req.user,
-    blogs 
+    blogs: blogsWithViews
   });
 });
 

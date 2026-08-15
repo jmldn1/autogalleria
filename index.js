@@ -346,6 +346,16 @@ app.post("/sell-your-:slug/lead", async (req, res) => {
   const { name, email, phone } = req.body;
   console.log(`New lead for ${landing.make} ${landing.model}`, { name, email, phone });
 
+  const lead = new Lead({
+    name: name ? name.trim() : '',
+    email: email ? email.trim() : '',
+    phone: phone ? phone.trim() : undefined,
+    car: `${landing.make || ''} ${landing.model || ''}`.trim(),
+    sourceType: 'landing',
+    sourceSlug: landing.slug,
+  });
+  await lead.save();
+
   res.redirect(`/sell-your-${landing.slug}?success=1`);
 });
 
@@ -488,6 +498,8 @@ app.post("/car/:slug/enquire", async (req, res) => {
       car: carDoc ? `${carDoc.year} ${carDoc.make} ${carDoc.model}` : req.params.slug,
       carId: carDoc ? carDoc._id : undefined,
       carSlug: req.params.slug,
+      sourceType: 'car',
+      sourceSlug: req.params.slug,
     });
 
     await lead.save();

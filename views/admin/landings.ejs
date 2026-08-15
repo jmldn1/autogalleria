@@ -7,9 +7,9 @@
   <link href="/css/tailwind.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
 <%- include('partials/nav', { pageTitle: 'Landings', user }) %>
-  <main class="max-w-7xl mx-auto p-6">
+  <main class="flex-1 mx-auto w-full max-w-7xl p-6">
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-2xl font-bold">Manage Landings</h1>
@@ -68,9 +68,6 @@
                 <h3 class="font-semibold text-gray-800">
                   <%= landing.make %> <%= landing.model %>
                 </h3>
-                <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700" title="Landing reference">
-                  Ref <%= landing._id.toString().slice(-4) %>
-                </span>
               </div>
               <p class="mt-2 text-sm text-gray-500">Slug: <%= landing.slug %></p>
             </div>
@@ -120,5 +117,6 @@
       <span>Back to Dashboard</span>
     </a>
   </main>
+  <%- include('partials/footer') %>
 </body>
 </html>

@@ -6,12 +6,12 @@
   <title>Admin - Landing Pages | Auto Galleria</title>
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
 
 <%- include('partials/nav', { pageTitle: landing._id ? 'Edit Landing' : 'New Landing', user }) %>
 
   <!-- MAIN CONTENT -->
-  <main class="max-w-4xl mx-auto p-6">
+  <main class="flex-1 mx-auto w-full max-w-4xl p-6">
 
     <h2 class="text-2xl font-bold mb-6"><%= landing._id ? 'Edit Landing Page' : 'Create Landing Page' %></h2>
 
@@ -159,5 +159,6 @@
     }
   });
 </script>
+  <%- include('partials/footer') %>
 </body>
 </html>

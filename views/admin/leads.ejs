@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Leads | Auto Galleria</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
+<%- include('partials/nav', { pageTitle: 'Leads', user }) %>
+  <main class="flex-1 mx-auto w-full max-w-7xl p-6">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold">Leads</h1>
+        <p class="mt-1 text-sm text-gray-500"><%= pagination.total %> lead<%= pagination.total === 1 ? '' : 's' %> recorded.</p>
+      </div>
+      <% const exportQuery = new URLSearchParams({ search: filters.search, status: filters.status, from: filters.from, to: filters.to, filter: filters.filter || '' }); %>
+      <a href="/admin/leads/export.csv?<%= exportQuery.toString() %>" class="inline-flex items-center justify-center rounded-lg bg-gray-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-900">Export CSV</a>
+    </div>
+
+    <form method="GET" action="/admin/leads" class="mb-6 grid gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-6">
+      <label class="lg:col-span-2">
+        <span class="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500">Search</span>
+        <input name="search" value="<%= filters.search %>" placeholder="Name, email, phone, vehicle..." class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </label>
+      <label>
+        <span class="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500">Status</span>
+        <select name="status" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+          <option value="">All statuses</option>
+          <% ['new', 'contacted', 'qualified', 'in progress', 'won', 'lost', 'archived'].forEach(option => { %>
+            <option value="<%= option %>" <%= filters.status === option ? 'selected' : '' %>><%= option.replace(/\b\w/g, letter => letter.toUpperCase()) %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>
+        <span class="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500">From</span>
+        <input type="date" name="from" value="<%= filters.from %>" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </label>
+      <label>
+        <span class="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500">To</span>
+        <input type="date" name="to" value="<%= filters.to %>" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </label>
+      <div class="flex items-end gap-2">
+        <button class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">Filter</button>
+        <a href="/admin/leads" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">Clear</a>
+      </div>
+    </form>
+
+    <div class="mb-6 flex flex-wrap gap-2">
+      <a href="/admin/leads?filter=overdue" class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700 transition hover:bg-amber-100 <%= filters.filter === 'overdue' ? 'ring-2 ring-amber-200' : '' %>">Overdue</a>
+      <a href="/admin/leads?filter=followup" class="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-blue-700 transition hover:bg-blue-100 <%= filters.filter === 'followup' ? 'ring-2 ring-blue-200' : '' %>">Follow-up</a>
+      <a href="/admin/leads?status=new" class="rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-green-700 transition hover:bg-green-100 <%= filters.status === 'new' && !filters.filter ? 'ring-2 ring-green-200' : '' %>">New</a>
+      <a href="/admin/leads?status=qualified" class="rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-purple-700 transition hover:bg-purple-100 <%= filters.status === 'qualified' && !filters.filter ? 'ring-2 ring-purple-200' : '' %>">Qualified</a>
+      <a href="/admin/leads?status=won" class="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-emerald-700 transition hover:bg-emerald-100 <%= filters.status === 'won' && !filters.filter ? 'ring-2 ring-emerald-200' : '' %>">Won</a>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Lead</th>
+              <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Vehicle / source</th>
+              <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Received</th>
+              <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Follow-up</th>
+              <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Workflow</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <% if (!leads.length) { %>
+              <tr><td colspan="5" class="px-4 py-10 text-center text-sm text-gray-500">No leads match these filters.</td></tr>
+            <% } %>
+            <% leads.forEach(lead => { %>
+              <tr class="align-top hover:bg-gray-50">
+                <td class="px-4 py-4">
+                  <div class="font-medium text-gray-900"><%= lead.name %></div>
+                  <a href="mailto:<%= lead.email %>" class="text-sm text-blue-600 hover:underline"><%= lead.email %></a>
+                  <% if (lead.phone) { %><a href="tel:<%= lead.phone %>" class="block text-sm text-gray-500 hover:text-blue-600"><%= lead.phone %></a><% } %>
+                  <% if (lead.message) { %><p class="mt-2 max-w-xs text-sm text-gray-600"><%= lead.message %></p><% } %>
+                </td>
+                <td class="px-4 py-4 text-sm">
+                  <div class="font-medium text-gray-800"><%= lead.car || 'General enquiry' %></div>
+                  <% if (lead.sourceType && lead.sourceType !== 'unknown') { %><div class="mt-1 text-gray-500"><%= lead.sourceType %><%= lead.sourceSlug ? ': ' + lead.sourceSlug : '' %></div><% } %>
+                </td>
+                <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600"><%= new Date(lead.createdAt || lead.date).toLocaleDateString('en-GB') %></td>
+                <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-600"><%= lead.followUpAt ? new Date(lead.followUpAt).toLocaleDateString('en-GB') : 'None' %></td>
+                <td class="min-w-70 px-4 py-4">
+                  <form method="POST" action="/admin/leads/<%= lead._id %>/update" class="space-y-2">
+                    <div class="flex gap-2">
+                      <select name="status" class="min-w-0 flex-1 rounded-lg border border-gray-300 px-2 py-1.5 text-sm">
+                        <% ['new', 'contacted', 'qualified', 'in progress', 'won', 'lost', 'archived'].forEach(option => { %>
+                          <option value="<%= option %>" <%= (lead.status || 'new') === option ? 'selected' : '' %>><%= option.replace(/\b\w/g, letter => letter.toUpperCase()) %></option>
+                        <% }) %>
+                      </select>
+                      <button class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700">Save</button>
+                    </div>
+                    <input type="date" name="followUpAt" value="<%= lead.followUpAt ? new Date(lead.followUpAt).toISOString().slice(0, 10) : '' %>" class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm">
+                    <textarea name="notes" rows="2" placeholder="Internal notes" class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm"><%= lead.notes || '' %></textarea>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <% if (pagination.pages > 1) { %>
+      <div class="mt-6 flex items-center justify-between gap-4 text-sm">
+        <% const query = new URLSearchParams({ search: filters.search, status: filters.status, sort: filters.sort, from: filters.from, to: filters.to, filter: filters.filter || '' }); %>
+        <span class="text-gray-500">Page <%= pagination.page %> of <%= pagination.pages %></span>
+        <div class="flex gap-2">
+          <% if (pagination.page > 1) { query.set('page', pagination.page - 1); %><a href="/admin/leads?<%= query.toString() %>" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50">Previous</a><% } %>
+          <% if (pagination.page < pagination.pages) { query.set('page', pagination.page + 1); %><a href="/admin/leads?<%= query.toString() %>" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-gray-50">Next</a><% } %>
+        </div>
+      </div>
+    <% } %>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>
