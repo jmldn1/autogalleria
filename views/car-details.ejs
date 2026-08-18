@@ -20,8 +20,19 @@
   <%- include('partials/navbar') %>
 
   <main class="max-w-6xl mx-auto p-4 pt-20">
-    <!-- Car Title -->
-    <h1 class="text-3xl font-bold mb-4"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+    <header class="mb-5">
+      <nav aria-label="Breadcrumb" class="mb-2 text-sm text-slate-500">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li><a href="/" class="transition hover:text-blue-600">Home</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="/cars" class="transition hover:text-blue-600">Cars</a></li>
+          <li aria-hidden="true">/</li>
+          <li class="text-slate-700"><%= car.make %> <%= car.model %></li>
+        </ol>
+      </nav>
+
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+    </header>
     <!-- Gallery -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Left: Swiper Gallery -->
@@ -223,7 +234,7 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           <% relatedCars.forEach((relatedCar) => { %>
-            <article class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+            <article class="overflow-hidden rounded-xl bg-white shadow transition hover:shadow-lg">
               <a href="/car/<%= relatedCar.slug || relatedCar._id %>" class="block">
                 <% const sources = relatedCar.image?.sources || {}; %>
                 <% const avifSrcset = sources.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
@@ -244,7 +255,7 @@
                       srcset="<%= jpgSrcset %>"
                       sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       alt="<%= relatedCar.image?.alt %>"
-                      class="h-52 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                      class="h-52 w-full object-cover"
                       loading="lazy"
                     />
                   </picture>
@@ -261,7 +272,7 @@
                       <h3 class="text-lg font-semibold text-slate-900"><%= relatedCar.make %> <%= relatedCar.model %></h3>
                     </div>
                     <% if (relatedCar.price) { %>
-                      <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">£<%= Number(relatedCar.price).toLocaleString() %></span>
+                      <span class="text-sm font-semibold text-blue-700">£<%= Number(relatedCar.price).toLocaleString() %></span>
                     <% } %>
                   </div>
 
