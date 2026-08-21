@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tell Auto Galleria about the vehicle you would like to sell or send us any vehicle sale enquiry.">
+  <title>Sell Your Car | Auto Galleria</title>
+  <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/sell-your-car' %>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sell Your Car | Auto Galleria">
+  <meta property="og:description" content="Send Auto Galleria the details of the vehicle you would like to sell.">
+  <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/sell-your-car' %>">
+  <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body class="bg-slate-100 text-slate-800">
+  <%- include('partials/navbar') %>
+
+  <main>
+    <section class="bg-slate-900 pt-28 pb-16 text-white sm:pt-32 sm:pb-20">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <p class="section-eyebrow text-cyan-300">Vehicle sale enquiries</p>
+        <h1 class="max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">Tell us about your car.</h1>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">Whether you are ready to sell or simply have a question, send us the details that matter to you. There is no registration lookup required.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-5 lg:items-start">
+        <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-3" aria-labelledby="enquiry-heading">
+          <% if (sent) { %>
+            <div class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800" role="status">
+              Thank you. Your enquiry has been sent and we will be in touch shortly.
+            </div>
+          <% } %>
+          <% if (error) { %>
+            <div class="mb-6 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800" role="alert">
+              Please provide your name, a valid email address, and a message before sending.
+            </div>
+          <% } %>
+          <% if (rateLimited) { %>
+            <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800" role="alert">
+              Too many attempts in a short time. Please wait a few minutes and try again.
+            </div>
+          <% } %>
+
+          <h2 id="enquiry-heading" class="text-2xl font-semibold text-slate-900">Vehicle sale enquiry</h2>
+          <p class="mt-2 text-slate-600">Send the details you have and we will take it from there personally. You do not need to complete a valuation form.</p>
+
+          <form class="mt-8 space-y-5" action="/sell-your-car" method="POST">
+            <div class="hidden" aria-hidden="true">
+              <label for="companyWebsite">Company website</label>
+              <input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="name" class="mb-2 block text-sm font-medium text-slate-700">Name</label>
+                <div class="relative">
+                  <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.75a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a7.5 7.5 0 0 1 15 0" />
+                  </svg>
+                  <input id="name" name="name" type="text" required autocomplete="name" class="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="Your full name">
+                </div>
+              </div>
+              <div>
+                <label for="email" class="mb-2 block text-sm font-medium text-slate-700">Email</label>
+                <div class="relative">
+                  <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5v10.5H3.75V6.75Zm.75.75 7.5 5.25 7.5-5.25" />
+                  </svg>
+                  <input id="email" name="email" type="email" required autocomplete="email" class="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="you@example.com">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="phone" class="mb-2 block text-sm font-medium text-slate-700">Phone <span class="font-normal text-slate-500">(optional)</span></label>
+                <div class="relative">
+                  <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 5.25a2.25 2.25 0 0 1 2.25-2.25h2.1c.9 0 1.69.54 2.04 1.37l1.05 2.47a2.25 2.25 0 0 1-.49 2.45l-1.12 1.12a12.02 12.02 0 0 0 5.69 5.69l1.12-1.12a2.25 2.25 0 0 1 2.45-.49l2.47 1.05a2.25 2.25 0 0 1 1.37 2.04v2.1a2.25 2.25 0 0 1-2.25 2.25C10.1 21.93 2.07 13.9 2.25 5.25Z" />
+                  </svg>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" class="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="+44 ...">
+                </div>
+              </div>
+              <div>
+                <label for="enquiryType" class="mb-2 block text-sm font-medium text-slate-700">How can we help?</label>
+                <div class="relative">
+                  <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9h7.5M8.25 12h4.5m-8.25 8.25 2.37-2.37A2.25 2.25 0 0 1 8.46 17.25h7.29A4.5 4.5 0 0 0 20.25 12V7.5A4.5 4.5 0 0 0 15.75 3h-7.5a4.5 4.5 0 0 0-4.5 4.5V12a4.5 4.5 0 0 0 3.75 4.43" />
+                  </svg>
+                  <select id="enquiryType" name="enquiryType" class="w-full rounded-lg border border-slate-300 bg-white py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2">
+                    <option value="Sell my car">I would like to sell my car</option>
+                    <option value="Vehicle valuation">I would like a valuation</option>
+                    <option value="General question">I have a general question</option>
+                    <option value="Collection or paperwork">Collection or paperwork query</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="vehicle" class="mb-2 block text-sm font-medium text-slate-700">Vehicle details <span class="font-normal text-slate-500">(optional)</span></label>
+              <div class="relative">
+                <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m3 16.5 1.5-6h15l1.5 6M4.5 16.5v2.25m15-2.25v2.25M6 16.5h12M5.25 10.5l1.5-3h10.5l1.5 3M7.5 13.5h.01M16.5 13.5h.01" />
+                </svg>
+                <input id="vehicle" name="vehicle" type="text" autocomplete="off" class="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="For example, 2017 BMW X5, 80,000 miles">
+              </div>
+            </div>
+
+            <div>
+              <label for="message" class="mb-2 block text-sm font-medium text-slate-700">Your message</label>
+              <div class="relative">
+                <svg class="pointer-events-none absolute left-3.5 top-4 h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9h7.5M8.25 12h5.25m-8.25 8.25 2.37-2.37A2.25 2.25 0 0 1 8.46 17.25h7.29A4.5 4.5 0 0 0 20.25 12V7.5A4.5 4.5 0 0 0 15.75 3h-7.5a4.5 4.5 0 0 0-4.5 4.5V12a4.5 4.5 0 0 0 3.75 4.43" />
+                </svg>
+                <textarea id="message" name="message" rows="5" required class="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="Tell us what you would like help with, or simply say hello."></textarea>
+              </div>
+              <p id="messageHint" class="mt-2 text-sm text-slate-500">A sentence or two is plenty. We can talk through the rest with you.</p>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button type="submit" class="btn-primary w-full sm:w-auto">Start a conversation</button>
+              <% if (adminWhatsAppNumber) { %>
+                <a
+                  href="https://wa.me/<%= adminWhatsAppNumber %>?text=<%= encodeURIComponent('Hi Auto Galleria, I am interested in selling my car and would like to discuss it.') %>"
+                  target="_blank"
+                  rel="noopener"
+                  class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 font-semibold text-white transition hover:bg-[#20b954] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]/50 sm:w-auto"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                    <path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611ZM8.003 14.5a6.64 6.64 0 0 1-3.386-.926l-.242-.143-2.53.654.675-2.464-.158-.253a6.542 6.542 0 0 1-.999-3.46c0-3.605 2.956-6.54 6.597-6.54a6.576 6.576 0 0 1 4.678 1.933 6.506 6.506 0 0 1 1.92 4.607c0 3.604-2.957 6.542-6.575 6.542Zm3.605-4.879c-.197-.098-1.172-.578-1.353-.644-.18-.066-.313-.099-.445.099-.132.198-.511.644-.625.777-.115.132-.23.148-.428.049-.198-.098-.838-.31-1.596-.99-.59-.525-.988-1.174-1.104-1.373-.115-.198-.012-.305.086-.403.088-.088.198-.23.297-.345.099-.116.132-.198.198-.33.066-.132.033-.248-.017-.347-.049-.099-.445-1.072-.61-1.47-.16-.39-.323-.337-.445-.343-.115-.006-.248-.007-.38-.007s-.347.049-.53.248c-.182.198-.695.678-.695 1.654 0 .975.712 1.917.812 2.05.099.132 1.4 2.14 3.393 3.002.474.204.843.326 1.131.417.475.151.908.13 1.25.079.381-.057 1.172-.479 1.338-.942.165-.462.165-.858.116-.942-.049-.083-.18-.132-.377-.23Z"/>
+                  </svg>
+                  Message on WhatsApp
+                </a>
+              <% } %>
+            </div>
+            <p class="text-sm text-slate-500">Your enquiry goes directly to our team. We usually reply within one working day.</p>
+          </form>
+        </section>
+
+        <aside class="space-y-5 lg:col-span-2">
+          <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-700" aria-hidden="true">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9h7.5M8.25 12h5.25m-8.25 8.25 2.37-2.37A2.25 2.25 0 0 1 8.46 17.25h7.29A4.5 4.5 0 0 0 20.25 12V7.5A4.5 4.5 0 0 0 15.75 3h-7.5a4.5 4.5 0 0 0-4.5 4.5V12a4.5 4.5 0 0 0 3.75 4.43" />
+                </svg>
+              </span>
+              <h2 class="text-lg font-semibold text-slate-900">A personal first step</h2>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-slate-600">There is no instant automated offer to accept here. We read every enquiry and speak with you about the car, your expectations and the best next step.</p>
+          </section>
+          <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 class="text-lg font-semibold text-slate-900">What happens next</h2>
+            <ol class="mt-4 text-sm text-slate-600">
+              <li class="relative flex gap-3 pb-4">
+                <span class="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">1</span>
+                <span class="pt-1">We review your message and vehicle details.</span>
+                <span class="absolute left-3.5 top-7 h-full w-px bg-blue-100" aria-hidden="true"></span>
+              </li>
+              <li class="relative flex gap-3 pb-4">
+                <span class="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">2</span>
+                <span class="pt-1">We contact you by email or phone.</span>
+                <span class="absolute left-3.5 top-7 h-full w-px bg-blue-100" aria-hidden="true"></span>
+              </li>
+              <li class="flex gap-3">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">3</span>
+                <span class="pt-1">We discuss valuation, collection and paperwork.</span>
+              </li>
+            </ol>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const enquiryType = document.getElementById('enquiryType');
+    const messageHint = document.getElementById('messageHint');
+    const message = document.getElementById('message');
+
+    const enquiryGuidance = {
+      'Sell my car': 'A sentence or two is plenty. We can talk through the rest with you.',
+      'Vehicle valuation': 'Tell us anything you know about the car and what you would like to understand about its value.',
+      'General question': 'Ask your question in your own words. We will point you in the right direction.',
+      'Collection or paperwork': 'Tell us what you need to arrange and, if relevant, where the vehicle is located.',
+    };
+
+    enquiryType.addEventListener('change', () => {
+      messageHint.textContent = enquiryGuidance[enquiryType.value] || enquiryGuidance['Sell my car'];
+      message.focus();
+    });
+  </script>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

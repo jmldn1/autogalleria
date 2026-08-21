@@ -228,7 +228,7 @@ app.get("/contact", (req, res) => {
 
 app.post("/contact", async (req, res) => {
   try {
-    const { name, email, phone, message, companyWebsite } = req.body;
+    const { name, email, phone, projectType, referenceUrl, message, companyWebsite } = req.body;
 
     // Honeypot field: real users never fill this, bots often do.
     if (companyWebsite && companyWebsite.trim()) {
@@ -248,11 +248,17 @@ app.post("/contact", async (req, res) => {
       return res.redirect("/contact?error=1");
     }
 
+    const projectContext = [
+      projectType && `Project type: ${projectType.trim()}`,
+      referenceUrl && `Website or inspiration link: ${referenceUrl.trim()}`,
+    ].filter(Boolean).join("\n");
+    const leadMessage = [projectContext, message.trim()].filter(Boolean).join("\n\n");
+
     const lead = new Lead({
       name: name.trim(),
       email: email.trim(),
       phone: phone ? phone.trim() : undefined,
-      message: message.trim(),
+      message: leadMessage,
       car: "Website Enquiry",
     });
 
@@ -276,6 +282,8 @@ app.post("/contact", async (req, res) => {
           <p><strong>Name:</strong> ${name.trim()}</p>
           <p><strong>Email:</strong> ${email.trim()}</p>
           ${phone ? `<p><strong>Phone:</strong> ${phone.trim()}</p>` : ""}
+          ${projectType ? `<p><strong>Project type:</strong> ${projectType.trim()}</p>` : ""}
+          ${referenceUrl ? `<p><strong>Website or inspiration link:</strong> ${referenceUrl.trim()}</p>` : ""}
           <p><strong>Message:</strong> ${message.trim()}</p>
         `,
       });
@@ -285,6 +293,79 @@ app.post("/contact", async (req, res) => {
   } catch (err) {
     console.error("Contact form error:", err);
     return res.redirect("/contact?error=1");
+  }
+});
+
+// General vehicle sale enquiry page
+app.get("/sell-your-car", (req, res) => {
+  res.render("sell-your-car", {
+    sent: req.query.sent === "1",
+    error: req.query.error === "1",
+    rateLimited: req.query.rate === "1",
+  });
+});
+
+app.post("/sell-your-car", async (req, res) => {
+  try {
+    const { name, email, phone, enquiryType, registration, vehicle, mileage, message, companyWebsite } = req.body;
+
+    if (companyWebsite && companyWebsite.trim()) {
+      return res.redirect("/sell-your-car?sent=1");
+    }
+
+    if (isContactRateLimited(req.ip)) {
+      return res.redirect("/sell-your-car?rate=1");
+    }
+
+    if (!name || !name.trim() || !email || !email.trim() || !message || !message.trim()) {
+      return res.redirect("/sell-your-car?error=1");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.redirect("/sell-your-car?error=1");
+    }
+
+    const vehicleContext = [
+      enquiryType && `Enquiry type: ${enquiryType.trim()}`,
+      registration && `Registration: ${registration.trim().toUpperCase()}`,
+      vehicle && `Vehicle: ${vehicle.trim()}`,
+      mileage && `Mileage: ${mileage.trim()}`,
+    ].filter(Boolean).join("\n");
+    const leadMessage = [vehicleContext, message.trim()].filter(Boolean).join("\n\n");
+
+    const lead = new Lead({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone ? phone.trim() : undefined,
+      message: leadMessage,
+      car: vehicle && vehicle.trim() ? vehicle.trim() : "Vehicle sale enquiry",
+      sourceType: "landing",
+      sourceSlug: "sell-your-car",
+    });
+
+    await lead.save();
+
+    if (hasGmailMailConfig) {
+      const nodemailer = require("nodemailer");
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
+      });
+
+      await transporter.sendMail({
+        from: `"Auto Galleria Enquiries" <${process.env.GMAIL_USER}>`,
+        to: process.env.GMAIL_TO,
+        replyTo: email.trim(),
+        subject: "New Vehicle Sale Enquiry",
+        text: `Name: ${name.trim()}\nEmail: ${email.trim()}${phone ? `\nPhone: ${phone.trim()}` : ""}\n\n${leadMessage}`,
+      });
+    }
+
+    return res.redirect("/sell-your-car?sent=1");
+  } catch (err) {
+    console.error("Vehicle sale enquiry error:", err);
+    return res.redirect("/sell-your-car?error=1");
   }
 });
 

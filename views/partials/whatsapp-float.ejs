@@ -1,9 +1,12 @@
 <% if (adminWhatsAppNumber) { %>
+  <% const vehicleName = [car && car.year, car && car.make, car && car.model].filter(Boolean).join(' ') || 'this vehicle'; %>
+  <% const vehicleUrl = car && car.slug ? `${(process.env.SITE_URL || 'https://autogalleria.co.uk').replace(/\/$/, '')}/car/${car.slug}` : ''; %>
+  <% const whatsappMessage = `Hi Auto Galleria, I am interested in the ${vehicleName}. Is it still available?${vehicleUrl ? ` ${vehicleUrl}` : ''}`; %>
   <a
-    href="https://wa.me/<%= adminWhatsAppNumber %>"
+    href="https://wa.me/<%= adminWhatsAppNumber %>?text=<%= encodeURIComponent(whatsappMessage) %>"
       target="_blank"
       rel="noopener"
-      aria-label="Chat with us on WhatsApp"
+      aria-label="Ask about <%= vehicleName %> on WhatsApp"
       class="fixed bottom-4 right-4 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:bg-[#20b954]"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-7 w-7" aria-hidden="true">
