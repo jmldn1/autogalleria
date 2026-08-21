@@ -1,0 +1,61 @@
+<%
+  const cardVehicle = vehicle || {};
+  const vehicleHref = (typeof href !== 'undefined' && href) || `/car/${cardVehicle.slug || cardVehicle._id || ''}`;
+  const isCompact = Boolean(typeof compact !== 'undefined' && compact);
+  const sources = cardVehicle.image?.sources || {};
+  const avifSrcset = sources.avif?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const webpSrcset = sources.webp?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const jpgSrcset = sources.jpg?.map(src => `${src.url} ${src.w}w`).join(', ');
+  const fallbackSrc = cardVehicle.image?.fallback || sources.jpg?.[0]?.url || sources.webp?.[0]?.url || sources.avif?.[0]?.url;
+  const vehicleName = [cardVehicle.make, cardVehicle.model].filter(Boolean).join(' ') || 'Vehicle';
+  const priceValue = Number(cardVehicle.price);
+%>
+<article class="card card-hover">
+  <a href="<%= vehicleHref %>" class="block">
+    <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
+      <picture>
+        <% if (avifSrcset) { %>
+          <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+        <% } %>
+        <% if (webpSrcset) { %>
+          <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+        <% } %>
+        <img
+          src="<%= fallbackSrc %>"
+          srcset="<%= jpgSrcset %>"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          alt="<%= cardVehicle.image?.alt || vehicleName %>"
+          class="h-52 w-full object-cover"
+          loading="lazy"
+        />
+      </picture>
+    <% } else { %>
+      <div class="flex h-52 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">
+        No image available
+      </div>
+    <% } %>
+
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"><%= cardVehicle.year || (isCompact ? 'In stock' : 'New arrival') %></p>
+          <h2 class="mt-1 text-lg font-semibold text-slate-900"><%= vehicleName %></h2>
+        </div>
+        <% if (Number.isFinite(priceValue)) { %>
+          <span class="text-sm font-semibold text-blue-700">
+            £<%= priceValue.toLocaleString() %>
+          </span>
+        <% } %>
+      </div>
+
+      <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-500">
+        <% if (cardVehicle.mileage) { %>
+          <span><%= Number(cardVehicle.mileage).toLocaleString() %> miles</span>
+        <% } %>
+        <% if (cardVehicle.condition) { %>
+          <span><%= cardVehicle.condition %></span>
+        <% } %>
+      </div>
+    </div>
+  </a>
+</article>

@@ -20,21 +20,21 @@
   <!-- Top Admin Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <!-- Landings -->
-    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition">
       <h3 class="font-semibold text-lg mb-2">Landings</h3>
       <p class="text-gray-600 mb-4">Manage landing pages.</p>
       <a href="/admin/landings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
     </div>
 
     <!-- Cars -->
-    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition">
       <h3 class="font-semibold text-lg mb-2">Cars</h3>
       <p class="text-gray-600 mb-4">Add, edit, and remove cars.</p>
       <a href="/admin/cars" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
     </div>
 
     <!-- Blog -->
-    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition">
       <h3 class="font-semibold text-lg mb-2">Blog</h3>
       <p class="text-gray-600 mb-4">Manage blog posts.</p>
       <a href="/admin/blogs" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Manage</a>
@@ -68,7 +68,7 @@
   <!-- Metrics Cards Section -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <!-- Total Leads -->
-    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center">
       <div class="shrink-0 bg-blue-500 text-white rounded-full p-3 mr-4">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
           viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -82,7 +82,7 @@
     </div>
 
     <!-- Cars Added -->
-    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center">
       <div class="shrink-0 bg-green-500 text-white rounded-full p-3 mr-4">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
           viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Blog Posts -->
-    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center">
       <div class="shrink-0 bg-red-500 text-white rounded-full p-3 mr-4">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
           viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -110,7 +110,7 @@
     </div>
 
     <!-- Page Views -->
-    <div class="bg-white p-6 rounded-lg shadow flex items-center">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center">
       <div class="shrink-0 bg-yellow-500 text-white rounded-full p-3 mr-4">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
           viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -127,20 +127,20 @@
   <!-- Charts Section -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
     <!-- Line Chart -->
-    <div class="bg-white p-6 rounded shadow">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
       <h3 class="text-lg font-semibold mb-4">Leads Over Time</h3>
       <canvas id="lineChart" class="w-full h-64"></canvas>
     </div>
 
     <!-- Heatmap Simulation -->
-    <div class="bg-white p-6 rounded shadow">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
       <h3 class="text-lg font-semibold mb-4">Website Activity Heatmap</h3>
       <canvas id="heatmap" class="w-full h-64"></canvas>
     </div>
   </div>
 
   <!-- Follow-up Queue -->
-  <div class="bg-white p-6 rounded shadow">
+  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
     <div class="mb-4 flex items-center justify-between gap-3">
       <h3 class="text-lg font-semibold">Follow-up queue</h3>
       <a href="/admin/leads?filter=followup" class="text-sm font-medium text-blue-600 hover:text-blue-800">View all</a>
@@ -176,7 +176,7 @@
   </div>
 
   <!-- Top Pages -->
-  <div class="bg-white p-6 rounded shadow">
+  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-lg font-semibold">Top Pages</h3>
       <span class="text-sm text-gray-500"><%= heatmapRangeLabel %></span>
@@ -208,7 +208,7 @@
   </div>
 
   <!-- Recent Leads Table -->
-  <div class="bg-white p-6 rounded shadow">
+  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
     <div class="mb-4 flex items-center justify-between gap-3">
       <h3 class="text-lg font-semibold">Recent Leads</h3>
       <a href="/admin/leads" class="text-sm font-medium text-blue-600 hover:text-blue-800">View all leads</a>

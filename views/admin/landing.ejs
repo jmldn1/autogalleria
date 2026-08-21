@@ -3,120 +3,265 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Landing Pages | Auto Galleria</title>
+  <title>
+    <%= landing._id ? `Edit ${landing.make || ''} ${landing.model || ''}` : 'Add New Landing' %> | Admin
+  </title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="/css/tailwind.css" />
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+  </style>
 </head>
-<body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
+<body class="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased">
 
 <%- include('partials/nav', { pageTitle: landing._id ? 'Edit Landing' : 'New Landing', user }) %>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 mx-auto w-full max-w-4xl p-6">
+  <!-- Page Content -->
+  <main class="flex-1">
+    <div class="max-w-5xl mx-auto p-3 sm:p-6">
 
-    <h2 class="text-2xl font-bold mb-6"><%= landing._id ? 'Edit Landing Page' : 'Create Landing Page' %></h2>
-
-    <section class="bg-white rounded-2xl shadow p-6">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-3xl font-bold text-gray-900"><%= landing._id ? 'Edit Landing Page' : 'Add New Landing Page' %></h2>
+        <a href="/admin/landings" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to List
+        </a>
+      </div>
 
       <% const landingAction = landing._id ? '/admin/landing/' + landing.id : '/admin/landing'; %>
       <form action="<%= landingAction %>" method="POST" enctype="multipart/form-data" class="space-y-6">
-        
-        <!-- Make -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Make</label>
-          <input type="text" name="make" value="<%= landing.make %>" required
-                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
 
-        <!-- Model -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Model</label>
-          <input type="text" name="model" value="<%= landing.model %>" required
-                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+        <!-- Basic Information Section -->
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Basic Information
+          </h3>
 
-        <!-- Slug -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-          <input type="text" name="slug" value="<%= landing.slug %>" required
-                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Make *</label>
+              <input id="make" type="text" name="make" value="<%= landing.make || '' %>" required
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                     placeholder="e.g., BMW">
+            </div>
 
-        <!-- Hero Image -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Hero Image</label>
-          <input type="file" name="image" accept="image/*"
-                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-          
-          <% if (landing.imageManifest && landing.imageManifest.sources && landing.imageManifest.sources.jpg) { %>
-            <img src="<%= landing.imageManifest.sources.jpg[0].url %>" alt="Current Hero Image" class="mt-2 h-32 object-cover rounded-lg">
-          <% } else if (landing.imagePath) { %>
-            <img src="<%= landing.imagePath %>.jpg" alt="Current Hero Image" class="mt-2 h-32 object-cover rounded-lg">
-          <% } %>
-        </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Model *</label>
+              <input id="model" type="text" name="model" value="<%= landing.model || '' %>" required
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                     placeholder="e.g., 3 Series">
+            </div>
 
-        <!-- Hero Alt Text -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Hero Image Alt Text</label>
-          <input type="text" name="heroAltText" value="<%= landing.heroAltText || '' %>"
-                 class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Photo of {{make}} {{model}}">
-          <p class="text-xs text-gray-500 mt-1">Describe the hero image for accessibility and search relevance.</p>
-        </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Slug *</label>
+              <input id="slug" type="text" name="slug" value="<%= landing.slug || '' %>" required
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                     placeholder="auto-generated-from-make-model">
+              <p class="text-xs text-gray-500 mt-1">Auto-updates from Make and Model unless you edit it manually.</p>
+            </div>
+          </div>
+        </section>
 
-        <!-- Meta Description -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-          <textarea name="description" rows="3"
-                    class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.description %></textarea>
-        </div>
-<!-- AI Assist -->
-<div class="border-t pt-6">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-semibold">Body Copy</h3>
-    <button type="button" id="generateBtn"
-            class="px-4 py-2 bg-violet-600 text-white text-sm rounded-lg hover:bg-violet-700 shadow flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-      <span id="generateBtnText">✨ Generate with AI</span>
-    </button>
-  </div>
-  <div class="space-y-2">
-    <p id="generateError" class="hidden text-sm text-red-600"></p>
-    <p id="generateStatus" class="hidden text-sm text-green-600">AI copy generated successfully.</p>
-  </div>
+        <!-- Hero Image Section -->
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Hero Image
+          </h3>
 
-  <div class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Overview</label>
-      <textarea name="overview" id="field-overview" rows="3"
-                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.overview || '' %></textarea>
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Value Factors</label>
-      <textarea name="valueFactors" id="field-valueFactors" rows="3"
-                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.valueFactors || '' %></textarea>
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Selling Tips</label>
-      <textarea name="sellingTips" id="field-sellingTips" rows="3"
-                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"><%= landing.sellingTips || '' %></textarea>
-    </div>
-  </div>
-</div>
-        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow">
-          Save Landing Page
-        </button>
+          <div class="space-y-4">
+            <% if (landing.imageManifest && landing.imageManifest.sources && landing.imageManifest.sources.jpg) { %>
+              <div>
+                <p class="text-sm font-medium text-gray-700 mb-3">Current Image</p>
+                <img src="<%= landing.imageManifest.sources.jpg[0].url %>" alt="Current Hero Image" class="w-full max-w-xs h-32 object-cover rounded-lg border-2 border-gray-200">
+              </div>
+            <% } else if (landing.imagePath) { %>
+              <div>
+                <p class="text-sm font-medium text-gray-700 mb-3">Current Image</p>
+                <img src="<%= landing.imagePath %>.jpg" alt="Current Hero Image" class="w-full max-w-xs h-32 object-cover rounded-lg border-2 border-gray-200">
+              </div>
+            <% } %>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-3">
+                <%= landing.imagePath || landing.imageManifest ? 'Replace Image' : 'Upload Image' %>
+              </label>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition cursor-pointer"
+                   onclick="document.getElementById('heroImageInput').click()">
+                <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                <p class="text-sm text-gray-600 mb-1">Click to upload an image or drag and drop</p>
+                <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB</p>
+              </div>
+
+              <input type="file" id="heroImageInput" name="image" accept="image/*"
+                     class="hidden"
+                     onchange="previewHeroImage(this)">
+
+              <div id="heroImagePreview" class="mt-4"></div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Hero Image Alt Text</label>
+              <input type="text" name="heroAltText" value="<%= landing.heroAltText || '' %>"
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                     placeholder="Photo of {{make}} {{model}}">
+              <p class="text-xs text-gray-500 mt-1">Describe the hero image for accessibility and search relevance.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Description & AI Copy Section -->
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+            Description & Body Copy
+          </h3>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+              <textarea name="description" id="descriptionInput" rows="3"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
+                        placeholder="Short SEO summary for this landing page"><%= landing.description || '' %></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <p id="generateError" class="hidden text-sm text-red-600"></p>
+              <p id="generateStatus" class="hidden text-sm text-green-600">AI content generated successfully.</p>
+              <button type="button" id="generateBtn"
+                      class="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition flex items-center gap-1 ml-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <span id="generateBtnText">AI Assist</span>
+              </button>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Overview</label>
+              <textarea name="overview" id="field-overview" rows="3"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.overview || '' %></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Value Factors</label>
+              <textarea name="valueFactors" id="field-valueFactors" rows="3"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.valueFactors || '' %></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Selling Tips</label>
+              <textarea name="sellingTips" id="field-sellingTips" rows="3"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.sellingTips || '' %></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-6">
+          <a href="/admin/landings" class="w-full sm:w-auto px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-center">
+            Cancel
+          </a>
+          <button type="submit"
+                  class="w-full sm:w-auto px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm font-medium flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Save Landing Page
+          </button>
+        </div>
       </form>
-
-    </section>
-
+    </div>
   </main>
+  <%- include('partials/footer') %>
+
 <script>
+  const makeInput = document.getElementById('make');
+  const modelInput = document.getElementById('model');
+  const slugInput = document.getElementById('slug');
+  let slugEditedManually = false;
+
+  function toSlug(value) {
+    return (value || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  function buildLandingSlugFromFields() {
+    return toSlug([
+      makeInput?.value || '',
+      modelInput?.value || ''
+    ].filter(Boolean).join(' '));
+  }
+
+  function isLikelyAutoGeneratedSlug(existingSlug, generatedBase) {
+    if (!existingSlug || !generatedBase) return !existingSlug;
+    return existingSlug === generatedBase || existingSlug.startsWith(`${generatedBase}-`);
+  }
+
+  if (slugInput && makeInput && modelInput) {
+    const initialGenerated = buildLandingSlugFromFields();
+    const initialSlug = (slugInput.value || '').trim();
+    slugEditedManually = initialSlug.length > 0 && !isLikelyAutoGeneratedSlug(initialSlug, initialGenerated);
+
+    if (!initialSlug && initialGenerated) {
+      slugInput.value = initialGenerated;
+    }
+
+    slugInput.addEventListener('input', () => {
+      const generated = buildLandingSlugFromFields();
+      const current = (slugInput.value || '').trim();
+      slugEditedManually = current.length > 0 && current !== generated;
+    });
+
+    slugInput.addEventListener('blur', () => {
+      slugInput.value = toSlug(slugInput.value);
+    });
+
+    [makeInput, modelInput].forEach((field) => {
+      field.addEventListener('input', () => {
+        if (slugEditedManually) return;
+        slugInput.value = buildLandingSlugFromFields();
+      });
+    });
+  }
+
+  function previewHeroImage(input) {
+    const preview = document.getElementById('heroImagePreview');
+    preview.innerHTML = '';
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.innerHTML = `
+          <p class="text-sm font-medium text-gray-700 mb-2">New Image Preview</p>
+          <img src="${e.target.result}" class="w-full max-w-xs h-32 object-cover rounded-lg border-2 border-green-200">
+        `;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
   const generateBtn = document.getElementById('generateBtn');
   const generateBtnText = document.getElementById('generateBtnText');
   const generateError = document.getElementById('generateError');
   const generateStatus = document.getElementById('generateStatus');
 
   generateBtn.addEventListener('click', async () => {
-    const make = document.querySelector('[name="make"]').value.trim();
-    const model = document.querySelector('[name="model"]').value.trim();
+    const make = makeInput.value.trim();
+    const model = modelInput.value.trim();
 
     generateError.classList.add('hidden');
     generateStatus.classList.add('hidden');
@@ -130,11 +275,15 @@
     generateBtn.disabled = true;
     generateBtnText.textContent = 'Generating…';
 
+    const controller = new AbortController();
+    const clientTimeout = setTimeout(() => controller.abort(), 25000);
+
     try {
       const res = await fetch('/admin/landing/generate-copy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ make, model })
+        body: JSON.stringify({ make, model }),
+        signal: controller.signal
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Generation failed');
@@ -143,7 +292,7 @@
       document.getElementById('field-valueFactors').value = data.valueFactors || '';
       document.getElementById('field-sellingTips').value = data.sellingTips || '';
 
-      const descField = document.querySelector('[name="description"]');
+      const descField = document.getElementById('descriptionInput');
       if (!descField.value.trim() && data.metaDescription) {
         descField.value = data.metaDescription;
       }
@@ -151,14 +300,14 @@
       generateStatus.textContent = 'AI content filled successfully. Save to persist it.';
       generateStatus.classList.remove('hidden');
     } catch (err) {
-      generateError.textContent = err.message;
+      generateError.textContent = err.name === 'AbortError' ? 'AI request timed out. Please try again.' : err.message;
       generateError.classList.remove('hidden');
     } finally {
+      clearTimeout(clientTimeout);
       generateBtn.disabled = false;
-      generateBtnText.textContent = '✨ Generate with AI';
+      generateBtnText.textContent = 'AI Assist';
     }
   });
 </script>
-  <%- include('partials/footer') %>
 </body>
 </html>

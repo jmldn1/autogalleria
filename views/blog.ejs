@@ -5,64 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Auto Galleria Blog</title>
   <meta name="description" content="Read the latest car news, reviews, and guides from Auto Galleria.">
+  <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/blog' %>" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Auto Galleria Blog" />
+  <meta property="og:description" content="Read the latest car news, reviews, and guides from Auto Galleria." />
+  <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/blog' %>" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body class="bg-slate-50 text-slate-800 antialiased">
 
   <!-- NAVBAR -->
   <%- include('partials/navbar') %>
 
   <!-- HERO -->
-  <header class="bg-gray-900 text-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+  <header class="bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
       <h1 class="text-4xl sm:text-5xl font-bold mb-6">Auto Galleria Blog</h1>
-      <p class="max-w-2xl mx-auto text-lg text-gray-300">
+      <p class="max-w-2xl mx-auto text-lg text-slate-300">
         Stay updated with car reviews, tips, and automotive insights.
       </p>
     </div>
   </header>
 
   <!-- BLOG LIST -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
       <% blogs.forEach(blog => { %>
-        <a href="/blog/<%= blog.slug %>" class="block bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
-          <% const sources = blog.imageManifest?.sources; %>
-          <% const avifSrcset = sources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const webpSrcset = sources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const jpgSrcset = sources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-          <% const jpgSrc = sources?.jpg?.[sources?.jpg?.length - 1]?.url; %>
-          <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
-            <picture>
-              <% if (avifSrcset) { %>
-                <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-              <% } %>
-              <% if (webpSrcset) { %>
-                <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-              <% } %>
-              <img
-                src="<%= jpgSrc || blog.coverImage %>"
-                srcset="<%= jpgSrcset %>"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                alt="<%= blog.title %>"
-                class="w-full h-48 object-cover"
-                loading="lazy"
-              />
-            </picture>
-          <% } else if (blog.coverImage) { %>
-            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="w-full h-48 object-cover" loading="lazy" />
-          <% } %>
-          <div class="p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2"><%= blog.title %></h2>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-              <%= blog.excerpt || blog.content.substring(0, 120) %>...
-            </p>
-            <div class="text-xs text-gray-400">
-              Posted <%= blog.createdAt.toDateString() %>
-            </div>
-          </div>
-        </a>
+        <%- include('partials/blog-card', { post: blog }) %>
       <% }) %>
     </div>
   </main>

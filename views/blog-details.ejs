@@ -1,10 +1,21 @@
+<%
+  const pageTitle = blog.title || 'Auto Galleria Blog';
+  const pageDescription = blog.excerpt || (typeof blog.content === 'string' ? blog.content.replace(/<[^>]*>/g, ' ').trim().slice(0, 160) : 'Read the latest insights from Auto Galleria.');
+  const canonicalUrl = `${process.env.SITE_URL || 'https://autogalleria.co.uk'}/blog/${blog.slug || ''}`;
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= blog.title %> | Auto Galleria Blog</title>
-  <meta name="description" content="<%= blog.excerpt || blog.title %>">
+  <title><%= pageTitle %> | Auto Galleria Blog</title>
+  <meta name="description" content="<%= pageDescription %>">
+  <link rel="canonical" href="<%= canonicalUrl %>" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="<%= pageTitle %> | Auto Galleria Blog" />
+  <meta property="og:description" content="<%= pageDescription %>" />
+  <meta property="og:url" content="<%= canonicalUrl %>" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
@@ -43,7 +54,7 @@
     </header>
 
     <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc || blog.coverImage) { %>
-      <div class="mx-auto max-w-6xl px-4 pt-8 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
         <div class="aspect-video overflow-hidden rounded-lg bg-slate-200">
           <% if (heroAvifSrcset || heroWebpSrcset || heroJpgSrc) { %>
             <picture>
@@ -69,36 +80,11 @@
     </article>
 
     <% if (relatedBlogs.length) { %>
-      <section class="mx-auto mt-12 max-w-6xl border-t border-slate-200 px-4 pt-12 sm:px-6 lg:px-8">
+      <section class="mx-auto mt-12 max-w-7xl border-t border-slate-200 px-4 pt-12 sm:px-6 lg:px-8">
         <h2 class="text-2xl font-semibold tracking-tight text-slate-950">Related posts</h2>
         <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <% relatedBlogs.forEach(r => { %>
-          <a href="/blog/<%= r.slug %>" class="group block overflow-hidden rounded-lg border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-md">
-            <% const rSources = r.imageManifest?.sources; %>
-            <% const rAvifSrcset = rSources?.avif?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-            <% const rWebpSrcset = rSources?.webp?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-            <% const rJpgSrcset = rSources?.jpg?.map(src => `${src.url} ${src.w}w`).join(', '); %>
-            <% const rJpgSrc = rSources?.jpg?.[rSources?.jpg?.length - 1]?.url || r.coverImage; %>
-            <% if (rAvifSrcset || rWebpSrcset || rJpgSrcset) { %>
-              <picture>
-                <% if (rAvifSrcset) { %>
-                  <source type="image/avif" srcset="<%= rAvifSrcset %>" sizes="100vw">
-                <% } %>
-                <% if (rWebpSrcset) { %>
-                  <source type="image/webp" srcset="<%= rWebpSrcset %>" sizes="100vw">
-                <% } %>
-                <img src="<%= rJpgSrc %>" srcset="<%= rJpgSrcset %>" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="<%= r.title %>" class="h-48 w-full object-cover">
-              </picture>
-            <% } else if (r.coverImage) { %>
-              <img src="<%= r.coverImage %>" alt="<%= r.title %>" class="h-48 w-full object-cover">
-            <% } %>
-            <div class="p-5">
-              <h3 class="text-lg font-semibold text-slate-950 transition group-hover:text-blue-700"><%= r.title %></h3>
-              <% if (r.excerpt) { %>
-                <p class="mt-2 text-sm leading-6 text-slate-600"><%= r.excerpt %></p>
-              <% } %>
-            </div>
-          </a>
+          <%- include('partials/blog-card', { post: r, compact: true }) %>
         <% }) %>
         </div>
       </section>

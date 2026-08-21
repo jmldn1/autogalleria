@@ -84,7 +84,7 @@ async function handleMultipleImageUploads(files, folder, sizes) {
   return results;
 }
 
-async function openaiChatCompletion(body) {
+async function openaiChatCompletion(body, timeoutMs = 25000) {
   return new Promise((resolve, reject) => {
     const apiKey = (
       process.env.OPENAI_API_KEY
@@ -106,7 +106,8 @@ async function openaiChatCompletion(body) {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(requestBody),
         Authorization: `Bearer ${apiKey}`
-      }
+      },
+      timeout: timeoutMs
     };
 
     const req = https.request(options, (res) => {
@@ -125,6 +126,9 @@ async function openaiChatCompletion(body) {
       });
     });
 
+    req.on('timeout', () => {
+      req.destroy(new Error(`OpenAI request timed out after ${timeoutMs}ms`));
+    });
     req.on('error', reject);
     req.write(requestBody);
     req.end();
@@ -151,26 +155,28 @@ function parseOpenAIJson(text) {
 }
 
 async function generateLandingCopy(make, model) {
-  const modelName = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-  const prompt = `You are a friendly marketing copywriter for a used car buying service. Generate a JSON object only, with the following keys: overview, valueFactors, sellingTips, metaDescription. Each value should be short, readable, and persuasive for a landing page about selling a ${make} ${model}. Do not include extra text outside the JSON.
+  const modelName = process.env.OPENAI_LANDING_MODEL || process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
+  const prompt = `Write short, persuasive landing page copy for a used car buying service, about selling a ${make} ${model}. Keys: overview (1-2 sentences), valueFactors (1-2 sentences on what affects its value), sellingTips (1-2 sentences of practical advice), metaDescription (one SEO sentence, under 160 characters). Respond with JSON only, no extra text.`;
 
-Example output:
-{
-  "overview": "...",
-  "valueFactors": "...",
-  "sellingTips": "...",
-  "metaDescription": "..."
-}`;
-
-  const response = await openaiChatCompletion({
+  const requestBody = {
     model: modelName,
     messages: [
-      { role: 'system', content: 'You are a helpful copywriter for web landing pages.' },
+      { role: 'system', content: 'You are a helpful copywriter for web landing pages. Always respond with a single valid JSON object and nothing else.' },
       { role: 'user', content: prompt }
     ],
-    temperature: 0.65,
-    max_tokens: 400
-  });
+    temperature: 0.6,
+    max_tokens: 300
+  };
+
+  let response;
+  try {
+    // json_object mode keeps output compact and avoids markdown fences, so it's faster and parses reliably
+    response = await openaiChatCompletion({ ...requestBody, response_format: { type: 'json_object' } }, 20000);
+  } catch (err) {
+    // Older models don't support response_format — fall back to a plain request
+    if (!/response_format|400/i.test(err.message)) throw err;
+    response = await openaiChatCompletion(requestBody, 20000);
+  }
 
   const text = response.choices?.[0]?.message?.content || '';
   const parsed = parseOpenAIJson(text);

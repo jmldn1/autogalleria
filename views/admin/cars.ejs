@@ -37,7 +37,7 @@
         %>
           <div
             onclick="window.location='/admin/cars/<%= car._id %>/edit'"
-            class="flex flex-col rounded-lg bg-white p-4 shadow transition hover:shadow-lg cursor-pointer"
+            class="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:shadow-lg"
           >
             <div class="mb-4">
               <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
@@ -51,15 +51,15 @@
                   <img src="<%= jpgSrc || (sources?.webp?.[sources.webp.length - 1]?.url) || (sources?.avif?.[sources.avif.length - 1]?.url) %>"
                        srcset="<%= jpgSrcset %>"
                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                       class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                       class="h-32 w-full rounded-lg object-cover shadow-sm"
                        alt="Car thumbnail">
                 </picture>
               <% } else if (car.imagePath) { %>
                 <img src="<%= car.imagePath %>.jpg"
-                     class="h-32 w-full rounded object-cover shadow transition hover:scale-[1.03]"
+                     class="h-32 w-full rounded-lg object-cover shadow-sm"
                      alt="Car thumbnail">
               <% } else { %>
-                <div class="flex h-32 w-full items-center justify-center rounded bg-gray-200 text-gray-500">
+                <div class="flex h-32 w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
                   No Image
                 </div>
               <% } %>
@@ -79,7 +79,7 @@
               <div class="flex flex-wrap gap-2">
                 <a href="/admin/cars/<%= car._id %>/edit"
                    onclick="event.stopPropagation()"
-                   class="text-blue-600 hover:underline">
+                   class="font-medium text-blue-600 transition hover:text-blue-700 hover:underline">
                   Edit
                 </a>
                 <form action="/admin/cars/<%= car._id %>/delete"
@@ -105,7 +105,7 @@
                 <a href="/car/<%= car.slug %>"
                    target="_blank"
                    onclick="event.stopPropagation()"
-                   class="rounded bg-blue-600 px-3 py-1 text-sm text-white transition hover:bg-blue-700">
+                   class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700">
                   View
                 </a>
               </div>
