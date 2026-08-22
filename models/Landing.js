@@ -27,6 +27,11 @@ const LandingSchema = new mongoose.Schema(
   valueFactors: String,
   sellingTips: String,
 
+  // Model-specific FAQ answers (fall back to generic copy in the view when blank)
+  faqQuickSale: String,
+  faqNonUk: String,
+  faqNonRunning: String,
+
   imagePath: String,       // base folder for images
   placeholder: String,     // tiny base64 preview
 

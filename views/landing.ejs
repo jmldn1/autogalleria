@@ -28,7 +28,7 @@
       "name": "How quickly can I sell my <%= landing.make %> <%= landing.model %>?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "We can provide an instant offer for your <%= landing.make %> <%= landing.model %> and arrange free collection within 24 hours."
+        "text": "<%= landing.faqQuickSale || `We can provide an instant offer for your ${landing.make} ${landing.model} and arrange free collection within 24 hours.` %>"
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do you buy non UK registration <%= landing.make %> <%= landing.model %>?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, we can buy non UK registration <%= landing.make %> <%= landing.model %> and handle import formalities."
+        "text": "<%= landing.faqNonUk || `Yes, we can buy non UK registration ${landing.make} ${landing.model} and handle import formalities.` %>"
       }
     },
     {
@@ -52,7 +52,7 @@
       "name": "Do you buy non-running <%= landing.make %> cars?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, we purchase <%= landing.make %> vehicles even if they are damaged or not running, and collection is always free."
+        "text": "<%= landing.faqNonRunning || `Yes, we purchase ${landing.make} vehicles even if they are damaged or not running, and collection is always free.` %>"
       }
     }
   ]
@@ -697,53 +697,54 @@ if (continueBtn) {
 </script>
 
 <section class="py-16 bg-gray-50" aria-labelledby="aboutHeading">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <h2 id="aboutHeading" class="text-3xl md:text-4xl font-bold text-gray-900 mb-10">
-      How to Sell Your <%= landing.make %> <%= landing.model %> for the Best Price
-    </h2>
+    <div class="max-w-3xl mx-auto text-center mb-12">
+      <h2 id="aboutHeading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+        How to Sell Your <%= landing.make %> <%= landing.model %> for the Best Price
+      </h2>
+      <p class="text-gray-600">
+        Everything you need to know before you sell, in one place.
+      </p>
+    </div>
 
-    <% if (landing.overview) { %>
-      <div class="border-l-4 border-blue-600 bg-white rounded-xl px-8 py-6 mb-12 shadow-sm">
-        <p class="text-gray-700 text-[15px] leading-relaxed">
-          <%= landing.overview %>
-        </p>
-      </div>
-    <% } %>
+    <%
+      const guideCards = [
+        {
+          text: landing.overview,
+          title: `About Selling Your ${landing.make} ${landing.model}`,
+          icon: 'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z',
+        },
+        {
+          text: landing.valueFactors,
+          title: `What Affects Your ${landing.model}'s Value`,
+          icon: 'M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 8.25V6a3 3 0 013-3v0a3 3 0 013 3v2.25M9 8.25h6',
+        },
+        {
+          text: landing.sellingTips,
+          title: `Tips for Selling Your ${landing.make}`,
+          icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z',
+        },
+      ].filter(card => card.text);
+    %>
 
-    <% if (landing.valueFactors || landing.sellingTips) { %>
-      <div class="grid gap-8 sm:grid-cols-2">
-
-        <% if (landing.valueFactors) { %>
+    <% if (guideCards.length) { %>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <% guideCards.forEach(card => { %>
           <article class="bg-white border border-gray-100 rounded-xl p-7 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<%= card.icon %>" />
+            </svg>
             <h3 class="text-lg font-semibold text-gray-900 mb-3">
-              What Affects Your <%= landing.model %>'s Value
+              <%= card.title %>
             </h3>
-            <p class="text-gray-700 text-[15px] leading-relaxed">
-              <%= landing.valueFactors %>
+            <p class="text-gray-700 text-base leading-relaxed">
+              <%= card.text %>
             </p>
           </article>
-        <% } %>
-
-        <% if (landing.sellingTips) { %>
-          <article class="bg-white border border-gray-100 rounded-xl p-7 shadow-sm">
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">
-              Tips for Selling Your <%= landing.make %>
-            </h3>
-            <p class="text-gray-700 text-[15px] leading-relaxed">
-              <%= landing.sellingTips %>
-            </p>
-          </article>
-        <% } %>
-
+        <% }) %>
       </div>
     <% } %>
-
-    <p class="mt-12 text-gray-700 text-[15px] leading-relaxed">
-      Selling a <%= landing.make %> <%= landing.model %> doesn’t need to be complicated. 
-      With the right preparation and a clear understanding of what buyers look for, 
-      you can secure a strong price and a smooth sale.
-    </p>
 
   </div>
 </section>
@@ -794,7 +795,7 @@ if (continueBtn) {
     How quickly can I sell my <%= landing.make %> <%= landing.model %>?
   </summary>
   <p class="mt-2 text-gray-600">
-    We can provide an instant offer for your <%= landing.make %> <%= landing.model %> and arrange free collection within 24 hours.
+    <%= landing.faqQuickSale || `We can provide an instant offer for your ${landing.make} ${landing.model} and arrange free collection within 24 hours.` %>
   </p>
 </details>
 
@@ -812,7 +813,7 @@ if (continueBtn) {
     Do you buy non UK registration <%= landing.make %> <%= landing.model %>?
   </summary>
   <p class="mt-2 text-gray-600">
-    Yes, we can buy non UK registration <%= landing.make %> <%= landing.model %> and handle import formalities.
+    <%= landing.faqNonUk || `Yes, we can buy non UK registration ${landing.make} ${landing.model} and handle import formalities.` %>
   </p>
 </details>
 
@@ -821,7 +822,7 @@ if (continueBtn) {
     Do you buy non-running <%= landing.make %> cars?
   </summary>
   <p class="mt-2 text-gray-600">
-    Yes, we purchase <%= landing.make %> vehicles even if they are damaged or not running, and collection is always free.
+    <%= landing.faqNonRunning || `Yes, we purchase ${landing.make} vehicles even if they are damaged or not running, and collection is always free.` %>
   </p>
 </details>
 

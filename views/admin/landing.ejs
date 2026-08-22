@@ -163,6 +163,26 @@
               <textarea name="sellingTips" id="field-sellingTips" rows="3"
                         class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.sellingTips || '' %></textarea>
             </div>
+
+            <div class="pt-2 border-t border-gray-100">
+              <p class="text-sm font-medium text-gray-700 mb-1">Model-Specific FAQ Answers</p>
+              <p class="text-xs text-gray-500 mb-4">Leave blank to use the generic answer for these questions.</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">"How quickly can I sell my <%= landing.make || 'this' %> <%= landing.model || 'car' %>?"</label>
+              <textarea name="faqQuickSale" id="field-faqQuickSale" rows="2"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.faqQuickSale || '' %></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">"Do you buy non UK registration <%= landing.make || 'this' %> <%= landing.model || 'car' %>?"</label>
+              <textarea name="faqNonUk" id="field-faqNonUk" rows="2"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.faqNonUk || '' %></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">"Do you buy non-running <%= landing.make || 'this' %> cars?"</label>
+              <textarea name="faqNonRunning" id="field-faqNonRunning" rows="2"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"><%= landing.faqNonRunning || '' %></textarea>
+            </div>
           </div>
         </section>
 
@@ -291,6 +311,9 @@
       document.getElementById('field-overview').value = data.overview || '';
       document.getElementById('field-valueFactors').value = data.valueFactors || '';
       document.getElementById('field-sellingTips').value = data.sellingTips || '';
+      document.getElementById('field-faqQuickSale').value = data.faqQuickSale || '';
+      document.getElementById('field-faqNonUk').value = data.faqNonUk || '';
+      document.getElementById('field-faqNonRunning').value = data.faqNonRunning || '';
 
       const descField = document.getElementById('descriptionInput');
       if (!descField.value.trim() && data.metaDescription) {

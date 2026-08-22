@@ -156,7 +156,18 @@ function parseOpenAIJson(text) {
 
 async function generateLandingCopy(make, model) {
   const modelName = process.env.OPENAI_LANDING_MODEL || process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-  const prompt = `Write short, persuasive landing page copy for a used car buying service, about selling a ${make} ${model}. Keys: overview (1-2 sentences), valueFactors (1-2 sentences on what affects its value), sellingTips (1-2 sentences of practical advice), metaDescription (one SEO sentence, under 160 characters). Respond with JSON only, no extra text.`;
+  const prompt = `Write unique, persuasive landing page copy for a used car buying service, specifically about selling a ${make} ${model}. Avoid generic filler that could apply to any car — reference things specific to the ${make} ${model} (typical condition/mileage concerns, known strengths or weaknesses, resale demand, common buyer questions).
+
+Keys:
+- overview (3-4 sentences introducing what makes selling a ${make} ${model} straightforward with us)
+- valueFactors (3-4 sentences on what specifically affects a ${make} ${model}'s resale value — e.g. mileage, service history, common wear points, trim/engine variants)
+- sellingTips (3-4 sentences of practical, model-specific advice for getting the best price for a ${make} ${model})
+- faqQuickSale (1-2 sentences answering "How quickly can I sell my ${make} ${model}?" with specifics relevant to this model)
+- faqNonUk (1-2 sentences answering "Do you buy non-UK registration ${make} ${model}?")
+- faqNonRunning (1-2 sentences answering "Do you buy non-running ${make} cars?")
+- metaDescription (one SEO sentence, under 160 characters)
+
+Respond with JSON only, no extra text.`;
 
   const requestBody = {
     model: modelName,
@@ -165,7 +176,7 @@ async function generateLandingCopy(make, model) {
       { role: 'user', content: prompt }
     ],
     temperature: 0.6,
-    max_tokens: 300
+    max_tokens: 700
   };
 
   let response;
@@ -188,9 +199,13 @@ async function generateLandingCopy(make, model) {
     overview: parsed.overview || '',
     valueFactors: parsed.valueFactors || '',
     sellingTips: parsed.sellingTips || '',
+    faqQuickSale: parsed.faqQuickSale || '',
+    faqNonUk: parsed.faqNonUk || '',
+    faqNonRunning: parsed.faqNonRunning || '',
     metaDescription: parsed.metaDescription || ''
   };
 }
+
 
 async function generateBlogDraft(title, excerpt, topic) {
   const modelName = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
@@ -537,6 +552,21 @@ router.post('/landing', isAdmin, upload.single('image'), async (req, res) => {
   }
 });
 
+router.post('/landing/generate-copy', isAdmin, async (req, res) => {
+  try {
+    const { make, model } = req.body;
+    if (!make || !model) {
+      return res.status(400).json({ error: 'Make and model are required.' });
+    }
+
+    const copy = await generateLandingCopy(make, model);
+    return res.json(copy);
+  } catch (err) {
+    console.error('Landing AI generate error:', err);
+    return res.status(500).json({ error: err.message || 'AI generation failed.' });
+  }
+});
+
 router.get('/landing/:id/edit', isAdmin, async (req, res) => {
   const landing = await Landing.findById(req.params.id);
   if (!landing) return res.redirect('/admin/landings');
@@ -575,21 +605,6 @@ router.post('/landing/:id', isAdmin, upload.single('image'), async (req, res) =>
 router.post('/landing/:id/delete', isAdmin, async (req, res) => {
   await Landing.findByIdAndDelete(req.params.id);
   res.redirect('/admin/landings');
-});
-
-router.post('/landing/generate-copy', isAdmin, async (req, res) => {
-  try {
-    const { make, model } = req.body;
-    if (!make || !model) {
-      return res.status(400).json({ error: 'Make and model are required.' });
-    }
-
-    const copy = await generateLandingCopy(make, model);
-    return res.json(copy);
-  } catch (err) {
-    console.error('Landing AI generate error:', err);
-    return res.status(500).json({ error: err.message || 'AI generation failed.' });
-  }
 });
 
 // ---------------------- CARS ----------------------
