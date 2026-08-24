@@ -12,6 +12,7 @@ const PageView = require('../models/PageView');
 const Lead = require('../models/Lead');
 const { processImage, buildImageManifest, SIZES } = require('../utils/imageService');
 const generateUniqueSlug = require('../utils/slugifyUnique');
+const { runAssistant, applyConfirmedAction } = require('../utils/aiAssistant');
 
 // ---------------------- MULTER SETUP ----------------------
 const storage = multer.diskStorage({
@@ -262,6 +263,42 @@ Mileage: ${details.mileage ? details.mileage + ' miles' : 'Not specified'}`;
   const text = response.choices?.[0]?.message?.content || '';
   return text.trim();
 }
+
+// ---------------------- AI ASSISTANT ----------------------
+router.post('/ai/chat', isAdmin, async (req, res) => {
+  const { message, history } = req.body || {};
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+  const safeHistory = Array.isArray(history)
+    ? history
+        .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+        .slice(-10)
+        .map(m => ({ role: m.role, content: m.content }))
+    : [];
+
+  try {
+    const { reply, pendingAction } = await runAssistant(message.trim(), safeHistory);
+    res.json({ reply, pendingAction });
+  } catch (err) {
+    console.error('AI assistant error:', err);
+    res.status(500).json({ error: 'The assistant hit an error. Please try again.' });
+  }
+});
+
+router.post('/ai/confirm', isAdmin, async (req, res) => {
+  const { action, args } = req.body || {};
+  if (!action || typeof action !== 'string') {
+    return res.status(400).json({ error: 'Action is required' });
+  }
+  try {
+    const result = await applyConfirmedAction(action, args || {});
+    res.json({ ok: true, result });
+  } catch (err) {
+    console.error('AI confirm action error:', err);
+    res.status(400).json({ error: err.message });
+  }
+});
 
 // ---------------------- DASHBOARD ----------------------
 router.get('/dashboard', isAdmin, async (req, res) => {

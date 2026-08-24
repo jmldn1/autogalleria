@@ -678,6 +678,8 @@ if (continueBtn) {
     document.getElementById('regInput').value = '';
     document.getElementById('resultBox').classList.add('hidden');
     document.getElementById('errorBox').classList.add('hidden');
+    document.getElementById('regForm').classList.remove('hidden');
+    document.getElementById('lookupTrust').classList.remove('hidden');
     document.getElementById('lookupSubtitle').textContent = 'Enter your registration number';
     // Reset lead form state
     leadForm.reset();
