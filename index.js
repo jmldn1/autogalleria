@@ -18,6 +18,7 @@ const Lead = require("./models/Lead");
 // Routes
 const adminRoutes = require("./routes/admin");
 const blogRoutes = require("./routes/blog");
+const { getSiteUrl, buildCanonicalUrl, toAbsoluteUrl } = require("./utils/seo");
 const vehicleRoutes = require("./routes/vehicle");
 
 const app = express();
@@ -129,6 +130,15 @@ if (!adminWhatsAppNumber) {
 
 app.use((req, res, next) => {
   res.locals.adminWhatsAppNumber = adminWhatsAppNumber;
+  next();
+});
+
+// Default canonical/OG url for public pages, based on the current path; views can override by passing their own canonicalUrl.
+app.use((req, res, next) => {
+  if (req.method === "GET" && !req.path.startsWith("/admin") && !req.path.startsWith("/api")) {
+    res.locals.siteUrl = getSiteUrl();
+    res.locals.canonicalUrl = buildCanonicalUrl(req.path);
+  }
   next();
 });
 
@@ -498,6 +508,48 @@ app.get("/car/:slug", async (req, res) => {
       galleryImages,
       video: buildYouTubeVideoData(carDoc.youtubeUrl),
     };
+    const vehicleName = [car.year, car.make, car.model].filter(Boolean).join(' ');
+    const vehicleImages = galleryImages
+      .map(image => toAbsoluteUrl(image.lightboxSrc || image.fallback))
+      .filter(Boolean);
+    const vehicleUrl = buildCanonicalUrl(`/car/${car.slug}`);
+    const vehicleSchema = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Product",
+          "name": vehicleName,
+          ...(car.description ? { description: car.description } : {}),
+          ...(vehicleImages.length ? { image: vehicleImages } : {}),
+          ...(Number.isFinite(Number(car.price)) ? {
+            offers: {
+              "@type": "Offer",
+              price: Number(car.price),
+              priceCurrency: "GBP",
+              availability: "https://schema.org/InStock",
+              url: vehicleUrl
+            }
+          } : {}),
+          additionalProperty: [
+            ['year', car.year],
+            ['mileageFromOdometer', car.mileage],
+            ['condition', car.condition]
+          ].filter(([, value]) => value !== undefined && value !== null && value !== '').map(([name, value]) => ({
+            "@type": "PropertyValue",
+            name,
+            value
+          }))
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: getSiteUrl() },
+            { "@type": "ListItem", position: 2, name: "Cars", item: buildCanonicalUrl('/cars') },
+            { "@type": "ListItem", position: 3, name: vehicleName, item: vehicleUrl }
+          ]
+        }
+      ]
+    };
 
     const buildCardImage = (vehicle) => {
       const firstImage = vehicle.galleryImages?.[0] || vehicle.images?.[0];
@@ -548,6 +600,9 @@ app.get("/car/:slug", async (req, res) => {
       car,
       gallery: galleryImages,
       relatedCars,
+      ogImage: vehicleImages[0] || null,
+      ogImageAlt: vehicleName,
+      jsonLd: vehicleSchema,
     });
   } catch (err) {
     console.error("Car details error:", err);

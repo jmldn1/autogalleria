@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
+const { buildCanonicalUrl, toAbsoluteUrl } = require("../utils/seo");
 
 // GET all blogs
 router.get("/", async (req, res) => {
@@ -23,7 +24,28 @@ router.get("/:slug", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(3);
 
-    res.render("blog-details", { blog, relatedBlogs });
+    const articleUrl = buildCanonicalUrl(`/blog/${blog.slug}`);
+    const articleImage = toAbsoluteUrl(blog.coverImage);
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: blog.title,
+      ...(blog.excerpt ? { description: blog.excerpt } : {}),
+      ...(articleImage ? { image: articleImage } : {}),
+      ...(blog.createdAt ? { datePublished: new Date(blog.createdAt).toISOString() } : {}),
+      ...(blog.updatedAt ? { dateModified: new Date(blog.updatedAt).toISOString() } : {}),
+      author: { "@type": "Organization", name: "Auto Galleria" },
+      publisher: { "@type": "Organization", name: "Auto Galleria" },
+      mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl }
+    };
+
+    res.render("blog-details", {
+      blog,
+      relatedBlogs,
+      ogImage: articleImage,
+      ogImageAlt: blog.title,
+      jsonLd: articleSchema
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Error loading blog");

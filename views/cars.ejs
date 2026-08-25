@@ -10,19 +10,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title || 'Cars' %> | Auto Galleria</title>
-    <meta
-      name="description"
-      content="Browse our current stock of premium used cars. Every listing includes detailed information and high-quality responsive images."
-    />
-    <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/cars' %>" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Cars for Sale | Auto Galleria" />
-    <meta property="og:description" content="Browse our current stock of premium used cars. Every listing includes detailed information and high-quality responsive images." />
-    <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/cars' %>" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <%- include('partials/seo-head', {
+      title: (title || 'Cars') + ' | Auto Galleria',
+      description: 'Browse our current stock of premium used cars. Every listing includes detailed information and high-quality responsive images.'
+    }) %>
     <link href="/css/tailwind.css" rel="stylesheet" />
     <% if (heroPreloadSrcset) { %>
       <link

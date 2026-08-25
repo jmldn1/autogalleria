@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= car.make %> <%= car.model %> | Auto Galleria</title>
-  <meta name="description" content="Buy this <%= car.year %> <%= car.make %> <%= car.model %>. Explore detailed images, videos, and specs at Auto Galleria.">
+  <%- include('partials/seo-head', {
+    title: car.make + ' ' + car.model + ' | Auto Galleria',
+    description: 'Buy this ' + car.year + ' ' + car.make + ' ' + car.model + '. Explore detailed images, videos, and specs at Auto Galleria.'
+  }) %>
   <!-- Tailwind -->
   <link href="/css/tailwind.css" rel="stylesheet">
   <!-- Swiper -->

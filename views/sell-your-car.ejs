@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tell Auto Galleria about the vehicle you would like to sell or send us any vehicle sale enquiry.">
-  <title>Sell Your Car | Auto Galleria</title>
-  <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/sell-your-car' %>">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Sell Your Car | Auto Galleria">
-  <meta property="og:description" content="Send Auto Galleria the details of the vehicle you would like to sell.">
-  <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/sell-your-car' %>">
+  <%- include('partials/seo-head', {
+    title: 'Sell Your Car | Auto Galleria',
+    description: 'Tell Auto Galleria about the vehicle you would like to sell or send us any vehicle sale enquiry.'
+  }) %>
   <link rel="stylesheet" href="/css/tailwind.css">
 </head>
 <body class="bg-slate-100 text-slate-800">

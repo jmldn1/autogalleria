@@ -1,0 +1,47 @@
+<%
+  // Shared head tags: pass title/description/canonicalUrl/ogType/ogImage/ogImageAlt/jsonLd/robots as needed per page.
+  const seoTitle = typeof title !== 'undefined' ? title : 'Auto Galleria';
+  const seoDescription = typeof description !== 'undefined' ? description : null;
+  const seoRobots = typeof robots !== 'undefined' ? robots : null;
+  const seoCanonical = typeof canonicalUrl !== 'undefined' ? canonicalUrl : null;
+  const seoOgType = typeof ogType !== 'undefined' ? ogType : 'website';
+  const seoOgImage = typeof ogImage !== 'undefined' ? ogImage : null;
+  const seoOgImageAlt = typeof ogImageAlt !== 'undefined' ? ogImageAlt : null;
+  const seoJsonLd = typeof jsonLd !== 'undefined' ? jsonLd : null;
+  const seoJsonLdText = seoJsonLd
+    ? JSON.stringify(seoJsonLd).replace(/[<>&]/g, character => ({ '<': '\\u003c', '>': '\\u003e', '&': '\\u0026' }[character]))
+    : null;
+%>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title><%= seoTitle %></title>
+<% if (seoRobots) { %>
+<meta name="robots" content="<%= seoRobots %>" />
+<% } %>
+<% if (seoDescription) { %>
+<meta name="description" content="<%= seoDescription %>" />
+<% } %>
+<% if (seoCanonical) { %>
+<link rel="canonical" href="<%= seoCanonical %>" />
+<% } %>
+<% if (seoDescription) { %>
+<meta property="og:type" content="<%= seoOgType %>" />
+<meta property="og:title" content="<%= seoTitle %>" />
+<meta property="og:description" content="<%= seoDescription %>" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<%= seoTitle %>" />
+<meta name="twitter:description" content="<%= seoDescription %>" />
+<% } %>
+<% if (seoCanonical) { %>
+<meta property="og:url" content="<%= seoCanonical %>" />
+<meta name="twitter:url" content="<%= seoCanonical %>" />
+<% } %>
+<% if (seoOgImage) { %>
+<meta property="og:image" content="<%= seoOgImage %>" />
+<% if (seoOgImageAlt) { %>
+<meta property="og:image:alt" content="<%= seoOgImageAlt %>" />
+<% } %>
+<% } %>
+<% if (seoJsonLd) { %>
+<script type="application/ld+json"><%- seoJsonLdText %></script>
+<% } %>

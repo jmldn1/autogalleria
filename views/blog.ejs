@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auto Galleria Blog</title>
-  <meta name="description" content="Read the latest car news, reviews, and guides from Auto Galleria.">
-  <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/blog' %>" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Auto Galleria Blog" />
-  <meta property="og:description" content="Read the latest car news, reviews, and guides from Auto Galleria." />
-  <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/blog' %>" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <%- include('partials/seo-head', {
+    title: 'Auto Galleria Blog',
+    description: 'Read the latest car news, reviews, and guides from Auto Galleria.'
+  }) %>
 
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>

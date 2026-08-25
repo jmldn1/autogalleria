@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Dynamic Title -->
-  <title>
-    <%= car._id ? `Edit ${car.make || ''} ${car.model || ''}` : 'Add New Car' %> | Admin
-  </title>
-
-  <!-- SEO (kept minimal for admin but still clean) -->
-  <meta name="robots" content="noindex, nofollow">
+  <%- include('../partials/seo-head', {
+    title: (car._id ? `Edit ${car.make || ''} ${car.model || ''}` : 'Add New Car') + ' | Admin',
+    robots: 'noindex, nofollow'
+  }) %>
 
   <!-- Tailwind -->
   <link rel="stylesheet" href="/css/tailwind.css" />

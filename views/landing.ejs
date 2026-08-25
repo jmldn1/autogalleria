@@ -1,64 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sell Your <%= landing.make %> <%= landing.model %> | Auto Galleria</title>
-  <meta name="description" content="<%= landing.metaDescription || 'Sell your ' + landing.make + ' ' + landing.model + ' quickly with top offers and free pickup from Auto Galleria.' %>">
-  <link rel="canonical" href="<%= process.env.SITE_URL %>/sell-your-<%= landing.slug %>">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Sell Your <%= landing.make %> <%= landing.model %> | Auto Galleria">
-  <meta property="og:description" content="<%= landing.metaDescription || 'Sell your ' + landing.make + ' ' + landing.model + ' quickly with top offers and free pickup from Auto Galleria.' %>">
-  <meta property="og:url" content="<%= process.env.SITE_URL %>/sell-your-<%= landing.slug %>">
-  <meta name="twitter:card" content="summary_large_image">
-  <% const ogImage = landing.imageManifest && landing.imageManifest.sources && (landing.imageManifest.sources.webp && landing.imageManifest.sources.webp[0] ? landing.imageManifest.sources.webp[0].url : landing.imageManifest.sources.jpg && landing.imageManifest.sources.jpg[0] ? landing.imageManifest.sources.jpg[0].url : landing.imageManifest.base); %>
-  <% if (ogImage) { %>
-    <meta property="og:image" content="<%= ogImage %>">
-    <meta property="og:image:alt" content="<%= landing.heroAltText || landing.make + ' ' + landing.model %>">
-  <% } %>
+  <%
+    const landingOgImage = landing.imageManifest && landing.imageManifest.sources && (landing.imageManifest.sources.webp && landing.imageManifest.sources.webp[0] ? landing.imageManifest.sources.webp[0].url : landing.imageManifest.sources.jpg && landing.imageManifest.sources.jpg[0] ? landing.imageManifest.sources.jpg[0].url : landing.imageManifest.base);
+    const landingJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": `How quickly can I sell my ${landing.make} ${landing.model}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": landing.faqQuickSale || `We can provide an instant offer for your ${landing.make} ${landing.model} and arrange free collection within 24 hours.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How quickly will I get paid?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We process full payment before collecting your vehicle."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `Do you buy non UK registration ${landing.make} ${landing.model}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": landing.faqNonUk || `Yes, we can buy non UK registration ${landing.make} ${landing.model} and handle import formalities.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `Do you buy non-running ${landing.make} cars?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": landing.faqNonRunning || `Yes, we purchase ${landing.make} vehicles even if they are damaged or not running, and collection is always free.`
+          }
+        }
+      ]
+    };
+  %>
+  <%- include('partials/seo-head', {
+    title: 'Sell Your ' + landing.make + ' ' + landing.model + ' | Auto Galleria',
+    description: landing.metaDescription || 'Sell your ' + landing.make + ' ' + landing.model + ' quickly with top offers and free pickup from Auto Galleria.',
+    ogImage: landingOgImage,
+    ogImageAlt: landing.heroAltText || landing.make + ' ' + landing.model,
+    jsonLd: landingJsonLd
+  }) %>
   <link rel="stylesheet" href="/css/tailwind.css">
-  
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How quickly can I sell my <%= landing.make %> <%= landing.model %>?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "<%= landing.faqQuickSale || `We can provide an instant offer for your ${landing.make} ${landing.model} and arrange free collection within 24 hours.` %>"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How quickly will I get paid?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We process full payment before collecting your vehicle."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you buy non UK registration <%= landing.make %> <%= landing.model %>?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "<%= landing.faqNonUk || `Yes, we can buy non UK registration ${landing.make} ${landing.model} and handle import formalities.` %>"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you buy non-running <%= landing.make %> cars?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "<%= landing.faqNonRunning || `Yes, we purchase ${landing.make} vehicles even if they are damaged or not running, and collection is always free.` %>"
-      }
-    }
-  ]
-}
-</script>
-
 </head>
 <body class="text-gray-800 antialiased bg-gray-100">
 

@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Contact Auto Galleria for premium web design, landing page builds, and complete website projects." />
-  <title>Contact | Auto Galleria</title>
-  <link rel="canonical" href="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/contact' %>" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Contact | Auto Galleria" />
-  <meta property="og:description" content="Contact Auto Galleria for premium web design, landing page builds, and complete website projects." />
-  <meta property="og:url" content="<%= (process.env.SITE_URL || 'https://autogalleria.co.uk') + '/contact' %>" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <%- include('partials/seo-head', {
+    title: 'Contact | Auto Galleria',
+    description: 'Contact Auto Galleria for premium web design, landing page builds, and complete website projects.'
+  }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
 <body class="bg-slate-50 text-slate-800">

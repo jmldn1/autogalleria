@@ -477,85 +477,105 @@ function buildLeadFilterQuery(params) {
 }
 
 router.get('/leads', isAdmin, async (req, res) => {
-  const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
-  const limit = 25;
-  const search = (req.query.search || '').trim();
-  const status = (req.query.status || '').trim();
-  const filter = (req.query.filter || '').trim();
-  const sort = req.query.sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 };
-  const query = buildLeadFilterQuery(req.query);
+  try {
+    const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+    const limit = 25;
+    const search = (req.query.search || '').trim();
+    const status = (req.query.status || '').trim();
+    const filter = (req.query.filter || '').trim();
+    const sort = req.query.sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 };
+    const query = buildLeadFilterQuery(req.query);
 
-  const [leads, total] = await Promise.all([
-    Lead.find(query).sort(sort).skip((page - 1) * limit).limit(limit).lean(),
-    Lead.countDocuments(query)
-  ]);
+    const [leads, total] = await Promise.all([
+      Lead.find(query).sort(sort).skip((page - 1) * limit).limit(limit).lean(),
+      Lead.countDocuments(query)
+    ]);
 
-  res.render('admin/leads', {
-    user: req.user,
-    leads,
-    filters: {
-      search,
-      status,
-      filter: req.query.filter || '',
-      sort: req.query.sort === 'oldest' ? 'oldest' : 'newest',
-      from: req.query.from || '',
-      to: req.query.to || ''
-    },
-    pagination: { page, limit, total, pages: Math.max(1, Math.ceil(total / limit)) }
-  });
+    res.render('admin/leads', {
+      user: req.user,
+      leads,
+      filters: {
+        search,
+        status,
+        filter: req.query.filter || '',
+        sort: req.query.sort === 'oldest' ? 'oldest' : 'newest',
+        from: req.query.from || '',
+        to: req.query.to || ''
+      },
+      pagination: { page, limit, total, pages: Math.max(1, Math.ceil(total / limit)) }
+    });
+  } catch (err) {
+    console.error('❌ Leads list error:', err);
+    res.status(500).send('Error loading leads');
+  }
 });
 
 router.post('/leads/:id/update', isAdmin, async (req, res) => {
-  const allowedStatuses = ['new', 'contacted', 'qualified', 'in progress', 'won', 'lost', 'archived'];
-  const update = {
-    status: allowedStatuses.includes(req.body.status) ? req.body.status : 'new',
-    notes: (req.body.notes || '').trim(),
-    followUpAt: req.body.followUpAt ? new Date(req.body.followUpAt) : undefined,
-  };
-  if (update.status === 'contacted') update.lastContactedAt = new Date();
-  await Lead.findByIdAndUpdate(req.params.id, update);
-  res.redirect(req.get('Referrer') || '/admin/leads');
+  try {
+    const allowedStatuses = ['new', 'contacted', 'qualified', 'in progress', 'won', 'lost', 'archived'];
+    const update = {
+      status: allowedStatuses.includes(req.body.status) ? req.body.status : 'new',
+      notes: (req.body.notes || '').trim(),
+      followUpAt: req.body.followUpAt ? new Date(req.body.followUpAt) : undefined,
+    };
+    if (update.status === 'contacted') update.lastContactedAt = new Date();
+    await Lead.findByIdAndUpdate(req.params.id, update);
+    res.redirect(req.get('Referrer') || '/admin/leads');
+  } catch (err) {
+    console.error('❌ Update lead error:', err);
+    res.redirect(req.get('Referrer') || '/admin/leads');
+  }
 });
 
 router.get('/leads/export.csv', isAdmin, async (req, res) => {
-  const leads = await Lead.find(buildLeadFilterQuery(req.query)).sort({ createdAt: -1 }).lean();
-  const escapeCsv = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
-  const rows = [
-    ['Date', 'Name', 'Email', 'Phone', 'Vehicle', 'Source', 'Status', 'Follow-up', 'Notes'],
-    ...leads.map(lead => [
-      lead.createdAt || lead.date,
-      lead.name,
-      lead.email,
-      lead.phone,
-      lead.car,
-      lead.sourceSlug ? `${lead.sourceType || 'unknown'}:${lead.sourceSlug}` : lead.sourceType,
-      lead.status || 'new',
-      lead.followUpAt,
-      lead.notes
-    ])
-  ];
-  res.type('text/csv').attachment('autogalleria-leads.csv').send(rows.map(row => row.map(escapeCsv).join(',')).join('\n'));
+  try {
+    const leads = await Lead.find(buildLeadFilterQuery(req.query)).sort({ createdAt: -1 }).lean();
+    const escapeCsv = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+    const rows = [
+      ['Date', 'Name', 'Email', 'Phone', 'Vehicle', 'Source', 'Status', 'Follow-up', 'Notes'],
+      ...leads.map(lead => [
+        lead.createdAt || lead.date,
+        lead.name,
+        lead.email,
+        lead.phone,
+        lead.car,
+        lead.sourceSlug ? `${lead.sourceType || 'unknown'}:${lead.sourceSlug}` : lead.sourceType,
+        lead.status || 'new',
+        lead.followUpAt,
+        lead.notes
+      ])
+    ];
+    res.type('text/csv').attachment('autogalleria-leads.csv').send(rows.map(row => row.map(escapeCsv).join(',')).join('\n'));
+  } catch (err) {
+    console.error('❌ Leads export error:', err);
+    res.status(500).send('Error exporting leads');
+  }
 });
 
 // ---------------------- LANDINGS ----------------------
 router.get('/landings', isAdmin, async (req, res) => {
-  const landings = await Landing.find().sort({ createdAt: -1 });
+  try {
+    const landings = await Landing.find().sort({ createdAt: -1 });
 
-  const pageViewCounts = await PageView.aggregate([
-    { $match: { path: { $regex: '^/sell-your-' } } },
-    { $group: { _id: '$path', views: { $sum: 1 } } }
-  ]);
+    const pageViewCounts = await PageView.aggregate([
+      { $match: { path: { $regex: '^/sell-your-' } } },
+      { $group: { _id: '$path', views: { $sum: 1 } } }
+    ]);
 
-  const viewCountMap = Object.fromEntries(
-    pageViewCounts.map(({ _id, views }) => [_id, views])
-  );
+    const viewCountMap = Object.fromEntries(
+      pageViewCounts.map(({ _id, views }) => [_id, views])
+    );
 
-  const landingsWithViews = landings.map((landing) => ({
-    ...landing.toObject(),
-    views: viewCountMap[`/sell-your-${landing.slug}`] || 0
-  }));
+    const landingsWithViews = landings.map((landing) => ({
+      ...landing.toObject(),
+      views: viewCountMap[`/sell-your-${landing.slug}`] || 0
+    }));
 
-  res.render('admin/landings', { user: req.user, landings: landingsWithViews });
+    res.render('admin/landings', { user: req.user, landings: landingsWithViews });
+  } catch (err) {
+    console.error('❌ Landings list error:', err);
+    res.status(500).send('Error loading landings');
+  }
 });
 
 router.get('/landing/new', isAdmin, (req, res) => {
@@ -605,9 +625,14 @@ router.post('/landing/generate-copy', isAdmin, async (req, res) => {
 });
 
 router.get('/landing/:id/edit', isAdmin, async (req, res) => {
-  const landing = await Landing.findById(req.params.id);
-  if (!landing) return res.redirect('/admin/landings');
-  res.render('admin/landing', { user: req.user, landing });
+  try {
+    const landing = await Landing.findById(req.params.id);
+    if (!landing) return res.redirect('/admin/landings');
+    res.render('admin/landing', { user: req.user, landing });
+  } catch (err) {
+    console.error('❌ Landing edit lookup error:', err);
+    res.redirect('/admin/landings');
+  }
 });
 
 router.post('/landing/:id', isAdmin, upload.single('image'), async (req, res) => {
@@ -640,28 +665,37 @@ router.post('/landing/:id', isAdmin, upload.single('image'), async (req, res) =>
 });
 
 router.post('/landing/:id/delete', isAdmin, async (req, res) => {
-  await Landing.findByIdAndDelete(req.params.id);
+  try {
+    await Landing.findByIdAndDelete(req.params.id);
+  } catch (err) {
+    console.error('❌ Delete landing error:', err);
+  }
   res.redirect('/admin/landings');
 });
 
 // ---------------------- CARS ----------------------
 router.get('/cars', isAdmin, async (req, res) => {
-  const cars = await Car.find().sort({ createdAt: -1 });
-  const pageViewCounts = await PageView.aggregate([
-    { $match: { path: { $regex: '^/car/' } } },
-    { $group: { _id: '$path', views: { $sum: 1 } } }
-  ]);
+  try {
+    const cars = await Car.find().sort({ createdAt: -1 });
+    const pageViewCounts = await PageView.aggregate([
+      { $match: { path: { $regex: '^/car/' } } },
+      { $group: { _id: '$path', views: { $sum: 1 } } }
+    ]);
 
-  const viewCountMap = Object.fromEntries(
-    pageViewCounts.map(({ _id, views }) => [_id, views])
-  );
+    const viewCountMap = Object.fromEntries(
+      pageViewCounts.map(({ _id, views }) => [_id, views])
+    );
 
-  const carsWithViews = cars.map((car) => ({
-    ...car.toObject(),
-    views: viewCountMap[`/car/${car.slug}`] || 0
-  }));
+    const carsWithViews = cars.map((car) => ({
+      ...car.toObject(),
+      views: viewCountMap[`/car/${car.slug}`] || 0
+    }));
 
-  res.render('admin/cars', { user: req.user, cars: carsWithViews });
+    res.render('admin/cars', { user: req.user, cars: carsWithViews });
+  } catch (err) {
+    console.error('❌ Cars list error:', err);
+    res.status(500).send('Error loading cars');
+  }
 });
 
 router.get('/cars/new', isAdmin, (req, res) => {
@@ -730,9 +764,14 @@ router.post(
 );
 
 router.get('/cars/:id/edit', isAdmin, async (req, res) => {
-  const car = await Car.findById(req.params.id);
-  if (!car) return res.redirect('/admin/cars');
-  res.render('admin/car-form', { user: req.user, car, action: `/admin/cars/${car._id}`, method: 'POST' });
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) return res.redirect('/admin/cars');
+    res.render('admin/car-form', { user: req.user, car, action: `/admin/cars/${car._id}`, method: 'POST' });
+  } catch (err) {
+    console.error('❌ Car edit lookup error:', err);
+    res.redirect('/admin/cars');
+  }
 });
 
 router.post(
@@ -778,31 +817,40 @@ router.post(
 );
 
 router.post('/cars/:id/delete', isAdmin, async (req, res) => {
-  await Car.findByIdAndDelete(req.params.id);
+  try {
+    await Car.findByIdAndDelete(req.params.id);
+  } catch (err) {
+    console.error('❌ Delete car error:', err);
+  }
   res.redirect('/admin/cars');
 });
 
 // ---------------------- BLOGS ----------------------
 router.get('/blogs', isAdmin, async (req, res) => {
-  const blogs = await Blog.find().sort({ createdAt: -1 });
-  const pageViewCounts = await PageView.aggregate([
-    { $match: { path: { $regex: '^/blog/' } } },
-    { $group: { _id: '$path', views: { $sum: 1 } } }
-  ]);
+  try {
+    const blogs = await Blog.find().sort({ createdAt: -1 });
+    const pageViewCounts = await PageView.aggregate([
+      { $match: { path: { $regex: '^/blog/' } } },
+      { $group: { _id: '$path', views: { $sum: 1 } } }
+    ]);
 
-  const viewCountMap = Object.fromEntries(
-    pageViewCounts.map(({ _id, views }) => [_id, views])
-  );
+    const viewCountMap = Object.fromEntries(
+      pageViewCounts.map(({ _id, views }) => [_id, views])
+    );
 
-  const blogsWithViews = blogs.map((blog) => ({
-    ...blog.toObject(),
-    views: viewCountMap[`/blog/${blog.slug}`] || 0
-  }));
+    const blogsWithViews = blogs.map((blog) => ({
+      ...blog.toObject(),
+      views: viewCountMap[`/blog/${blog.slug}`] || 0
+    }));
 
-  res.render('admin/blogs', { 
-    user: req.user,
-    blogs: blogsWithViews
-  });
+    res.render('admin/blogs', { 
+      user: req.user,
+      blogs: blogsWithViews
+    });
+  } catch (err) {
+    console.error('❌ Blogs list error:', err);
+    res.status(500).send('Error loading blogs');
+  }
 });
 
 router.get('/blogs/new', isAdmin, (req, res) => {
@@ -879,11 +927,17 @@ router.post('/blogs', isAdmin, upload.fields([
 });
 
 router.get('/blogs/edit/:id', isAdmin, async (req, res) => {
-  const blog = await Blog.findById(req.params.id);
-  res.render('admin/edit-blog', {
-    user: req.user,
-    blog
-  });
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.redirect('/admin/blogs');
+    res.render('admin/edit-blog', {
+      user: req.user,
+      blog
+    });
+  } catch (err) {
+    console.error('❌ Blog edit lookup error:', err);
+    res.redirect('/admin/blogs');
+  }
 });
 
 router.post('/blogs/edit/:id', isAdmin, upload.fields([
@@ -927,7 +981,11 @@ router.post('/blogs/edit/:id', isAdmin, upload.fields([
 });
 
 router.post('/blogs/delete/:id', isAdmin, async (req, res) => {
-  await Blog.findByIdAndDelete(req.params.id);
+  try {
+    await Blog.findByIdAndDelete(req.params.id);
+  } catch (err) {
+    console.error('❌ Delete blog error:', err);
+  }
   res.redirect('/admin/blogs');
 });
 

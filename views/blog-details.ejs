@@ -1,21 +1,18 @@
 <%
   const pageTitle = blog.title || 'Auto Galleria Blog';
   const pageDescription = blog.excerpt || (typeof blog.content === 'string' ? blog.content.replace(/<[^>]*>/g, ' ').trim().slice(0, 160) : 'Read the latest insights from Auto Galleria.');
-  const canonicalUrl = `${process.env.SITE_URL || 'https://autogalleria.co.uk'}/blog/${blog.slug || ''}`;
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= pageTitle %> | Auto Galleria Blog</title>
-  <meta name="description" content="<%= pageDescription %>">
-  <link rel="canonical" href="<%= canonicalUrl %>" />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="<%= pageTitle %> | Auto Galleria Blog" />
-  <meta property="og:description" content="<%= pageDescription %>" />
-  <meta property="og:url" content="<%= canonicalUrl %>" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <%- include('partials/seo-head', {
+    title: pageTitle + ' | Auto Galleria Blog',
+    description: pageDescription,
+    ogType: 'article',
+    ogImage,
+    ogImageAlt: blog.title,
+    jsonLd
+  }) %>
 
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= landing._id ? `Edit ${landing.make || ''} ${landing.model || ''}` : 'Add New Landing' %> | Admin
-  </title>
-  <meta name="robots" content="noindex, nofollow">
+  <%- include('../partials/seo-head', {
+    title: (landing._id ? `Edit ${landing.make || ''} ${landing.model || ''}` : 'Add New Landing') + ' | Admin',
+    robots: 'noindex, nofollow'
+  }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
