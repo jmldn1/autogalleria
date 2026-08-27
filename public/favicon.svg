@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Auto Galleria</title>
+  <rect width="64" height="64" rx="14" fill="#2563eb"/>
+  <path d="M14 45 27.5 18h9L50 45h-8l-2.7-6H24.6L22 45h-8Zm13.4-12h8.9l-4.5-10-4.4 10ZM45 18h7v27h-7V18Z" fill="#fff"/>
+</svg>
