@@ -188,6 +188,7 @@ const regOut = document.getElementById('regOut');
 const resultStatus = document.getElementById('resultStatus');
 const lookupNotice = document.getElementById('lookupNotice');
 const resetBtn = document.getElementById('resetBtn');
+const submitBtn = document.getElementById('submitBtn');
 const lookupSubtitle = document.getElementById('lookupSubtitle');
 const lookupTrust = document.getElementById('lookupTrust');
 
@@ -197,6 +198,15 @@ form.addEventListener('submit', async (e) => {
   const reg = input.value.toUpperCase().trim();
   errorBox.classList.add('hidden');
   resultBox.classList.add('hidden');
+
+  if (!reg) {
+    errorBox.textContent = 'Please enter a registration number';
+    errorBox.classList.remove('hidden');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
 
   try {
     const res = await fetch('/api/lookup', {
@@ -274,6 +284,9 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     errorBox.textContent = err.message;
     errorBox.classList.remove('hidden');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
   }
 });
 
@@ -851,7 +864,7 @@ if (continueBtn) {
               <% if (webpSrcset) { %>
                 <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw">
               <% } %>
-              <img src="<%= fallbackUrl %>" alt="Sell a <%= item.make %> <%= item.model %>" width="<%= fallbackWidth %>" height="<%= fallbackHeight %>" class="w-full h-48 object-cover" loading="lazy">
+              <img src="<%= fallbackUrl %>" alt="Sell a <%= item.make %> <%= item.model %>" width="<%= fallbackWidth %>" height="<%= fallbackHeight %>" class="w-full aspect-video object-cover" loading="lazy">
             </picture>
           </a>
           <div class="p-6">

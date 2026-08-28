@@ -3,7 +3,7 @@
 <head>
   <%- include('../partials/seo-head', { title: 'Admin Dashboard | Auto Galleria', robots: 'noindex, nofollow' }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body class="flex min-h-screen flex-col bg-gray-100 text-gray-800">
 
@@ -271,6 +271,7 @@
 <script id="lead-trend-data" type="application/json"><%- JSON.stringify(leadTrend || []) %></script>
 <script id="heatmap-data" type="application/json"><%- JSON.stringify(heatmap || []) %></script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
   const rawLeadTrend = JSON.parse(document.getElementById('lead-trend-data').textContent);
   const lineLabels = rawLeadTrend.map(item => new Date(`${item.date}T00:00:00`).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
   const lineData = rawLeadTrend.map(item => item.count);
@@ -328,6 +329,7 @@
       }
     }
   });
+});
 </script>
 
 <script>

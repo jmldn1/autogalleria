@@ -24,12 +24,12 @@
         srcset="<%= jpgSrcset %>"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         alt="<%= cardPost.title || 'Blog post' %>"
-        class="h-48 w-full object-cover"
+        class="aspect-video w-full object-cover"
         loading="lazy"
       />
     </picture>
   <% } else if (cardPost.coverImage) { %>
-    <img src="<%= cardPost.coverImage %>" alt="<%= cardPost.title || 'Blog post' %>" class="h-48 w-full object-cover" loading="lazy" />
+    <img src="<%= cardPost.coverImage %>" alt="<%= cardPost.title || 'Blog post' %>" class="aspect-video w-full object-cover" loading="lazy" />
   <% } %>
   <div class="<%= isCompact ? 'p-5' : 'p-6' %>">
     <h2 class="text-xl font-semibold text-slate-900"><%= cardPost.title || 'Untitled post' %></h2>

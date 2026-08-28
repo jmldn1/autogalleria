@@ -46,15 +46,15 @@
                   <img src="<%= jpgSrc || blog.coverImage %>"
                        srcset="<%= jpgSrcset %>"
                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                       class="h-32 w-full rounded-lg object-cover shadow-sm"
+                       class="aspect-video w-full rounded-lg object-cover shadow-sm"
                        alt="Blog thumbnail">
                 </picture>
               <% } else if (blog.coverImage) { %>
                 <img src="<%= blog.coverImage %>"
-                     class="h-32 w-full rounded-lg object-cover shadow-sm"
+                     class="aspect-video w-full rounded-lg object-cover shadow-sm"
                      alt="Blog thumbnail">
               <% } else { %>
-                <div class="flex h-32 w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
                   No Image
                 </div>
               <% } %>

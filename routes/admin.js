@@ -10,6 +10,7 @@ const Car = require('../models/Car');
 const Blog = require('../models/Blog');
 const PageView = require('../models/PageView');
 const Lead = require('../models/Lead');
+const Admin = require('../models/Admin');
 const { processImage, buildImageManifest, SIZES } = require('../utils/imageService');
 const generateUniqueSlug = require('../utils/slugifyUnique');
 const { runAssistant, applyConfirmedAction } = require('../utils/aiAssistant');
@@ -20,6 +21,14 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
+const uploadProfile = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (/^image\/(jpeg|png|webp|avif)$/.test(file.mimetype)) return cb(null, true);
+    cb(new Error('Please upload a JPG, PNG, WebP, or AVIF image.'));
+  }
+});
 
 // ---------------------- HELPERS ----------------------
 async function handleImageUpload(file, folder, prefix, sizes) {
@@ -300,61 +309,136 @@ router.post('/ai/confirm', isAdmin, async (req, res) => {
   }
 });
 
+// ---------------------- ADMIN PROFILE ----------------------
+router.get('/profile', isAdmin, (req, res) => {
+  res.render('admin/profile', { user: req.user, error: null });
+});
+
+router.post('/profile', isAdmin, uploadProfile.single('profileImage'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.render('admin/profile', {
+        user: req.user,
+        error: 'Choose an image to upload.'
+      });
+    }
+
+    const admin = req.user.id
+      ? await Admin.findById(req.user.id)
+      : await Admin.findOne({ username: req.user.name });
+    if (!admin) return res.redirect('/login');
+
+    const imageData = await handleImageUpload(
+      req.file,
+      `admin/${admin._id}`,
+      'profile',
+      [{ width: 160, height: 160 }, { width: 320, height: 320 }]
+    );
+    admin.profileImage = imageData.imagePath;
+    await admin.save();
+
+    req.session.user = {
+      ...req.user,
+      id: admin._id.toString(),
+      name: admin.username,
+      profileImage: admin.profileImage
+    };
+    res.redirect('/admin/profile');
+  } catch (err) {
+    console.error('Admin profile image upload failed:', err);
+    res.render('admin/profile', {
+      user: req.user,
+      error: err.message || 'Image upload failed.'
+    });
+  }
+});
+
 // ---------------------- DASHBOARD ----------------------
 router.get('/dashboard', isAdmin, async (req, res) => {
   try {
-    const leads = await Lead.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .lean();
-
-    const totalLeads = await Lead.countDocuments();
-    const totalCars = await Car.countDocuments();
-    const totalBlogs = await Blog.countDocuments();
-    const totalPageViews = await PageView.countDocuments();
-
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    const topPages = await PageView.aggregate([
-      { $match: { createdAt: { $gte: sevenDaysAgo } } },
-      { $group: { _id: '$path', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]);
-
     const leadTrendStart = new Date();
     leadTrendStart.setDate(leadTrendStart.getDate() - 29);
     leadTrendStart.setHours(0, 0, 0, 0);
-    const leadTrend = await Lead.aggregate([
-      { $match: { createdAt: { $gte: leadTrendStart } } },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'Europe/London' }
-          },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } }
-    ]);
 
-    const heatmap = await PageView.aggregate([
-      { $match: { createdAt: { $gte: sevenDaysAgo } } },
-      {
-        $project: {
-          hour: { $hour: { date: '$createdAt', timezone: 'Europe/London' } },
-          dayOfWeek: { $dayOfWeek: { date: '$createdAt', timezone: 'Europe/London' } }
-        }
-      },
-      {
-        $group: {
-          _id: { hour: '$hour', dayOfWeek: '$dayOfWeek' },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { '_id.dayOfWeek': 1, '_id.hour': 1 } }
+    const today = new Date();
+    const thisWeek = new Date();
+    thisWeek.setDate(thisWeek.getDate() + 7);
+
+    // These queries are all independent reads, so run them concurrently
+    // instead of paying a round-trip to Atlas for each one in sequence.
+    const [
+      leads,
+      totalLeads,
+      totalCars,
+      totalBlogs,
+      totalPageViews,
+      topPages,
+      leadTrend,
+      heatmap,
+      followUpQueue,
+      followUpNeeded,
+      dueThisWeek,
+      newLeads,
+      noNotes
+    ] = await Promise.all([
+      Lead.find().sort({ createdAt: -1 }).limit(5).lean(),
+      Lead.countDocuments(),
+      Car.countDocuments(),
+      Blog.countDocuments(),
+      PageView.countDocuments(),
+      PageView.aggregate([
+        { $match: { createdAt: { $gte: sevenDaysAgo } } },
+        { $group: { _id: '$path', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ]),
+      Lead.aggregate([
+        { $match: { createdAt: { $gte: leadTrendStart } } },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'Europe/London' }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+      PageView.aggregate([
+        { $match: { createdAt: { $gte: sevenDaysAgo } } },
+        {
+          $project: {
+            hour: { $hour: { date: '$createdAt', timezone: 'Europe/London' } },
+            dayOfWeek: { $dayOfWeek: { date: '$createdAt', timezone: 'Europe/London' } }
+          }
+        },
+        {
+          $group: {
+            _id: { hour: '$hour', dayOfWeek: '$dayOfWeek' },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { '_id.dayOfWeek': 1, '_id.hour': 1 } }
+      ]),
+      Lead.find({
+        status: { $nin: ['won', 'lost', 'archived'] },
+        followUpAt: { $ne: null },
+        followUpAt: { $lte: thisWeek }
+      }).sort({ followUpAt: 1 }).limit(5).lean(),
+      Lead.countDocuments({
+        status: { $nin: ['won', 'lost', 'archived'] },
+        followUpAt: { $ne: null, $lte: today }
+      }),
+      Lead.countDocuments({
+        status: { $nin: ['won', 'lost', 'archived'] },
+        followUpAt: { $ne: null, $gte: today, $lte: thisWeek }
+      }),
+      Lead.countDocuments({ status: 'new' }),
+      Lead.countDocuments({ notes: { $exists: true, $in: ['', null] } })
     ]);
 
     const heatmapPoints = heatmap.map(item => ({
@@ -362,29 +446,6 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       dayIndex: item._id.dayOfWeek - 1,
       count: item.count
     }));
-
-    const today = new Date();
-    const thisWeek = new Date();
-    thisWeek.setDate(thisWeek.getDate() + 7);
-
-    const followUpQueue = await Lead.find({
-      status: { $nin: ['won', 'lost', 'archived'] },
-      followUpAt: { $ne: null },
-      followUpAt: { $lte: thisWeek }
-    }).sort({ followUpAt: 1 }).limit(5).lean();
-
-    const followUpNeeded = await Lead.countDocuments({
-      status: { $nin: ['won', 'lost', 'archived'] },
-      followUpAt: { $ne: null, $lte: today }
-    });
-
-    const dueThisWeek = await Lead.countDocuments({
-      status: { $nin: ['won', 'lost', 'archived'] },
-      followUpAt: { $ne: null, $gte: today, $lte: thisWeek }
-    });
-
-    const newLeads = await Lead.countDocuments({ status: 'new' });
-    const noNotes = await Lead.countDocuments({ notes: { $exists: true, $in: ['', null] } });
 
     res.render('admin/dashboard', {
       user: req.user,

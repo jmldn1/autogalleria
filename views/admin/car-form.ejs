@@ -9,9 +9,6 @@
   <!-- Tailwind -->
   <link rel="stylesheet" href="/css/tailwind.css" />
 
-  <!-- Optional: Favicon -->
-  <link rel="icon" href="/favicon.ico">
-
   <!-- Optional: Global styles -->
   <style>
     body {
@@ -28,9 +25,6 @@
   <main class="flex-1">
     <div class="max-w-5xl mx-auto p-3 sm:p-6">
 
-
-
-<main class="max-w-5xl mx-auto p-3 sm:p-6">
   <div class="mb-6 flex items-center justify-between">
     <h2 class="text-3xl font-bold text-gray-900"><%= car._id ? 'Edit Car' : 'Add New Car' %></h2>
     <a href="/admin/cars" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
@@ -257,8 +251,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <% car.galleryImages.forEach((img, index) => { %>
                 <div class="relative group" data-existing-image-card>
-                  <img src="<%= img.fallback %>" alt="Gallery Image <%= index + 1 %>" 
-                       class="w-full h-32 object-cover rounded-lg border-2 border-gray-200">
+                  <img src="<%= img.fallback %>" alt="Gallery Image <%= index + 1 %>"
+                       class="w-full aspect-4/3 object-cover rounded-lg border-2 border-gray-200">
                   <button type="button" data-remove-existing-image data-existing-image-index="<%= index %>"
                           class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,7 +376,7 @@
           const div = document.createElement('div');
           div.className = 'relative group';
           div.innerHTML = `
-            <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg border-2 border-green-200">
+            <img src="${e.target.result}" class="w-full aspect-4/3 object-cover rounded-lg border-2 border-green-200">
             <button type="button" onclick="removeNewImage(${index})"
                     class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

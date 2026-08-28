@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const bcrypt = require("bcrypt");
 const helmet = require("helmet");
+const compression = require("compression");
+const pkg = require("./package.json");
 
 // Models
 const Admin = require("./models/Admin");
@@ -39,10 +41,25 @@ app.use(
   })
 );
 
+app.use(compression());
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// Cache-bust vendor assets whenever the vendored package versions change.
+app.locals.vendorVersion = `swiper-${pkg.devDependencies.swiper}_lightgallery-${pkg.devDependencies.lightgallery}`.replace(/[^\w.-]/g, "");
+
+// Vendored third-party assets are immutable per version, so cache them aggressively.
+app.use('/vendor', express.static(path.join(__dirname, 'public/vendor'), {
+  maxAge: '1y',
+  immutable: true,
+}));
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// Processed gallery images are content-hashed per upload, so cache them aggressively.
+app.use('/images', express.static(path.join(__dirname, 'public/images'), {
+  maxAge: '1y',
+  immutable: true,
+}));
 
 function extractYouTubeVideoId(url) {
   if (!url || typeof url !== 'string') return null;
@@ -210,7 +227,11 @@ app.post("/login", async (req, res) => {
     if (!match) return res.render("login", { error: "Invalid username or password" });
 
     req.session.isAdmin = true;
-    req.session.user = { name: admin.username };
+    req.session.user = {
+      id: admin._id.toString(),
+      name: admin.username,
+      profileImage: admin.profileImage || ''
+    };
     return res.redirect("/admin/dashboard");
 
   } catch (err) {
@@ -566,7 +587,16 @@ app.get("/car/:slug", async (req, res) => {
       };
     };
 
-    const cardSelect = "slug make model year price mileage condition galleryImages";
+    const cardSelect = {
+      slug: 1,
+      make: 1,
+      model: 1,
+      year: 1,
+      price: 1,
+      mileage: 1,
+      condition: 1,
+      galleryImages: { $slice: 1 },
+    };
 
     const relatedByMake = await Car.find({
       _id: { $ne: carDoc._id },
@@ -613,7 +643,12 @@ app.get("/car/:slug", async (req, res) => {
 // Car enquiry route
 app.post("/car/:slug/enquire", async (req, res) => {
   try {
-    const { name, email, phone, message } = req.body;
+    const { name, email, phone, message, companyWebsite } = req.body;
+
+    // Honeypot field: real users never fill this, bots often do.
+    if (companyWebsite && companyWebsite.trim()) {
+      return res.json({ success: true, message: "Thank you — we'll be in touch shortly." });
+    }
 
     if (!name || !name.trim() || !email || !email.trim()) {
       return res.status(400).json({ success: false, message: "Name and email are required." });
@@ -646,22 +681,30 @@ app.post("/car/:slug/enquire", async (req, res) => {
       auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
     });
 
+    // Escape user-supplied fields before interpolating into the HTML email body.
+    const escapeHtml = (str) =>
+      String(str).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+
     const carLabel = carDoc ? `${carDoc.year} ${carDoc.make} ${carDoc.model}` : req.params.slug;
     const carUrl = `https://autogalleria.co.uk/car/${req.params.slug}`;
+    const safeName = escapeHtml(name.trim());
+    const safeEmail = escapeHtml(email.trim());
+    const safePhone = phone ? escapeHtml(phone.trim()) : "";
+    const safeMessage = message ? escapeHtml(message.trim()) : "";
 
     await transporter.sendMail({
       from: `"Auto Galleria Enquiries" <${process.env.GMAIL_USER}>`,
       to: process.env.GMAIL_TO,
-      replyTo: `"${name.trim()}" <${email.trim()}>`,
+      replyTo: `"${name.trim().replace(/["\r\n]/g, "")}" <${email.trim()}>`,
       subject: `New Car Enquiry — ${carLabel}`,
       html: `
         <h2 style="margin-bottom:8px">New Enquiry — ${carLabel}</h2>
         <p><a href="${carUrl}">${carUrl}</a></p>
         <hr style="margin:16px 0">
-        <p><strong>Name:</strong> ${name.trim()}</p>
-        <p><strong>Email:</strong> ${email.trim()}</p>
-        ${phone ? `<p><strong>Phone:</strong> ${phone.trim()}</p>` : ""}
-        ${message ? `<p><strong>Message:</strong> ${message.trim()}</p>` : ""}
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> ${safeEmail}</p>
+        ${safePhone ? `<p><strong>Phone:</strong> ${safePhone}</p>` : ""}
+        ${safeMessage ? `<p><strong>Message:</strong> ${safeMessage}</p>` : ""}
       `,
     });
 

@@ -49,15 +49,15 @@
                   <img src="<%= jpgSrc || (sources?.webp?.[sources.webp.length - 1]?.url) || (sources?.avif?.[sources.avif.length - 1]?.url) %>"
                        srcset="<%= jpgSrcset %>"
                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                       class="h-32 w-full rounded-lg object-cover shadow-sm"
+                       class="aspect-video w-full rounded-lg object-cover shadow-sm"
                        alt="Car thumbnail">
                 </picture>
               <% } else if (car.imagePath) { %>
                 <img src="<%= car.imagePath %>.jpg"
-                     class="h-32 w-full rounded-lg object-cover shadow-sm"
+                     class="aspect-video w-full rounded-lg object-cover shadow-sm"
                      alt="Car thumbnail">
               <% } else { %>
-                <div class="flex h-32 w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
                   No Image
                 </div>
               <% } %>

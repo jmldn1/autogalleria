@@ -7,14 +7,30 @@
   }) %>
   <!-- Tailwind -->
   <link href="/css/tailwind.css" rel="stylesheet">
-  <!-- Swiper -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-  <!-- LightGallery -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/thumbnail/lg-thumbnail.min.js" defer></script>
+  <!-- Preload the LCP (first gallery) image so it's discoverable immediately -->
+  <% if (car.galleryImages && car.galleryImages.length) { %>
+    <% const lcpImg = car.galleryImages[0]; %>
+    <link
+      rel="preload"
+      as="image"
+      href="<%= lcpImg.fallback %>"
+      imagesrcset="<%= lcpImg.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+      imagesizes="(max-width: 600px) 300px, (max-width: 1200px) 600px, 1200px"
+      type="image/avif"
+    >
+  <% } %>
+  <!-- Swiper (self-hosted, core + Navigation/FreeMode/Thumbs only) -->
+  <link rel="stylesheet" href="/vendor/swiper/swiper.min.css?v=<%= vendorVersion %>"/>
+  <link rel="stylesheet" href="/vendor/swiper/navigation.min.css?v=<%= vendorVersion %>"/>
+  <link rel="stylesheet" href="/vendor/swiper/free-mode.min.css?v=<%= vendorVersion %>"/>
+  <!-- LightGallery (self-hosted) -->
+  <!-- Only needed once the lightbox opens, so load without blocking initial render -->
+  <link rel="stylesheet" href="/vendor/lightgallery/css/lightgallery.min.css?v=<%= vendorVersion %>" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/vendor/lightgallery/css/lg-zoom.min.css?v=<%= vendorVersion %>" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/vendor/lightgallery/css/lg-thumbnail.min.css?v=<%= vendorVersion %>" media="print" onload="this.media='all'">
+  <script src="/vendor/lightgallery/lightgallery.min.js?v=<%= vendorVersion %>" defer></script>
+  <script src="/vendor/lightgallery/plugins/zoom/lg-zoom.min.js?v=<%= vendorVersion %>" defer></script>
+  <script src="/vendor/lightgallery/plugins/thumbnail/lg-thumbnail.min.js?v=<%= vendorVersion %>" defer></script>
 </head>
 <body class="bg-slate-50 text-slate-900">
   <%- include('partials/navbar') %>
@@ -65,8 +81,8 @@
                 srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                 sizes="(max-width: 600px) 300px, (max-width: 1200px) 600px, 1200px"
                 alt="<%= img.alt || `${car.make} ${car.model}` %>"
-                class="w-full h-[400px] object-cover"
-                loading="lazy"
+                class="aspect-4/3 w-full object-cover"
+                <% if (index === 0) { %>loading="eager" fetchpriority="high"<% } else { %>loading="lazy"<% } %>
                 style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
               >
             </picture>
@@ -105,7 +121,7 @@
                       srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                       sizes="96px"
                       alt="Thumbnail <%= car.make %> <%= car.model %>"
-                      class="w-full h-24 object-cover rounded-lg"
+                      class="aspect-4/3 w-full object-cover rounded-lg"
                       loading="lazy"
                       style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
                     >
@@ -242,15 +258,22 @@
   </main>
   <%- include('partials/whatsapp-float', { car }) %>
     <%- include('partials/footer') %>
-  <script>
+  <script type="module">
+    import Swiper from "/vendor/swiper/swiper.min.mjs?v=<%= vendorVersion %>";
+    import Navigation from "/vendor/swiper/modules/navigation.min.mjs?v=<%= vendorVersion %>";
+    import Thumbs from "/vendor/swiper/modules/thumbs.min.mjs?v=<%= vendorVersion %>";
+    import FreeMode from "/vendor/swiper/modules/free-mode.min.mjs?v=<%= vendorVersion %>";
+
     document.addEventListener("DOMContentLoaded", () => {
       const swiperThumbs = new Swiper(".mySwiper", {
+        modules: [FreeMode],
         spaceBetween: 10,
         slidesPerView: 4,
         freeMode: true,
         watchSlidesProgress: true,
       });
       const swiperMain = new Swiper(".mySwiper2", {
+        modules: [Navigation, Thumbs],
         spaceBetween: 10,
         navigation: {
           nextEl: ".swiper-button-next",

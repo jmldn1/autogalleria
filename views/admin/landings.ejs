@@ -47,15 +47,15 @@
                   <img src="<%= jpgSrc || landing.imagePath + '.jpg' %>"
                        srcset="<%= jpgSrcset %>"
                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                       class="h-32 w-full rounded-lg object-cover shadow-sm"
+                       class="aspect-video w-full rounded-lg object-cover shadow-sm"
                        alt="Landing thumbnail">
                 </picture>
               <% } else if (landing.imagePath) { %>
                 <img src="<%= landing.imagePath %>.jpg"
-                     class="h-32 w-full rounded-lg object-cover shadow-sm"
+                     class="aspect-video w-full rounded-lg object-cover shadow-sm"
                      alt="Landing thumbnail">
               <% } else { %>
-                <div class="flex h-32 w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-slate-100 text-sm font-medium text-slate-500">
                   No Image
                 </div>
               <% } %>

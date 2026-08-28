@@ -10,8 +10,8 @@
   const vehicleName = [cardVehicle.make, cardVehicle.model].filter(Boolean).join(' ') || 'Vehicle';
   const priceValue = Number(cardVehicle.price);
 %>
-<article class="card card-hover">
-  <a href="<%= vehicleHref %>" class="block">
+<article class="card card-hover h-full">
+  <a href="<%= vehicleHref %>" class="flex h-full flex-col">
     <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
       <picture>
         <% if (avifSrcset) { %>
@@ -25,17 +25,17 @@
           srcset="<%= jpgSrcset %>"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           alt="<%= cardVehicle.image?.alt || vehicleName %>"
-          class="h-52 w-full object-cover"
+          class="aspect-4/3 w-full object-cover"
           loading="lazy"
         />
       </picture>
     <% } else { %>
-      <div class="flex h-52 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">
+      <div class="flex aspect-4/3 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">
         No image available
       </div>
     <% } %>
 
-    <div class="p-5">
+    <div class="flex-1 p-6">
       <div class="flex items-start justify-between gap-3">
         <div>
           <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"><%= cardVehicle.year || (isCompact ? 'In stock' : 'New arrival') %></p>

@@ -8,6 +8,7 @@
     "build:css": "tailwindcss -i ./src/input.css -o ./public/css/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./src/input.css -o ./public/css/tailwind.css --watch",
     "reset:blogs": "node scripts/resetBlogs.js",
+    "vendor:sync": "node scripts/syncVendorAssets.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +17,7 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "compression": "^1.8.1",
     "connect-mongo": "^5.1.0",
     "dotenv": "^17.3.1",
     "express-ejs-layouts": "^2.5.1",
@@ -30,7 +32,10 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
     "autoprefixer": "^10.4.21",
+    "cssnano": "^8.0.10",
+    "lightgallery": "^2.7.2",
     "postcss": "^8.5.6",
+    "swiper": "^11.2.10",
     "tailwindcss": "^4.2.1"
   }
 }

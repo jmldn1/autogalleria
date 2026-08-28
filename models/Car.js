@@ -8,9 +8,11 @@ const carSchema = new mongoose.Schema({
   mileage: Number,
   vin: String,
   condition: String,
+  fuelType: String,
+  transmission: String,
   description: String,
   youtubeUrl: String,
-  slug: String,
+  slug: { type: String, required: true, unique: true },
   galleryImages: [
     {
       placeholder: String,

@@ -23,10 +23,16 @@ const MOT_URL =
 const REQUEST_TIMEOUT_MS =
   Number(process.env.REQUEST_TIMEOUT_MS) || 10000;
 
+const LOOKUP_CACHE_TTL_MS =
+  Number(process.env.LOOKUP_CACHE_TTL_MS) || 5 * 60 * 1000;
+
 const motAccessTokenCache = {
   token: null,
   expiresAt: 0,
 };
+
+const lookupCache = new Map();
+const inFlightLookups = new Map();
 
 const missingEnv = [
   { name: 'DVLA_API_KEY', value: DVLA_API_KEY },
@@ -84,6 +90,28 @@ function manualResponse(message) {
     source: 'manual',
     message,
   };
+}
+
+function getCachedLookup(reg) {
+  const cached = lookupCache.get(reg);
+
+  if (!cached) {
+    return null;
+  }
+
+  if (cached.expiresAt <= Date.now()) {
+    lookupCache.delete(reg);
+    return null;
+  }
+
+  return cached.data;
+}
+
+function setCachedLookup(reg, data) {
+  lookupCache.set(reg, {
+    data,
+    expiresAt: Date.now() + LOOKUP_CACHE_TTL_MS,
+  });
 }
 
 
@@ -332,29 +360,49 @@ router.post("/lookup", async (req, res) => {
   }
 
   try {
-    const dvlaData = await getDvlaVehicleData(cleanReg);
-
-    if (!dvlaData) {
-      return res.json(
-        manualResponse(
-          'Vehicle not found in DVLA database. Please enter details manually.'
-        )
-      );
+    const cached = getCachedLookup(cleanReg);
+    if (cached) {
+      return res.json(cached);
     }
 
-    const motData = await getMotVehicleData(cleanReg);
+    let lookupPromise = inFlightLookups.get(cleanReg);
 
-    return res.json({
-      year: dvlaData.year,
-      make: dvlaData.make,
-      model: motData?.model || 'Model unavailable',
-      color: dvlaData.color || motData?.color || null,
-      fuelType: dvlaData.fuelType || motData?.fuelType || null,
-      engineSize: dvlaData.engineSize || motData?.engineSize || null,
-      motStatus: dvlaData.motStatus || motData?.motStatus || null,
-      motExpiry: dvlaData.motExpiry || motData?.motExpiry || null,
-      source: motData ? 'dvla+mot' : 'dvla',
-    });
+    if (!lookupPromise) {
+      lookupPromise = (async () => {
+        const [dvlaData, motData] = await Promise.all([
+          getDvlaVehicleData(cleanReg),
+          getMotVehicleData(cleanReg),
+        ]);
+
+        if (!dvlaData) {
+          return manualResponse(
+            'Vehicle not found in DVLA database. Please enter details manually.'
+          );
+        }
+
+        return {
+          year: dvlaData.year,
+          make: dvlaData.make,
+          model: motData?.model || 'Model unavailable',
+          color: dvlaData.color || motData?.color || null,
+          fuelType: dvlaData.fuelType || motData?.fuelType || null,
+          engineSize: dvlaData.engineSize || motData?.engineSize || null,
+          motStatus: dvlaData.motStatus || motData?.motStatus || null,
+          motExpiry: dvlaData.motExpiry || motData?.motExpiry || null,
+          source: motData ? 'dvla+mot' : 'dvla',
+        };
+      })();
+
+      inFlightLookups.set(cleanReg, lookupPromise);
+    }
+
+    const lookupResult = await lookupPromise;
+
+    if (lookupResult.source !== 'manual') {
+      setCachedLookup(cleanReg, lookupResult);
+    }
+
+    return res.json(lookupResult);
   } catch(error) {
     console.error('Vehicle lookup error:', error);
     return res.json(
@@ -362,6 +410,8 @@ router.post("/lookup", async (req, res) => {
         'Could not verify vehicle. Please enter details manually.'
       )
     );
+  } finally {
+    inFlightLookups.delete(cleanReg);
   }
 });
 
