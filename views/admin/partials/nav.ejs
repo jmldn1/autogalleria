@@ -3,6 +3,7 @@
   const title = rawTitle.trim();
   const isActive = (key) => {
     if (key === 'dashboard') return title === 'dashboard';
+    if (key === 'showroom') return title.includes('showroom');
     if (key === 'landings') return title.includes('landing');
     if (key === 'cars') return title.includes('car');
     if (key === 'blogs') return title.includes('blog');
@@ -42,6 +43,7 @@
 
       <div class="hidden text-sm md:flex md:items-center md:gap-2">
         <a href="/admin/dashboard" class="<%= navClass('dashboard') %>">Dashboard</a>
+        <a href="/admin/showroom" class="<%= navClass('showroom') %>">Showroom</a>
         <a href="/admin/landings" class="<%= navClass('landings') %>">Landings</a>
         <a href="/admin/cars" class="<%= navClass('cars') %>">Cars</a>
         <a href="/admin/blogs" class="<%= navClass('blogs') %>">Blog</a>
@@ -73,6 +75,7 @@
     </div>
     <div class="flex flex-col gap-2 text-sm">
       <a href="/admin/dashboard" class="<%= navClass('dashboard') %>">Dashboard</a>
+      <a href="/admin/showroom" class="<%= navClass('showroom') %>">Showroom</a>
       <a href="/admin/landings" class="<%= navClass('landings') %>">Landings</a>
       <a href="/admin/cars" class="<%= navClass('cars') %>">Cars</a>
       <a href="/admin/blogs" class="<%= navClass('blogs') %>">Blog</a>

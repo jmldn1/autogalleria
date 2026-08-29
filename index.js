@@ -13,6 +13,8 @@ const pkg = require("./package.json");
 const Admin = require("./models/Admin");
 const Landing = require("./models/Landing");
 const Car = require("./models/Car");   
+const Showroom = require("./models/Showroom");
+const HeroImage = require("./models/HeroImage");
 const Blog = require("./models/Blog");
 const PageView = require("./models/PageView");
 const Lead = require("./models/Lead");
@@ -503,6 +505,70 @@ app.get("/cars", async (req, res) => {
     });
   } catch (err) {
     console.error("Cars listing error:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Reusable car website demo homepage (not a replacement for the "/" brochure page)
+app.get("/showroom", async (req, res) => {
+  try {
+    const [cars, showroom] = await Promise.all([
+      Car.find().sort({ updatedAt: -1, createdAt: -1 }).lean(),
+      Showroom.findOne().populate(['heroCar', 'heroImageAsset']).lean(),
+    ]);
+    const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+
+    const normalizedCars = cars.map((car) => {
+      const firstImage = car.galleryImages?.[0];
+      const imageManifest = firstImage?.manifest?.sources;
+      const image = {
+        sources: {
+          avif: imageManifest?.avif || [],
+          webp: imageManifest?.webp || [],
+          jpg: imageManifest?.jpg || [],
+        },
+        fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
+        alt: firstImage?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
+      };
+
+      return { ...car, image };
+    });
+
+    const configuredHeroCar = showroom?.heroCar?.galleryImages?.[0]?.manifest?.heroSources?.jpg?.length
+      ? showroom.heroCar
+      : null;
+    const fallbackHeroCar = cars.find((car) => car.galleryImages?.[0]?.manifest?.heroSources?.jpg?.length);
+    const heroCar = configuredHeroCar || fallbackHeroCar;
+    const customHeroAsset = showroom?.heroMode === 'custom-image' && showroom.heroImageAsset?.manifest?.sources?.jpg?.length
+      ? showroom.heroImageAsset
+      : null;
+    const legacyCustomHeroImage = showroom?.heroMode === 'custom-image' && showroom.heroImage?.manifest?.sources?.jpg?.length
+      ? showroom.heroImage
+      : null;
+    const customHeroImage = customHeroAsset || legacyCustomHeroImage;
+    const heroImage = customHeroImage
+      ? {
+          sources: customHeroImage.manifest.sources,
+          alt: customHeroImage.alt || '',
+        }
+      : heroCar
+        ? {
+          sources: heroCar.galleryImages[0].manifest.heroSources,
+          alt: heroCar.galleryImages[0].alt || `${heroCar.make || 'Vehicle'} ${heroCar.model || ''}`.trim(),
+        }
+      : null;
+
+    res.render("showroom", {
+      title: "Auto Galleria | Find Your Next Car",
+      description: "Browse hand-picked used cars with transparent pricing, detailed photos and nationwide delivery.",
+      cars: normalizedCars.slice(0, 6),
+      totalCars: normalizedCars.length,
+      heroCar,
+      heroImage,
+      showroom: showroom || {},
+    });
+  } catch (err) {
+    console.error("Showroom homepage error:", err);
     res.status(500).send("Server error");
   }
 });

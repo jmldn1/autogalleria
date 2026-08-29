@@ -7,6 +7,8 @@ const https = require('https');
 const multer = require('multer');
 const Landing = require('../models/Landing');
 const Car = require('../models/Car');
+const Showroom = require('../models/Showroom');
+const HeroImage = require('../models/HeroImage');
 const Blog = require('../models/Blog');
 const PageView = require('../models/PageView');
 const Lead = require('../models/Lead');
@@ -620,6 +622,115 @@ router.get('/leads/export.csv', isAdmin, async (req, res) => {
     console.error('❌ Leads export error:', err);
     res.status(500).send('Error exporting leads');
   }
+});
+
+// ---------------------- SHOWROOM ----------------------
+router.get('/showroom', isAdmin, async (req, res) => {
+  try {
+    const [showroom, cars, heroImages] = await Promise.all([
+      Showroom.findOne().lean(),
+      Car.find().sort({ updatedAt: -1, createdAt: -1 }).select('make model year galleryImages').lean(),
+      HeroImage.find().sort({ createdAt: -1 }).lean(),
+    ]);
+
+    res.render('admin/showroom', {
+      user: req.user,
+      showroom: showroom || {},
+      cars,
+      heroImages,
+      saved: req.query.saved === '1',
+    });
+  } catch (err) {
+    console.error('Showroom settings error:', err);
+    res.status(500).send('Error loading showroom settings');
+  }
+});
+
+router.post('/showroom', isAdmin, upload.single('heroImage'), async (req, res) => {
+  try {
+    const showroom = await Showroom.findOne() || new Showroom();
+    const heroMode = req.body.heroMode === 'custom-image' ? 'custom-image' : 'featured-car';
+
+    showroom.heroMode = heroMode;
+    showroom.heroCar = req.body.heroCar || null;
+    showroom.heroImageAsset = req.body.heroImageAsset || null;
+    showroom.eyebrow = (req.body.eyebrow || '').trim();
+    showroom.heading = (req.body.heading || '').trim();
+    showroom.description = (req.body.description || '').trim();
+    showroom.primaryCtaLabel = (req.body.primaryCtaLabel || '').trim();
+    showroom.primaryCtaUrl = (req.body.primaryCtaUrl || '').trim();
+    showroom.secondaryCtaLabel = (req.body.secondaryCtaLabel || '').trim();
+    showroom.secondaryCtaUrl = (req.body.secondaryCtaUrl || '').trim();
+    showroom.heroImage = showroom.heroImage || {};
+    showroom.heroImage.alt = (req.body.heroImageAlt || '').trim();
+
+    await showroom.save();
+
+    if (req.file) {
+      const heroImage = await HeroImage.create({
+        name: (req.body.heroImageName || '').trim() || `Showroom hero ${new Date().toLocaleDateString('en-GB')}`,
+        alt: (req.body.heroImageAlt || '').trim(),
+      });
+      const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero);
+      Object.assign(heroImage, {
+        imagePath: imageData.imagePath,
+        placeholder: imageData.placeholder,
+        manifest: imageData.imageManifest,
+        alt: (req.body.heroImageAlt || '').trim(),
+      });
+      await heroImage.save();
+      showroom.heroImageAsset = heroImage._id;
+      await showroom.save();
+    }
+
+    res.redirect('/admin/showroom?saved=1');
+  } catch (err) {
+    console.error('Showroom settings update error:', err);
+    res.status(500).send('Error saving showroom settings');
+  }
+});
+
+// ---------------------- HERO IMAGE LIBRARY ----------------------
+router.get('/hero-images', isAdmin, async (req, res) => {
+  try {
+    const heroImages = await HeroImage.find().sort({ createdAt: -1 }).lean();
+    res.render('admin/hero-images', { user: req.user, heroImages, saved: req.query.saved === '1' });
+  } catch (err) {
+    console.error('Hero image library error:', err);
+    res.status(500).send('Error loading hero image library');
+  }
+});
+
+router.post('/hero-images', isAdmin, upload.single('heroImage'), async (req, res) => {
+  try {
+    if (!req.file) return res.redirect('/admin/hero-images');
+
+    const heroImage = await HeroImage.create({
+      name: (req.body.name || '').trim() || `Hero image ${new Date().toLocaleDateString('en-GB')}`,
+      alt: (req.body.alt || '').trim(),
+    });
+    const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero);
+    Object.assign(heroImage, {
+      imagePath: imageData.imagePath,
+      placeholder: imageData.placeholder,
+      manifest: imageData.imageManifest,
+    });
+    await heroImage.save();
+    res.redirect('/admin/hero-images?saved=1');
+  } catch (err) {
+    console.error('Hero image upload error:', err);
+    res.status(500).send('Error uploading hero image');
+  }
+});
+
+router.post('/hero-images/:id/delete', isAdmin, async (req, res) => {
+  try {
+    await HeroImage.findByIdAndDelete(req.params.id);
+    await Showroom.updateMany({ heroImageAsset: req.params.id }, { $set: { heroImageAsset: null } });
+  } catch (err) {
+    console.error('Hero image delete error:', err);
+  }
+  res.redirect('/admin/hero-images');
 });
 
 // ---------------------- LANDINGS ----------------------
