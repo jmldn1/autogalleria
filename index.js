@@ -626,7 +626,10 @@ app.get("/car/:slug", async (req, res) => {
       image: buildCardImage(relatedCar),
     }));
 
-    res.render("car-details", {
+    // ?layout=hero renders the experimental full-width hero layout for side-by-side comparison
+    const template = req.query.layout === "hero" ? "car-details-hero" : "car-details";
+
+    res.render(template, {
       car,
       gallery: galleryImages,
       relatedCars,
