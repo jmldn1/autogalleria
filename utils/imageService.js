@@ -37,6 +37,15 @@ car: [
   { width: 900, height: 675 },
   { width: 1200, height: 900 },
 ],
+  // Widescreen crop cut directly from the original upload for the full-bleed
+  // hero banner, so it isn't a second crop on top of the 4:3 "car" rendition.
+  carHero: [
+    { width: 640, height: 360 },
+    { width: 960, height: 540 },
+    { width: 1280, height: 720 },
+    { width: 1600, height: 900 },
+    { width: 1920, height: 1080 },
+  ],
 };
 
 // ✅ Tuned quality settings
