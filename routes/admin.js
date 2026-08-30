@@ -33,7 +33,7 @@ const uploadProfile = multer({
 });
 
 // ---------------------- HELPERS ----------------------
-async function handleImageUpload(file, folder, prefix, sizes) {
+async function handleImageUpload(file, folder, prefix, sizes, mobileSizes) {
   if (!file) return null;
 
   const outDir = path.join('public/images', folder);
@@ -43,6 +43,9 @@ async function handleImageUpload(file, folder, prefix, sizes) {
   fs.readdirSync(outDir).forEach(f => fs.unlinkSync(path.join(outDir, f)));
 
   const result = await processImage(file.path, outDir, prefix, sizes);
+  const mobileResult = mobileSizes
+    ? await processImage(file.path, outDir, prefix, mobileSizes)
+    : null;
   fs.unlinkSync(file.path); // Remove original
 
   const publicBaseURL = `${process.env.PUBLIC_IMAGE_PATH || '/images'}/${folder}`;
@@ -58,7 +61,8 @@ async function handleImageUpload(file, folder, prefix, sizes) {
     imagePath: fallbackUrl,
     placeholder: result.placeholder,
     imageManifest: manifest,
-    variantsCount: result.variants.length
+    mobileImageManifest: mobileSizes ? buildImageManifest(publicBaseURL, prefix, mobileSizes) : null,
+    variantsCount: result.variants.length + (mobileResult ? mobileResult.variants.length : 0)
   };
 }
 
@@ -671,11 +675,12 @@ router.post('/showroom', isAdmin, upload.single('heroImage'), async (req, res) =
         name: (req.body.heroImageName || '').trim() || `Showroom hero ${new Date().toLocaleDateString('en-GB')}`,
         alt: (req.body.heroImageAlt || '').trim(),
       });
-      const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero);
+      const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero, SIZES.heroMobile);
       Object.assign(heroImage, {
         imagePath: imageData.imagePath,
         placeholder: imageData.placeholder,
         manifest: imageData.imageManifest,
+        mobileManifest: imageData.mobileImageManifest,
         alt: (req.body.heroImageAlt || '').trim(),
       });
       await heroImage.save();
@@ -709,11 +714,12 @@ router.post('/hero-images', isAdmin, upload.single('heroImage'), async (req, res
       name: (req.body.name || '').trim() || `Hero image ${new Date().toLocaleDateString('en-GB')}`,
       alt: (req.body.alt || '').trim(),
     });
-    const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero);
+    const imageData = await handleImageUpload(req.file, `hero-images/${heroImage._id}`, 'hero', SIZES.hero, SIZES.heroMobile);
     Object.assign(heroImage, {
       imagePath: imageData.imagePath,
       placeholder: imageData.placeholder,
       manifest: imageData.imageManifest,
+      mobileManifest: imageData.mobileImageManifest,
     });
     await heroImage.save();
     res.redirect('/admin/hero-images?saved=1');

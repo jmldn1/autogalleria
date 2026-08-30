@@ -549,6 +549,7 @@ app.get("/showroom", async (req, res) => {
     const heroImage = customHeroImage
       ? {
           sources: customHeroImage.manifest.sources,
+          mobileSources: customHeroImage.mobileManifest?.sources || null,
           alt: customHeroImage.alt || '',
         }
       : heroCar

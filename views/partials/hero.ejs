@@ -16,6 +16,28 @@
   const heroHeight = heroFallback && heroFallback.h ? heroFallback.h : 900;
 %>
 <picture class="absolute inset-0 z-0">
+  <% if (heroImage.mobileSources?.avif?.length) { %>
+    <source
+      media="(max-width: 639px)"
+      type="image/avif"
+      srcset="<%= heroImage.mobileSources.avif.map(img => `${img.url} ${img.w}w`).join(', ') %>"
+      sizes="100vw">
+  <% } %>
+  <% if (heroImage.mobileSources?.webp?.length) { %>
+    <source
+      media="(max-width: 639px)"
+      type="image/webp"
+      srcset="<%= heroImage.mobileSources.webp.map(img => `${img.url} ${img.w}w`).join(', ') %>"
+      sizes="100vw">
+  <% } %>
+  <% if (heroImage.mobileSources?.jpg?.length) { %>
+    <source
+      media="(max-width: 639px)"
+      type="image/jpeg"
+      srcset="<%= heroImage.mobileSources.jpg.map(img => `${img.url} ${img.w}w`).join(', ') %>"
+      sizes="100vw">
+  <% } %>
+
   <!-- AVIF sources -->
   <% if (heroImage.sources.avif) { %>
     <source 

@@ -13,6 +13,14 @@ const heroImageSchema = new mongoose.Schema({
       avif: [{ w: Number, h: Number, url: String }],
     },
   },
+  mobileManifest: {
+    base: String,
+    sources: {
+      jpg: [{ w: Number, h: Number, url: String }],
+      webp: [{ w: Number, h: Number, url: String }],
+      avif: [{ w: Number, h: Number, url: String }],
+    },
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('HeroImage', heroImageSchema);
