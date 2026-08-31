@@ -57,7 +57,7 @@
               <a
                 href="<%= img.lightboxSrc || img.fallback %>"
                 data-src="<%= img.lightboxSrc || img.fallback %>"
-                data-lg-size="1200-900"
+                data-lg-size="<%= img.lightboxSize || '1200-900' %>"
                 data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
                 class="gallery-item block h-full w-full"
               >
@@ -114,7 +114,7 @@
       <div class="swiper-button-prev"></div>
     </div>
 
-    <!-- Overlay: gradient + title/breadcrumb/price. pointer-events-none so gallery arrows stay clickable underneath. -->
+    <!-- Overlay: gradient + breadcrumb/title. pointer-events-none so gallery arrows stay clickable underneath. -->
     <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
     <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-8">
       <div class="pointer-events-auto mx-auto max-w-7xl">
@@ -127,10 +127,7 @@
             <li class="text-white"><%= car.make %> <%= car.model %></li>
           </ol>
         </nav>
-        <div class="flex flex-wrap items-end justify-between gap-4">
-          <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
-          <span class="rounded-full bg-white/95 px-4 py-2 text-lg font-semibold text-slate-900 shadow-lg">£<%= car.price.toFixed(2) %></span>
-        </div>
+        <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
       </div>
     </div>
   </section>
@@ -149,17 +146,17 @@
                     <source
                       type="image/avif"
                       srcset="<%= img.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                      sizes="96px"
+                      sizes="(min-width: 1024px) 170px, 24vw"
                     >
                     <source
                       type="image/webp"
                       srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                      sizes="96px"
+                      sizes="(min-width: 1024px) 170px, 24vw"
                     >
                     <img
                       src="<%= img.fallback %>"
                       srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                      sizes="96px"
+                      sizes="(min-width: 1024px) 170px, 24vw"
                       alt="Thumbnail <%= car.make %> <%= car.model %>"
                       class="aspect-4/3 w-full object-cover rounded-lg"
                       loading="lazy"
@@ -182,7 +179,7 @@
         <!-- Video -->
         <% if (car.video) { %>
           <div class="mt-8">
-            <h2 class="text-2xl font-semibold mb-4">Car Video</h2>
+            <h2 class="text-xl font-semibold mb-4">Car Video</h2>
             <div
               class="relative aspect-video overflow-hidden rounded-xl shadow-lg bg-slate-900"
               data-youtube-player
@@ -380,10 +377,16 @@
     document.addEventListener("DOMContentLoaded", () => {
       const swiperThumbs = new Swiper(".mySwiper", {
         modules: [FreeMode],
-        spaceBetween: 10,
-        slidesPerView: 4,
+        spaceBetween: 8,
+        slidesPerView: 3.5,
         freeMode: true,
         watchSlidesProgress: true,
+        breakpoints: {
+          640: {
+            slidesPerView: 4,
+            spaceBetween: 10,
+          },
+        },
       });
       const swiperMain = new Swiper(".mySwiper2", {
         modules: [Navigation, Thumbs],

@@ -61,7 +61,7 @@
           <a
             href="<%= img.lightboxSrc || img.fallback %>"
             data-src="<%= img.lightboxSrc || img.fallback %>"
-            data-lg-size="1200-900"
+            data-lg-size="<%= img.lightboxSize || '1200-900' %>"
             data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
             class="gallery-item block"
           >

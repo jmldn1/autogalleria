@@ -12,7 +12,7 @@ const pkg = require("./package.json");
 // Models
 const Admin = require("./models/Admin");
 const Landing = require("./models/Landing");
-const Car = require("./models/Car");   
+const Car = require("./models/Car");
 const Showroom = require("./models/Showroom");
 const HeroImage = require("./models/HeroImage");
 const Blog = require("./models/Blog");
@@ -582,12 +582,19 @@ app.get("/car/:slug", async (req, res) => {
 
     if (!carDoc) return res.status(404).send("Car not found");
 
+    const buildLargest = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1] : null);
+
     const galleryImages = (carDoc.galleryImages || []).map((img) => {
+      const heroSources = img?.manifest?.heroSources || {};
       const sources = img?.manifest?.sources || {};
+      const largestHero = buildLargest(heroSources.jpg) || buildLargest(heroSources.webp) || buildLargest(heroSources.avif);
+      const largestSource = buildLargest(sources.jpg) || buildLargest(sources.webp) || buildLargest(sources.avif);
+      const largest = largestHero || largestSource;
 
       return {
         ...img,
-        lightboxSrc: buildFallback(sources.webp) || buildFallback(sources.jpg) || buildFallback(sources.avif) || img?.fallback || null,
+        lightboxSrc: largest?.url || img?.fallback || null,
+        lightboxSize: largest ? `${largest.w}-${largest.h}` : '1200-900',
       };
     });
 
