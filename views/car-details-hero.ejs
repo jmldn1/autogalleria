@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <%- include('partials/seo-head', {
@@ -10,15 +10,17 @@
   <!-- Preload the LCP (first gallery) image so it's discoverable immediately -->
   <% if (car.galleryImages && car.galleryImages.length) { %>
     <% const lcpImg = car.galleryImages[0]; %>
-    <link
-      rel="preload"
-      as="image"
-      href="<%= lcpImg.manifest.sources.jpg[lcpImg.manifest.sources.jpg.length - 1].url %>"
-      imagesrcset="<%= lcpImg.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-      imagesizes="100vw"
-      media="(max-width: 639.98px)"
-      type="image/avif"
-    >
+    <% if (lcpImg.manifest.heroMobileSources?.avif?.length) { %>
+      <link
+        rel="preload"
+        as="image"
+        href="<%= lcpImg.manifest.heroMobileSources.jpg[lcpImg.manifest.heroMobileSources.jpg.length - 1].url %>"
+        imagesrcset="<%= lcpImg.manifest.heroMobileSources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+        imagesizes="100vw"
+        media="(max-width: 639.98px)"
+        type="image/avif"
+      >
+    <% } %>
     <link
       rel="preload"
       as="image"
@@ -45,50 +47,57 @@
 <body class="bg-slate-50 text-slate-900">
   <%- include('partials/navbar') %>
 
-  <!-- Hero gallery: clean full-bleed image with viewport-specific crop -->
+  <!-- Hero gallery: full-bleed main image with title/price overlaid -->
   <section class="relative isolate w-full">
-    <div class="swiper mySwiper2 relative z-0 h-[56vh] min-h-[380px] max-h-[720px] w-full overflow-hidden sm:h-auto sm:aspect-video sm:max-h-[900px]">
+    <div class="swiper mySwiper2 relative z-0 w-full aspect-4/5 max-h-[85vh] overflow-hidden sm:aspect-video">
       <div class="swiper-wrapper" id="lightgallery">
         <% if (car.galleryImages && car.galleryImages.length) { %>
           <% car.galleryImages.forEach((img, index) => { %>
-            <div class="swiper-slide relative" role="group" aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>">
+            <div class="swiper-slide" role="group" aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>">
               <a
                 href="<%= img.lightboxSrc || img.fallback %>"
                 data-src="<%= img.lightboxSrc || img.fallback %>"
                 data-lg-size="1200-900"
                 data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
-                class="gallery-item relative block h-full w-full"
+                class="gallery-item block h-full w-full"
               >
                 <picture>
-                  <!-- Desktop/tablet: wide crop for the hero -->
+                  <% if (img.manifest.heroMobileSources?.avif?.length) { %>
+                    <source
+                      media="(max-width: 639px)"
+                      type="image/avif"
+                      srcset="<%= img.manifest.heroMobileSources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="100vw"
+                    >
+                    <source
+                      media="(max-width: 639px)"
+                      type="image/webp"
+                      srcset="<%= img.manifest.heroMobileSources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="100vw"
+                    >
+                    <source
+                      media="(max-width: 639px)"
+                      type="image/jpeg"
+                      srcset="<%= img.manifest.heroMobileSources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                      sizes="100vw"
+                    >
+                  <% } %>
                   <source
-                    media="(min-width: 640px)"
                     type="image/avif"
                     srcset="<%= img.manifest.heroSources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                     sizes="100vw"
                   >
                   <source
-                    media="(min-width: 640px)"
                     type="image/webp"
                     srcset="<%= img.manifest.heroSources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                     sizes="100vw"
                   >
-                  <source
-                    type="image/avif"
-                    srcset="<%= img.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                    sizes="100vw"
-                  >
-                  <source
-                    type="image/webp"
-                    srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                    sizes="100vw"
-                  >
                   <img
-                    src="<%= img.manifest.sources.jpg[img.manifest.sources.jpg.length - 1].url %>"
-                    srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                    src="<%= img.manifest.heroSources.jpg[img.manifest.heroSources.jpg.length - 1].url %>"
+                    srcset="<%= img.manifest.heroSources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
                     sizes="100vw"
                     alt="<%= img.alt || `${car.make} ${car.model}` %>"
-                    class="relative z-10 h-full w-full object-cover object-center"
+                    class="h-full w-full object-cover"
                     <% if (index === 0) { %>loading="eager" fetchpriority="high"<% } else { %>loading="lazy"<% } %>
                     style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
                   >
@@ -105,7 +114,7 @@
       <div class="swiper-button-prev"></div>
     </div>
 
-    <!-- Overlay: gradient + breadcrumb + title. -->
+    <!-- Overlay: gradient + title/breadcrumb/price. pointer-events-none so gallery arrows stay clickable underneath. -->
     <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
     <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 sm:p-8">
       <div class="pointer-events-auto mx-auto max-w-7xl">
@@ -118,18 +127,21 @@
             <li class="text-white"><%= car.make %> <%= car.model %></li>
           </ol>
         </nav>
-        <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+          <span class="rounded-full bg-white/95 px-4 py-2 text-lg font-semibold text-slate-900 shadow-lg">£<%= car.price.toFixed(2) %></span>
+        </div>
       </div>
     </div>
   </section>
 
   <main class="max-w-7xl mx-auto p-4">
-    <div class="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-12">
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
       <!-- Left: thumbnails + description + video -->
       <div class="lg:col-span-7">
         <!-- Thumbnails -->
         <% if (car.galleryImages && car.galleryImages.length) { %>
-          <div class="swiper mySwiper mt-3 sm:mt-4">
+          <div class="swiper mySwiper">
             <div class="swiper-wrapper">
               <% car.galleryImages.forEach(img => { %>
                 <div class="swiper-slide cursor-pointer">
@@ -337,48 +349,6 @@
       </div>
     </div>
 
-    <% if (car.galleryImages && car.galleryImages.length > 1) { %>
-      <section class="mt-12">
-        <div class="mb-5 flex items-end justify-between gap-4">
-          <h2 class="text-2xl font-bold text-slate-900">More photos</h2>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-          <% car.galleryImages.forEach((img, index) => { %>
-            <% const largeTile = index % 5 === 0 || index % 5 === 3; %>
-            <% const tallTile = index % 3 === 1; %>
-            <figure
-              class="group relative overflow-hidden rounded-2xl bg-slate-200 shadow-sm <%= largeTile ? 'col-span-2 row-span-2' : '' %> <%= tallTile ? 'sm:col-span-1 sm:row-span-2' : '' %>"
-              aria-label="<%= img.alt || `${car.make} ${car.model} photo ${index + 1}` %>"
-            >
-              <picture>
-                <source
-                  type="image/avif"
-                  srcset="<%= img.manifest.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                >
-                <source
-                  type="image/webp"
-                  srcset="<%= img.manifest.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                >
-                <img
-                  src="<%= img.fallback %>"
-                  srcset="<%= img.manifest.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  alt="<%= img.alt || `${car.make} ${car.model} photo ${index + 1}` %>"
-                  loading="lazy"
-                  class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] <%= largeTile ? 'min-h-[220px] sm:min-h-[280px]' : 'min-h-[140px] sm:min-h-[200px]' %>"
-                  style="background:url('<%= img.placeholder %>') center / cover no-repeat;"
-                >
-              </picture>
-              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition group-hover:opacity-100"></div>
-            </figure>
-          <% }) %>
-        </div>
-      </section>
-    <% } %>
-
     <% if (relatedCars && relatedCars.length) { %>
       <section class="mt-14">
         <div class="mb-5 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -410,20 +380,10 @@
     document.addEventListener("DOMContentLoaded", () => {
       const swiperThumbs = new Swiper(".mySwiper", {
         modules: [FreeMode],
-        spaceBetween: 8,
+        spaceBetween: 10,
         slidesPerView: 4,
         freeMode: true,
         watchSlidesProgress: true,
-        breakpoints: {
-          0: {
-            slidesPerView: 3.5,
-            spaceBetween: 8,
-          },
-          640: {
-            slidesPerView: 4,
-            spaceBetween: 10,
-          },
-        },
       });
       const swiperMain = new Swiper(".mySwiper2", {
         modules: [Navigation, Thumbs],

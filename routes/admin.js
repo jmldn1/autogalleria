@@ -66,7 +66,7 @@ async function handleImageUpload(file, folder, prefix, sizes, mobileSizes) {
   };
 }
 
-async function handleMultipleImageUploads(files, folder, sizes, heroSizes) {
+async function handleMultipleImageUploads(files, folder, sizes, heroSizes, heroMobileSizes) {
   if (!files || files.length === 0) return [];
 
   const outDir = path.join('public/images', folder);
@@ -81,6 +81,9 @@ async function handleMultipleImageUploads(files, folder, sizes, heroSizes) {
       // isn't a second crop stacked on top of the 4:3 "car" rendition.
       await processImage(file.path, outDir, prefix, heroSizes);
     }
+    if (heroMobileSizes) {
+      await processImage(file.path, outDir, prefix, heroMobileSizes);
+    }
     fs.unlinkSync(file.path);
 
     const publicBaseURL = `${process.env.PUBLIC_IMAGE_PATH || '/images'}/${folder}`;
@@ -92,6 +95,10 @@ async function handleMultipleImageUploads(files, folder, sizes, heroSizes) {
 
     if (heroSizes) {
       manifest.heroSources = buildImageManifest(publicBaseURL, prefix, heroSizes).sources;
+    }
+
+    if (heroMobileSizes) {
+      manifest.heroMobileSources = buildImageManifest(publicBaseURL, prefix, heroMobileSizes).sources;
     }
 
     const pickLargest = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
@@ -926,7 +933,7 @@ router.post(
       const slugSource = requestedSlug || `${req.body.make || ''} ${req.body.model || ''} ${req.body.year || ''}`;
       const slug = await generateUniqueSlug(slugSource, Car);
 
-      const galleryImages = await handleMultipleImageUploads(req.files.galleryImages || [], '', SIZES.car, SIZES.carHero);
+      const galleryImages = await handleMultipleImageUploads(req.files.galleryImages || [], '', SIZES.car, SIZES.carHero, SIZES.carHeroMobile);
 
       const carData = {
         ...req.body,
@@ -971,7 +978,7 @@ router.post(
       if (!car) return res.redirect('/admin/cars');
 
       const existingImages = req.body.existingImages ? JSON.parse(req.body.existingImages) : (car.galleryImages || []);
-      const newImages = await handleMultipleImageUploads(req.files.galleryImages || [], '', SIZES.car, SIZES.carHero);
+      const newImages = await handleMultipleImageUploads(req.files.galleryImages || [], '', SIZES.car, SIZES.carHero, SIZES.carHeroMobile);
 
       const galleryImages = [
         ...existingImages,

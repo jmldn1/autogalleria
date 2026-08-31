@@ -29,6 +29,12 @@ const carSchema = new mongoose.Schema({
           webp: [{ w: Number, h: Number, url: String }],
           avif: [{ w: Number, h: Number, url: String }],
         },
+        // 4:5 renditions cut from the original upload, used by the mobile hero banner.
+        heroMobileSources: {
+          jpg: [{ w: Number, h: Number, url: String }],
+          webp: [{ w: Number, h: Number, url: String }],
+          avif: [{ w: Number, h: Number, url: String }],
+        },
       },
       fallback: String,
       alt: String,
