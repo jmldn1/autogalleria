@@ -52,7 +52,7 @@
     <!-- Gallery -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Left: Swiper Gallery -->
-      <div class="lg:col-span-7">
+      <div class="lg:col-span-8">
 <div class="swiper mySwiper2 rounded-2xl overflow-hidden shadow-lg">
   <div class="swiper-wrapper" id="lightgallery">
     <% if (car.galleryImages && car.galleryImages.length) { %>
@@ -61,7 +61,7 @@
           <a
             href="<%= img.lightboxSrc || img.fallback %>"
             data-src="<%= img.lightboxSrc || img.fallback %>"
-            data-lg-size="<%= img.lightboxSize || '1200-900' %>"
+            data-lg-size="1200-900"
             data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
             class="gallery-item block"
           >
@@ -179,7 +179,7 @@
         <% } %>
       </div>
       <!-- Right: Car Info -->
-      <div class="flex flex-col gap-4 lg:col-span-5 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1">
+      <div class="flex flex-col gap-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1">
         <div class="bg-white rounded-3xl shadow-lg p-6">
           <h2 class="text-xl font-semibold text-slate-900">Specifications</h2>
           <% 
@@ -228,85 +228,92 @@
           </ul>
         </div>
 
-        <div class="bg-gray-100 rounded-3xl shadow-lg p-6">
-          <div id="enquiry-form-wrap">
-            <h2 class="text-xl font-semibold text-slate-900">Interested in this vehicle?</h2>
-            <p class="mt-2 text-sm text-slate-600">Send an enquiry about this <%= car.make %> <%= car.model %> and we'll get back to you shortly.</p>
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-slate-900">Interested in this vehicle?</h2>
+          <p class="mt-2 text-slate-600">Send an enquiry and we'll get back to you.</p>
 
-            <form id="enquiry-form" class="mt-5 space-y-3" novalidate>
-              <div class="hidden" aria-hidden="true">
-                <label for="enq-company">Company website</label>
-                <input id="enq-company" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
-              </div>
-
-              <div>
-                <label for="enq-name" class="sr-only">Full name</label>
-                <input
-                  id="enq-name" name="name" type="text" placeholder="Full name" autocomplete="name"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                  aria-describedby="enq-err-name"
-                >
-                <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-name" role="alert"></p>
-              </div>
-
-              <div>
-                <label for="enq-email" class="sr-only">Email address</label>
-                <input
-                  id="enq-email" name="email" type="email" placeholder="Email address" autocomplete="email"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                  aria-describedby="enq-err-email"
-                >
-                <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-email" role="alert"></p>
-              </div>
-
-              <div>
-                <label for="enq-phone" class="sr-only">Phone number (optional)</label>
-                <input
-                  id="enq-phone" name="phone" type="tel" inputmode="tel" placeholder="Phone (optional)" autocomplete="tel"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                  aria-describedby="enq-err-phone"
-                >
-                <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-phone" role="alert"></p>
-              </div>
-
-              <div>
-                <label for="enq-message" class="sr-only">Message (optional)</label>
-                <textarea
-                  id="enq-message" name="message" rows="3" placeholder="Anything you'd like us to know? (optional)"
-                  class="enq-input w-full resize-none rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                ></textarea>
-              </div>
-
-              <p id="enq-form-error" class="hidden text-xs text-rose-600" role="alert"></p>
-
-              <div class="flex items-center gap-4 pt-1">
-                <button
-                  type="submit"
-                  id="enq-submit"
-                  class="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/50 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <span id="enq-submit-label">Send Enquiry</span>
-                </button>
-              </div>
-            </form>
+          <div id="enquiry-success" class="mt-4 hidden rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
+            Thanks, your enquiry has been sent. We will be in touch shortly.
           </div>
+          <div id="enquiry-error" class="mt-4 hidden rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert"></div>
 
-          <div id="enquiry-confirmation" class="hidden" aria-hidden="true" role="status" aria-live="polite">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-                <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div>
-                <h2 class="text-lg font-semibold text-slate-900">Enquiry sent</h2>
-                <p class="mt-0.5 text-sm text-slate-600">We'll be in touch about this vehicle shortly.</p>
-              </div>
+          <form id="enquiry-form" class="mt-5 space-y-4">
+            <div>
+              <label for="enquiry-name" class="mb-1.5 block text-sm font-medium text-slate-700">Name</label>
+              <input id="enquiry-name" name="name" type="text" required autocomplete="name" class="w-full rounded-lg border border-slate-300 py-2.5 px-3.5 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="Your full name">
             </div>
-          </div>
+            <div>
+              <label for="enquiry-email" class="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
+              <input id="enquiry-email" name="email" type="email" required autocomplete="email" class="w-full rounded-lg border border-slate-300 py-2.5 px-3.5 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="you@example.com">
+            </div>
+            <div>
+              <label for="enquiry-phone" class="mb-1.5 block text-sm font-medium text-slate-700">Phone <span class="font-normal text-slate-500">(optional)</span></label>
+              <input id="enquiry-phone" name="phone" type="tel" autocomplete="tel" class="w-full rounded-lg border border-slate-300 py-2.5 px-3.5 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="+44 ...">
+            </div>
+            <div>
+              <label for="enquiry-message" class="mb-1.5 block text-sm font-medium text-slate-700">Message <span class="font-normal text-slate-500">(optional)</span></label>
+              <textarea id="enquiry-message" name="message" rows="3" class="w-full rounded-lg border border-slate-300 py-2.5 px-3.5 text-slate-900 outline-none ring-blue-500 transition focus:ring-2" placeholder="I'd like to know more about this car..."></textarea>
+            </div>
+            <button type="submit" id="enquiry-submit" class="btn-primary w-full">
+              <span id="enquiry-submit-label">Send Enquiry</span>
+            </button>
+          </form>
         </div>
       </div>
     </div>
+
+    <script>
+      (function () {
+        const form = document.getElementById('enquiry-form');
+        const successBox = document.getElementById('enquiry-success');
+        const errorBox = document.getElementById('enquiry-error');
+        const submitBtn = document.getElementById('enquiry-submit');
+        const submitLabel = document.getElementById('enquiry-submit-label');
+
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          successBox.classList.add('hidden');
+          errorBox.classList.add('hidden');
+
+          const name = document.getElementById('enquiry-name').value.trim();
+          const email = document.getElementById('enquiry-email').value.trim();
+          const phone = document.getElementById('enquiry-phone').value.trim();
+          const message = document.getElementById('enquiry-message').value.trim();
+
+          submitBtn.disabled = true;
+          submitLabel.textContent = 'Sending…';
+
+          try {
+            const res = await fetch('/api/enquiry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name,
+                email,
+                phone,
+                message,
+                carId: '<%= car._id %>',
+                carSlug: '<%= car.slug %>',
+                carLabel: '<%= car.year %> <%= car.make %> <%= car.model %>',
+                sourceType: 'car',
+                sourceSlug: '<%= car.slug %>',
+              }),
+            });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.message || 'Something went wrong. Please try again.');
+
+            form.reset();
+            successBox.classList.remove('hidden');
+          } catch (err) {
+            errorBox.textContent = err.message || 'Something went wrong. Please try again.';
+            errorBox.classList.remove('hidden');
+          } finally {
+            submitBtn.disabled = false;
+            submitLabel.textContent = 'Send Enquiry';
+          }
+        });
+      })();
+    </script>
 
     <% if (relatedCars && relatedCars.length) { %>
       <section class="mt-14">
@@ -378,82 +385,6 @@
           player.replaceChildren(iframe);
         }, { once: true });
       });
-
-      const formWrap = document.getElementById("enquiry-form-wrap");
-      const confirmation = document.getElementById("enquiry-confirmation");
-      const form = document.getElementById("enquiry-form");
-
-      if (formWrap && confirmation && form) {
-        function showConfirmation() {
-          formWrap.classList.add("hidden");
-          formWrap.setAttribute("aria-hidden", "true");
-          confirmation.classList.remove("hidden");
-          confirmation.setAttribute("aria-hidden", "false");
-        }
-
-        function showFieldError(id, message) {
-          const errorEl = document.getElementById(id);
-          if (!errorEl) return;
-          errorEl.textContent = message;
-          errorEl.classList.remove("hidden");
-          const input = document.getElementById(id.replace("enq-err-", "enq-"));
-          if (input) input.classList.add("border-rose-300");
-        }
-
-        function clearErrors() {
-          form.querySelectorAll(".enq-error").forEach((el) => el.classList.add("hidden"));
-          form.querySelectorAll(".enq-input").forEach((el) => el.classList.remove("border-rose-300"));
-          document.getElementById("enq-form-error")?.classList.add("hidden");
-        }
-
-        function validate(name, email, phone) {
-          let valid = true;
-          if (!name.trim()) { showFieldError("enq-err-name", "Name is required"); valid = false; }
-          if (!email.trim()) { showFieldError("enq-err-email", "Email is required"); valid = false; }
-          else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFieldError("enq-err-email", "Enter a valid email address"); valid = false; }
-          if (phone.trim() && !/^[\d\s+\-()·]{7,}$/.test(phone)) { showFieldError("enq-err-phone", "Enter a valid phone number"); valid = false; }
-          return valid;
-        }
-
-        const submitBtn = document.getElementById("enq-submit");
-        const submitLabel = document.getElementById("enq-submit-label");
-
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          clearErrors();
-
-          const name = document.getElementById("enq-name").value;
-          const email = document.getElementById("enq-email").value;
-          const phone = document.getElementById("enq-phone").value;
-          const message = document.getElementById("enq-message").value;
-          const companyWebsite = document.getElementById("enq-company").value;
-
-          if (!validate(name, email, phone)) return;
-
-          submitBtn.disabled = true;
-          submitLabel.textContent = "Sending…";
-
-          try {
-            const res = await fetch("/car/<%= car.slug %>/enquire", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, email, phone, message, companyWebsite }),
-            });
-            const data = await res.json();
-            if (!data.success) throw new Error(data.message || "Something went wrong. Please try again.");
-
-            showConfirmation();
-            form.reset();
-          } catch (err) {
-            const formError = document.getElementById("enq-form-error");
-            formError.textContent = err.message || "Something went wrong. Please try again.";
-            formError.classList.remove("hidden");
-          } finally {
-            submitBtn.disabled = false;
-            submitLabel.textContent = "Send Enquiry";
-          }
-        });
-      }
     });
   </script>
 </body>
