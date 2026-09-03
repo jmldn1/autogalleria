@@ -2,33 +2,37 @@
   const cardVehicle = vehicle || {};
   const vehicleHref = (typeof href !== 'undefined' && href) || `/car/${cardVehicle.slug || cardVehicle._id || ''}`;
   const isCompact = Boolean(typeof compact !== 'undefined' && compact);
-  const sources = cardVehicle.image?.sources || {};
-  const avifSrcset = sources.avif?.map(src => `${src.url} ${src.w}w`).join(', ');
-  const webpSrcset = sources.webp?.map(src => `${src.url} ${src.w}w`).join(', ');
-  const jpgSrcset = sources.jpg?.map(src => `${src.url} ${src.w}w`).join(', ');
-  const fallbackSrc = cardVehicle.image?.fallback || sources.jpg?.[0]?.url || sources.webp?.[0]?.url || sources.avif?.[0]?.url;
+  const cardImages = (Array.isArray(cardVehicle.images) && cardVehicle.images.length)
+    ? cardVehicle.images
+    : (cardVehicle.image ? [cardVehicle.image] : []);
   const vehicleName = [cardVehicle.make, cardVehicle.model].filter(Boolean).join(' ') || 'Vehicle';
   const priceValue = Number(cardVehicle.price);
 %>
-<article class="card card-hover h-full">
+<article class="card card-hover group relative h-full">
   <a href="<%= vehicleHref %>" class="flex h-full flex-col">
-    <% if (avifSrcset || webpSrcset || jpgSrcset) { %>
-      <picture>
-        <% if (avifSrcset) { %>
-          <source type="image/avif" srcset="<%= avifSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        <% } %>
-        <% if (webpSrcset) { %>
-          <source type="image/webp" srcset="<%= webpSrcset %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        <% } %>
-        <img
-          src="<%= fallbackSrc %>"
-          srcset="<%= jpgSrcset %>"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          alt="<%= cardVehicle.image?.alt || vehicleName %>"
-          class="aspect-4/3 w-full object-cover"
-          loading="lazy"
-        />
-      </picture>
+    <% if (cardImages.length) { %>
+      <div class="vehicle-card-carousel relative aspect-4/3 w-full overflow-hidden">
+        <div class="vehicle-card-track flex h-full w-full snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-none [-ms-overflow-style:none]">
+          <% cardImages.forEach((img, index) => { %>
+            <picture class="vehicle-card-slide h-full w-full flex-none snap-start">
+              <% if (img.sources?.avif?.length) { %>
+                <source type="image/avif" srcset="<%= img.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+              <% } %>
+              <% if (img.sources?.webp?.length) { %>
+                <source type="image/webp" srcset="<%= img.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+              <% } %>
+              <img
+                src="<%= img.fallback %>"
+                srcset="<%= img.sources?.jpg?.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                alt="<%= img.alt || vehicleName %>"
+                class="aspect-4/3 h-full w-full object-cover"
+                loading="lazy"
+              />
+            </picture>
+          <% }) %>
+        </div>
+      </div>
     <% } else { %>
       <div class="flex aspect-4/3 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">
         No image available
@@ -58,4 +62,32 @@
       </div>
     </div>
   </a>
+
+  <% if (cardImages.length > 1) { %>
+    <button type="button" class="vehicle-card-prev absolute left-2 top-[calc(37.5%-1.25rem)] z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow transition hover:bg-white sm:hidden sm:group-hover:flex" aria-label="Previous photo">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" /></svg>
+    </button>
+    <button type="button" class="vehicle-card-next absolute right-2 top-[calc(37.5%-1.25rem)] z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-slate-700 shadow transition hover:bg-white sm:hidden sm:group-hover:flex" aria-label="Next photo">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
+    </button>
+    <script>
+      (function () {
+        const card = document.currentScript.closest('article');
+        const track = card?.querySelector('.vehicle-card-track');
+        const slides = card?.querySelectorAll('.vehicle-card-slide');
+        const prevBtn = card?.querySelector('.vehicle-card-prev');
+        const nextBtn = card?.querySelector('.vehicle-card-next');
+        if (!track || !slides || slides.length < 2) return;
+
+        const currentIndex = () => Math.round(track.scrollLeft / track.clientWidth);
+        const scrollToIndex = (i) => {
+          const clamped = Math.max(0, Math.min(slides.length - 1, i));
+          track.scrollTo({ left: clamped * track.clientWidth, behavior: 'smooth' });
+        };
+
+        prevBtn?.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); scrollToIndex(currentIndex() - 1); });
+        nextBtn?.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); scrollToIndex(currentIndex() + 1); });
+      })();
+    </script>
+  <% } %>
 </article>

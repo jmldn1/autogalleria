@@ -479,23 +479,28 @@ app.get("/cars", async (req, res) => {
   try {
     const cars = await Car.find().sort({ updatedAt: -1, createdAt: -1 }).lean();
 
-    const normalizedCars = cars.map((car) => {
-      const firstImage = car.galleryImages?.[0] || car.images?.[0];
-      const imageManifest = firstImage?.manifest?.sources;
-      const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
-      const image = {
+    const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+    const buildCardImage = (source, car) => {
+      const imageManifest = source?.manifest?.sources;
+      return {
         sources: {
           avif: imageManifest?.avif || [],
           webp: imageManifest?.webp || [],
           jpg: imageManifest?.jpg || [],
         },
         fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
-        alt: firstImage?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
+        alt: source?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
       };
+    };
+
+    const normalizedCars = cars.map((car) => {
+      const gallery = (car.galleryImages?.length ? car.galleryImages : car.images) || [];
+      const images = gallery.slice(0, 3).map((source) => buildCardImage(source, car));
 
       return {
         ...car,
-        image,
+        image: images[0] || buildCardImage(null, car),
+        images,
       };
     });
 
@@ -519,19 +524,22 @@ app.get("/showroom", async (req, res) => {
     const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
 
     const normalizedCars = cars.map((car) => {
-      const firstImage = car.galleryImages?.[0];
-      const imageManifest = firstImage?.manifest?.sources;
-      const image = {
-        sources: {
-          avif: imageManifest?.avif || [],
-          webp: imageManifest?.webp || [],
-          jpg: imageManifest?.jpg || [],
-        },
-        fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
-        alt: firstImage?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
+      const gallery = car.galleryImages || [];
+      const buildCardImage = (source) => {
+        const imageManifest = source?.manifest?.sources;
+        return {
+          sources: {
+            avif: imageManifest?.avif || [],
+            webp: imageManifest?.webp || [],
+            jpg: imageManifest?.jpg || [],
+          },
+          fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
+          alt: source?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
+        };
       };
+      const images = gallery.slice(0, 3).map(buildCardImage);
 
-      return { ...car, image };
+      return { ...car, image: images[0] || buildCardImage(null), images };
     });
 
     const configuredHeroCar = showroom?.heroCar?.galleryImages?.[0]?.manifest?.heroSources?.jpg?.length
@@ -646,9 +654,8 @@ app.get("/car/:slug", async (req, res) => {
       ]
     };
 
-    const buildCardImage = (vehicle) => {
-      const firstImage = vehicle.galleryImages?.[0] || vehicle.images?.[0];
-      const imageManifest = firstImage?.manifest?.sources;
+    const buildCardSingleImage = (source, vehicle) => {
+      const imageManifest = source?.manifest?.sources;
 
       return {
         sources: {
@@ -657,8 +664,14 @@ app.get("/car/:slug", async (req, res) => {
           jpg: imageManifest?.jpg || [],
         },
         fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
-        alt: firstImage?.alt || `${vehicle.make || "Vehicle"} ${vehicle.model || ""}`.trim(),
+        alt: source?.alt || `${vehicle.make || "Vehicle"} ${vehicle.model || ""}`.trim(),
       };
+    };
+
+    const buildCardImage = (vehicle) => {
+      const gallery = (vehicle.galleryImages?.length ? vehicle.galleryImages : vehicle.images) || [];
+      const images = gallery.slice(0, 3).map((source) => buildCardSingleImage(source, vehicle));
+      return { image: images[0] || buildCardSingleImage(null, vehicle), images };
     };
 
     const cardSelect = {
@@ -669,7 +682,7 @@ app.get("/car/:slug", async (req, res) => {
       price: 1,
       mileage: 1,
       condition: 1,
-      galleryImages: { $slice: 1 },
+      galleryImages: { $slice: 3 },
     };
 
     const relatedByMake = await Car.find({
@@ -697,11 +710,11 @@ app.get("/car/:slug", async (req, res) => {
 
     relatedCars = relatedCars.map((relatedCar) => ({
       ...relatedCar,
-      image: buildCardImage(relatedCar),
+      ...buildCardImage(relatedCar),
     }));
 
-    // ?layout=hero renders the experimental full-width hero layout for side-by-side comparison
-    const template = req.query.layout === "hero" ? "car-details-hero" : "car-details";
+    // ?layout=classic renders the legacy car-details layout for side-by-side comparison
+    const template = req.query.layout === "classic" ? "car-details" : "car-details-hero";
 
     res.render(template, {
       car,
