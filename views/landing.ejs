@@ -51,7 +51,7 @@
   }) %>
   <link rel="stylesheet" href="/css/tailwind.css">
 </head>
-<body class="text-gray-800 antialiased bg-gray-100">
+<body class="text-slate-800 antialiased bg-slate-100">
 
   <!-- NAVBAR -->
 <%- include('partials/navbar') %>
@@ -64,7 +64,7 @@
   <% if (landing.imageManifest) { %>
     <%- include('partials/hero', { heroImage: landing.imageManifest }) %>
   <% } else { %>
-    <div class="absolute inset-0 bg-gray-900" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-slate-900" aria-hidden="true"></div>
   <% } %>
 
   <!-- Dark overlay -->
@@ -79,7 +79,7 @@
   <span class="text-cyan-400"><%= landing.make %> <%= landing.model %></span>
 </h1>
       
-      <p id="lookupSubtitle" class="text-gray-200">Enter your registration number</p>
+      <p id="lookupSubtitle" class="text-slate-200">Enter your registration number</p>
     </div>
 
     <!-- Form -->
@@ -104,7 +104,7 @@
         </button>
       </div>
     </form>
-      <p id="lookupTrust" class="mt-2 text-xs text-gray-300 text-center flex items-center justify-center gap-1">
+      <p id="lookupTrust" class="mt-2 text-xs text-slate-300 text-center flex items-center justify-center gap-1">
   🔒 Secure lookup • No data stored or shared
 </p>
     <!-- Error -->
@@ -327,7 +327,7 @@ if (continueBtn) {
   <% if (landing.imageManifest) { %>
     <%- include('partials/hero', { heroImage: landing.imageManifest }) %>
   <% } else { %>
-    <div class="absolute inset-0 bg-gray-900"></div>
+    <div class="absolute inset-0 bg-slate-900"></div>
   <% } %>
 
   <!-- Dark overlay -->
@@ -338,7 +338,7 @@ if (continueBtn) {
     <!-- Header -->
     <div id="lf-header" class="mb-8 text-center">
       <h2 class="text-4xl font-bold mb-2 drop-shadow-lg">Your Details</h2>
-      <p class="text-gray-200">We'll be in touch with your offer</p>
+      <p class="text-slate-200">We'll be in touch with your offer</p>
     </div>
 
     <!-- Vehicle summary pill (populated by JS when user arrives from step 1) -->
@@ -350,14 +350,14 @@ if (continueBtn) {
       </div>
       <div>
         <p id="lf-vehicle-name" class="text-white font-semibold text-sm"></p>
-        <p id="lf-vehicle-sub" class="text-gray-400 text-xs font-mono"></p>
+        <p id="lf-vehicle-sub" class="text-slate-400 text-xs font-mono"></p>
       </div>
     </div>
 
     <!-- Divider -->
     <div id="lf-divider" class="flex items-center gap-3 mb-6">
       <div class="flex-1 h-px bg-white/20"></div>
-      <span class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Contact Details</span>
+      <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Contact Details</span>
       <div class="flex-1 h-px bg-white/20"></div>
     </div>
 
@@ -366,9 +366,9 @@ if (continueBtn) {
 
       <!-- Full Name -->
       <div>
-        <label for="lf-name" class="block text-gray-300 text-xs font-semibold uppercase tracking-wider mb-1.5">Full Name</label>
+        <label for="lf-name" class="block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5">Full Name</label>
         <div class="relative">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" aria-hidden="true">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -379,7 +379,7 @@ if (continueBtn) {
             type="text"
             placeholder="Jane Smith"
             autocomplete="name"
-            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
+            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
             aria-describedby="err-name"
           />
         </div>
@@ -388,9 +388,9 @@ if (continueBtn) {
 
       <!-- Email -->
       <div>
-        <label for="lf-email" class="block text-gray-300 text-xs font-semibold uppercase tracking-wider mb-1.5">Email Address</label>
+        <label for="lf-email" class="block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5">Email Address</label>
         <div class="relative">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" aria-hidden="true">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
@@ -401,7 +401,7 @@ if (continueBtn) {
             type="email"
             placeholder="jane@example.com"
             autocomplete="email"
-            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
+            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
             aria-describedby="err-email"
           />
         </div>
@@ -410,11 +410,11 @@ if (continueBtn) {
 
       <!-- Phone (optional) -->
       <div>
-        <label for="lf-phone" class="block text-gray-300 text-xs font-semibold uppercase tracking-wider mb-1.5">
-          Phone Number <span class="normal-case text-gray-500 font-normal">(optional)</span>
+        <label for="lf-phone" class="block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5">
+          Phone Number <span class="normal-case text-slate-500 font-normal">(optional)</span>
         </label>
         <div class="relative">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" aria-hidden="true">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
@@ -426,7 +426,7 @@ if (continueBtn) {
             inputmode="tel"
             placeholder="+44 7700 900000"
             autocomplete="tel"
-            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
+            class="lf-input w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition duration-200 text-sm font-medium"
             aria-describedby="err-phone"
           />
         </div>
@@ -434,7 +434,7 @@ if (continueBtn) {
       </div>
 
       <!-- Privacy note -->
-      <p class="text-gray-500 text-xs text-center pt-1">
+      <p class="text-slate-500 text-xs text-center pt-1">
         Your details are used solely to respond to this enquiry and won't be shared with third parties.
       </p>
 
@@ -463,14 +463,14 @@ if (continueBtn) {
         </div>
         <div>
           <h2 class="text-3xl font-bold text-white">Enquiry Sent!</h2>
-          <p class="text-gray-300 text-sm mt-1">We'll be in touch with your offer shortly</p>
+          <p class="text-slate-300 text-sm mt-1">We'll be in touch with your offer shortly</p>
         </div>
       </div>
 
       <!-- Summary card -->
       <div class="rounded-xl bg-white/10 backdrop-blur border border-white/20 overflow-hidden text-left">
         <div class="px-5 py-3 bg-black/20 border-b border-white/10">
-          <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Enquiry Summary</p>
+          <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Enquiry Summary</p>
         </div>
         <div class="p-5 space-y-3">
           <div id="lf-reg-summary"
@@ -507,25 +507,25 @@ if (continueBtn) {
             </div>
             <div>
               <p id="conf-vehicle-name" class="text-white font-semibold text-sm"></p>
-              <p id="conf-vehicle-sub" class="text-gray-400 text-xs font-mono"></p>
+              <p id="conf-vehicle-sub" class="text-slate-400 text-xs font-mono"></p>
             </div>
           </div>
           <!-- Contact details -->
           <div class="grid grid-cols-2 gap-3 pt-1">
             <div>
-              <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">Name</p>
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Name</p>
               <p id="conf-name" class="text-white text-sm font-medium"></p>
             </div>
             <div>
-              <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">Enquiry</p>
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Enquiry</p>
               <p class="text-white text-sm font-medium">Selling</p>
             </div>
             <div class="col-span-2">
-              <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">Email</p>
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Email</p>
               <p id="conf-email" class="text-white text-sm font-medium break-all"></p>
             </div>
             <div id="conf-phone-row" class="hidden col-span-2">
-              <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">Phone</p>
+              <p class="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Phone</p>
               <p id="conf-phone" class="text-white text-sm font-medium"></p>
             </div>
           </div>
@@ -702,14 +702,14 @@ if (continueBtn) {
 })();
 </script>
 
-<section class="py-16 bg-gray-50" aria-labelledby="aboutHeading">
+<section class="py-16 bg-slate-50" aria-labelledby="aboutHeading">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div class="max-w-3xl mx-auto text-center mb-12">
-      <h2 id="aboutHeading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+      <h2 id="aboutHeading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
         How to Sell Your <%= landing.make %> <%= landing.model %> for the Best Price
       </h2>
-      <p class="text-gray-600">
+      <p class="text-slate-600">
         Everything you need to know before you sell, in one place.
       </p>
     </div>
@@ -737,14 +737,14 @@ if (continueBtn) {
     <% if (guideCards.length) { %>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <% guideCards.forEach(card => { %>
-          <article class="bg-white border border-gray-100 rounded-xl p-7 shadow-sm">
+          <article class="bg-white border border-slate-100 rounded-xl p-7 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<%= card.icon %>" />
             </svg>
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            <h3 class="text-lg font-semibold text-slate-900 mb-3">
               <%= card.title %>
             </h3>
-            <p class="text-gray-700 text-base leading-relaxed">
+            <p class="text-slate-700 text-base leading-relaxed">
               <%= card.text %>
             </p>
           </article>
@@ -758,7 +758,7 @@ if (continueBtn) {
   <!-- BENEFITS -->
 <section class="py-16 bg-white" aria-labelledby="benefitsHeading">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 id="benefitsHeading" class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-12">
+    <h2 id="benefitsHeading" class="text-2xl md:text-3xl font-bold text-center text-slate-800 mb-12">
       Why Choose Auto Galleria
     </h2>
     <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-center">
@@ -766,8 +766,8 @@ if (continueBtn) {
         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-blue-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" role="img" aria-label="Quick Quotes Icon">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <h3 class="text-lg font-semibold text-gray-800">Quick Quotes</h3>
-        <p class="text-gray-600">Receive a valuation for your <%= landing.model %> in minutes.</p>
+        <h3 class="text-lg font-semibold text-slate-800">Quick Quotes</h3>
+        <p class="text-slate-600">Receive a valuation for your <%= landing.model %> in minutes.</p>
       </div>
       <div>
   <svg xmlns="http://www.w3.org/2000/svg" 
@@ -777,57 +777,57 @@ if (continueBtn) {
     <path stroke-linecap="round" stroke-linejoin="round" 
           d="M14.121 7.629A3 3 0 0 0 9.017 9.43c-.023.212-.002.425.028.636l.506 3.541a4.5 4.5 0 0 1-.43 2.65L9 16.5l1.539-.513a2.25 2.25 0 0 1 1.422 0l.655.218a2.25 2.25 0 0 0 1.718-.122L15 15.75M8.25 12H12m9 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
   </svg>
-        <h3 class="text-lg font-semibold text-gray-800">Top Offers</h3>
-        <p class="text-gray-600">We offer competitive prices for your <%= landing.make %>.</p>
+        <h3 class="text-lg font-semibold text-slate-800">Top Offers</h3>
+        <p class="text-slate-600">We offer competitive prices for your <%= landing.make %>.</p>
       </div>
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-blue-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" role="img" aria-label="Free Pickup Icon">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11l4 8H7l-4-8zM16 6h2a2 2 0 012 2v2h-4V6z" />
         </svg>
-        <h3 class="text-lg font-semibold text-gray-800">Free Pickup</h3>
-        <p class="text-gray-600">Hassle-free collection from your location at no cost.</p>
+        <h3 class="text-lg font-semibold text-slate-800">Free Pickup</h3>
+        <p class="text-slate-600">Hassle-free collection from your location at no cost.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="py-16 bg-gray-50" aria-labelledby="faqHeading">
+<section class="py-16 bg-slate-50" aria-labelledby="faqHeading">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 id="faqHeading" class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
+    <h2 id="faqHeading" class="text-2xl md:text-3xl font-bold text-center text-slate-800 mb-8">Frequently Asked Questions</h2>
     <div class="space-y-4">
       <details class="bg-white p-4 rounded-lg shadow-sm">
-  <summary class="cursor-pointer font-semibold text-gray-800">
+  <summary class="cursor-pointer font-semibold text-slate-800">
     How quickly can I sell my <%= landing.make %> <%= landing.model %>?
   </summary>
-  <p class="mt-2 text-gray-600">
+  <p class="mt-2 text-slate-600">
     <%= landing.faqQuickSale || `We can provide an instant offer for your ${landing.make} ${landing.model} and arrange free collection within 24 hours.` %>
   </p>
 </details>
 
 <details class="bg-white p-4 rounded-lg shadow-sm">
-  <summary class="cursor-pointer font-semibold text-gray-800">
+  <summary class="cursor-pointer font-semibold text-slate-800">
     How quickly will I get paid?
   </summary>
-  <p class="mt-2 text-gray-600">
+  <p class="mt-2 text-slate-600">
     We process full payment before collecting your vehicle.
   </p>
 </details>
 
 <details class="bg-white p-4 rounded-lg shadow-sm">
-  <summary class="cursor-pointer font-semibold text-gray-800">
+  <summary class="cursor-pointer font-semibold text-slate-800">
     Do you buy non UK registration <%= landing.make %> <%= landing.model %>?
   </summary>
-  <p class="mt-2 text-gray-600">
+  <p class="mt-2 text-slate-600">
     <%= landing.faqNonUk || `Yes, we can buy non UK registration ${landing.make} ${landing.model} and handle import formalities.` %>
   </p>
 </details>
 
 <details class="bg-white p-4 rounded-lg shadow-sm">
-  <summary class="cursor-pointer font-semibold text-gray-800">
+  <summary class="cursor-pointer font-semibold text-slate-800">
     Do you buy non-running <%= landing.make %> cars?
   </summary>
-  <p class="mt-2 text-gray-600">
+  <p class="mt-2 text-slate-600">
     <%= landing.faqNonRunning || `Yes, we purchase ${landing.make} vehicles even if they are damaged or not running, and collection is always free.` %>
   </p>
 </details>
@@ -836,10 +836,10 @@ if (continueBtn) {
   </div>
 </section>
 
- <section class="py-16 px-6 bg-gray-50">
+ <section class="py-16 px-6 bg-slate-50" aria-labelledby="relatedModelsHeading">
   <div class="max-w-6xl mx-auto text-center mb-12">
-    <h2 class="text-3xl font-bold"><%= relatedTitle || `Other ${landing.make || 'models'} models we buy` %></h2>
-    <p class="text-gray-600"><%= relatedDescription || `Explore other ${landing.make ? landing.make.toLowerCase() : 'vehicles'} models we purchase.` %></p>
+    <h2 id="relatedModelsHeading" class="text-3xl font-bold"><%= relatedTitle || `Other ${landing.make || 'models'} models we buy` %></h2>
+    <p class="text-slate-600"><%= relatedDescription || `Explore other ${landing.make ? landing.make.toLowerCase() : 'vehicles'} models we purchase.` %></p>
   </div>
   <div class="grid gap-8 max-w-6xl mx-auto <%= relatedGridClass %>">
     <% if (relatedItems.length) { %>
@@ -875,7 +875,7 @@ if (continueBtn) {
       <% }) %>
     <% } else { %>
       <div class="col-span-full bg-white rounded-2xl shadow p-8 text-center">
-        <p class="text-gray-600">No other <%= landing.make ? landing.make.toLowerCase() : 'vehicles' %> landing pages available yet.</p>
+        <p class="text-slate-600">No other <%= landing.make ? landing.make.toLowerCase() : 'vehicles' %> landing pages available yet.</p>
       </div>
     <% } %>
   </div>

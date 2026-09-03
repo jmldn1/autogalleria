@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
   <%- include('partials/seo-head', {
-    title: pageTitle + ' | Auto Galleria Blog',
+    title: pageTitle + ' | Auto Galleria',
     description: pageDescription,
     ogType: 'article',
     ogImage,
@@ -61,10 +61,10 @@
               <% if (heroWebpSrcset) { %>
                 <source type="image/webp" srcset="<%= heroWebpSrcset %>" sizes="(max-width: 768px) 100vw, 1152px">
               <% } %>
-              <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="(max-width: 768px) 100vw, 1152px" alt="<%= blog.title %>" class="h-full w-full object-cover" />
+              <img src="<%= heroJpgSrc %>" srcset="<%= heroJpgSrcset %>" sizes="(max-width: 768px) 100vw, 1152px" alt="<%= blog.title %>" class="h-full w-full object-cover" loading="eager" fetchpriority="high" />
             </picture>
           <% } else { %>
-            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="h-full w-full object-cover" />
+            <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="h-full w-full object-cover" loading="eager" fetchpriority="high" />
           <% } %>
         </div>
       </div>

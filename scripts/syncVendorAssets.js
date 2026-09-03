@@ -1,4 +1,4 @@
-// Copies the pre-built Swiper/LightGallery CSS+JS we use on car-details.ejs out of
+// Copies the pre-built Swiper/LightGallery CSS+JS we use on the car-details pages out of
 // node_modules and into public/vendor, self-hosted instead of pulled from cdn.jsdelivr.net.
 // Re-run after bumping the swiper/lightgallery versions in package.json.
 const fs = require('fs');
@@ -40,7 +40,7 @@ async function main() {
   copyFile(path.join(swiperSrc, 'modules', 'free-mode.min.css'), path.join(swiperDest, 'free-mode.min.css'));
 
   // JS is pulled as native ES modules instead of swiper-bundle.min.js so the page only
-  // downloads the core plus the Navigation/FreeMode/Thumbs modules car-details.ejs actually
+  // downloads the core plus the Navigation/FreeMode/Thumbs modules the car-details pages actually
   // uses (~86KB total), rather than every module Swiper ships (~155KB in the all-in-one bundle).
   copyFile(path.join(swiperSrc, 'swiper.min.mjs'), path.join(swiperDest, 'swiper.min.mjs'));
   copyFile(path.join(swiperSrc, 'modules', 'navigation.min.mjs'), path.join(swiperDest, 'modules', 'navigation.min.mjs'));

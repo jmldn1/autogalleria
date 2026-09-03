@@ -11,8 +11,10 @@
   %>
   <head>
     <%- include('partials/seo-head', {
-      title: title || 'Auto Galleria | Find Your Next Car',
-      description: description || 'Browse hand-picked used cars with transparent pricing, detailed photos and nationwide delivery.'
+      title: title || 'Find Your Next Car | Auto Galleria',
+      description: description || 'Browse hand-picked used cars with transparent pricing, detailed photos and nationwide delivery.',
+      ogImage: heroImage?.sources?.jpg?.[heroImage.sources.jpg.length - 1]?.url || null,
+      ogImageAlt: heroImage?.alt || null
     }) %>
     <link href="/css/tailwind.css" rel="stylesheet" />
   </head>

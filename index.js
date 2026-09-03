@@ -568,7 +568,7 @@ app.get("/showroom", async (req, res) => {
       : null;
 
     res.render("showroom", {
-      title: "Auto Galleria | Find Your Next Car",
+      title: "Find Your Next Car | Auto Galleria",
       description: "Browse hand-picked used cars with transparent pricing, detailed photos and nationwide delivery.",
       cars: normalizedCars.slice(0, 6),
       totalCars: normalizedCars.length,
@@ -713,13 +713,14 @@ app.get("/car/:slug", async (req, res) => {
       ...buildCardImage(relatedCar),
     }));
 
-    // ?layout=classic renders the legacy car-details layout for side-by-side comparison
-    const template = req.query.layout === "classic" ? "car-details" : "car-details-hero";
+    // ?layout=classic renders the retired car-details-classic layout for side-by-side comparison
+    const template = req.query.layout === "classic" ? "car-details-classic" : "car-details";
 
     res.render(template, {
       car,
       gallery: galleryImages,
       relatedCars,
+      ogType: "product",
       ogImage: vehicleImages[0] || null,
       ogImageAlt: vehicleName,
       jsonLd: vehicleSchema,
