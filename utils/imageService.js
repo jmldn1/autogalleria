@@ -17,8 +17,8 @@ const SIZES = {
     { width: 1600, height: 900 },
   ],
   heroMobile: [
-    { width: 480, height: 840 },
-    { width: 800, height: 1400 },
+    { width: 480, height: 600 },
+    { width: 800, height: 1000 },
   ],
   gallery: [
     { width: 400 },
@@ -85,7 +85,8 @@ async function processImage(
   outDir,
   baseName,
   sizes,
-  quality = DEFAULT_QUALITY
+  quality = DEFAULT_QUALITY,
+  position
 ) {
   try {
     ensureDir(outDir);
@@ -98,7 +99,7 @@ async function processImage(
 
     const tasks = sizes.flatMap((size) => {
       const resizeOpts = size.height
-        ? { width: size.width, height: size.height, fit: "cover" }
+        ? { width: size.width, height: size.height, fit: "cover", ...(position ? { position } : {}) }
         : { width: size.width };
 
       return Object.entries(FORMATS).map(([ext, fn]) => {

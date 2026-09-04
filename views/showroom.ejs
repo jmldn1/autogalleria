@@ -30,7 +30,7 @@
           <% } else { %>
             <div class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.35),transparent_55%)]"></div>
           <% } %>
-          <div class="absolute inset-0 z-10 bg-linear-to-t from-slate-950/85 via-slate-950/55 to-slate-900/15"></div>
+          <div class="absolute inset-0 z-10 bg-linear-to-t from-slate-950/75 via-slate-950/40 to-transparent"></div>
 
           <div class="relative z-20 mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
             <p class="section-eyebrow text-blue-300"><%= heroEyebrow %></p>
@@ -45,21 +45,6 @@
               <a href="<%= primaryCtaUrl %>" class="btn-primary"><%= primaryCtaLabel %></a>
               <a href="<%= secondaryCtaUrl %>" class="btn-secondary"><%= secondaryCtaLabel %></a>
             </div>
-
-            <dl class="mt-12 grid max-w-xl grid-cols-3 gap-6 border-t border-white/10 pt-6 text-center sm:text-left">
-              <div>
-                <dt class="text-xs uppercase tracking-[0.2em] text-slate-400">In stock</dt>
-                <dd class="mt-1 text-2xl font-semibold"><%= totalCars %>+</dd>
-              </div>
-              <div>
-                <dt class="text-xs uppercase tracking-[0.2em] text-slate-400">HPI checked</dt>
-                <dd class="mt-1 text-2xl font-semibold">100%</dd>
-              </div>
-              <div>
-                <dt class="text-xs uppercase tracking-[0.2em] text-slate-400">Delivery</dt>
-                <dd class="mt-1 text-2xl font-semibold">Nationwide</dd>
-              </div>
-            </dl>
           </div>
         </div>
       </section>

@@ -44,7 +44,7 @@ async function handleImageUpload(file, folder, prefix, sizes, mobileSizes) {
 
   const result = await processImage(file.path, outDir, prefix, sizes);
   const mobileResult = mobileSizes
-    ? await processImage(file.path, outDir, prefix, mobileSizes)
+    ? await processImage(file.path, outDir, prefix, mobileSizes, undefined, 'attention')
     : null;
   fs.unlinkSync(file.path); // Remove original
 
@@ -66,6 +66,24 @@ async function handleImageUpload(file, folder, prefix, sizes, mobileSizes) {
   };
 }
 
+// Blog content is authored as plain text (including AI Assist drafts, which are
+// instructed to return plain text). Wrap blank-line-separated blocks in <p> tags
+// so it renders with real paragraph breaks; leave already-structured HTML alone.
+function formatBlogContent(raw) {
+  const content = (raw || '').trim();
+  if (!content) return content;
+
+  const hasBlockHtml = /<(p|h[1-6]|ul|ol|blockquote|div)[\s>]/i.test(content);
+  if (hasBlockHtml) return content;
+
+  return content
+    .split(/\r?\n\s*\r?\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => `<p>${block.replace(/\r?\n/g, '<br>')}</p>`)
+    .join('\n');
+}
+
 async function handleMultipleImageUploads(files, folder, sizes, heroSizes, heroMobileSizes) {
   if (!files || files.length === 0) return [];
 
@@ -82,7 +100,7 @@ async function handleMultipleImageUploads(files, folder, sizes, heroSizes, heroM
       await processImage(file.path, outDir, prefix, heroSizes);
     }
     if (heroMobileSizes) {
-      await processImage(file.path, outDir, prefix, heroMobileSizes);
+      await processImage(file.path, outDir, prefix, heroMobileSizes, undefined, 'attention');
     }
     fs.unlinkSync(file.path);
 
@@ -1097,6 +1115,7 @@ router.post('/blogs', isAdmin, upload.fields([
 
     const blogData = {
       ...req.body,
+      content: formatBlogContent(req.body.content),
       slug: await generateUniqueSlug(slugSource, Blog)
     };
 
@@ -1147,7 +1166,7 @@ router.post('/blogs/edit/:id', isAdmin, upload.fields([
     // Update basic fields
     blog.title = req.body.title?.trim() || blog.title;
     blog.excerpt = req.body.excerpt?.trim() || blog.excerpt;
-    blog.content = req.body.content?.trim() || blog.content;
+    blog.content = req.body.content?.trim() ? formatBlogContent(req.body.content) : blog.content;
 
     // Normalize slug from user input and keep it unique.
     if (req.body.slug && req.body.slug.trim()) {
