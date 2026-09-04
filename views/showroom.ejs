@@ -66,12 +66,61 @@
           </div>
         <% } else { %>
           <div class="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-            <% cars.forEach(car => { %>
+            <% cars.slice(1).forEach(car => { %>
               <%- include('partials/vehicle-card', { vehicle: car }) %>
             <% }) %>
           </div>
         <% } %>
       </section>
+
+      <!-- FEATURED VEHICLE -->
+      <% if (cars.length) { %>
+        <%
+          const spotlight = cars[0];
+          const spotlightName = [spotlight.year, spotlight.make, spotlight.model].filter(Boolean).join(' ');
+          const spotlightHref = `/car/${spotlight.slug || spotlight._id || ''}`;
+          const spotlightBlurb = spotlight.description
+            ? (spotlight.description.length > 160 ? spotlight.description.slice(0, 157).trim() + '…' : spotlight.description)
+            : 'Hand-picked, fully inspected and ready to view at our showroom or delivered to your door.';
+        %>
+        <section class="bg-slate-900 py-16 text-white sm:py-20">
+          <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8">
+            <a href="<%= spotlightHref %>" class="group block overflow-hidden rounded-2xl">
+              <% if (spotlight.image?.sources?.jpg?.length) { %>
+                <picture>
+                  <% if (spotlight.image.sources.avif?.length) { %>
+                    <source type="image/avif" srcset="<%= spotlight.image.sources.avif.map(s => `${s.url} ${s.w}w`).join(', ') %>" sizes="(max-width: 1024px) 100vw, 50vw" />
+                  <% } %>
+                  <% if (spotlight.image.sources.webp?.length) { %>
+                    <source type="image/webp" srcset="<%= spotlight.image.sources.webp.map(s => `${s.url} ${s.w}w`).join(', ') %>" sizes="(max-width: 1024px) 100vw, 50vw" />
+                  <% } %>
+                  <img
+                    src="<%= spotlight.image.fallback %>"
+                    srcset="<%= spotlight.image.sources.jpg.map(s => `${s.url} ${s.w}w`).join(', ') %>"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    alt="<%= spotlight.image.alt || spotlightName %>"
+                    class="aspect-4/3 w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </picture>
+              <% } %>
+            </a>
+            <div>
+              <p class="section-eyebrow text-blue-300">Featured this week</p>
+              <h2 class="text-3xl font-bold sm:text-4xl"><%= spotlightName %></h2>
+              <p class="mt-4 max-w-lg text-slate-300"><%= spotlightBlurb %></p>
+
+              <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-300">
+                <% if (spotlight.mileage) { %><span><%= Number(spotlight.mileage).toLocaleString() %> miles</span><% } %>
+                <% if (spotlight.condition) { %><span><%= spotlight.condition %></span><% } %>
+                <% if (Number.isFinite(Number(spotlight.price))) { %><span class="font-semibold text-white">£<%= Number(spotlight.price).toLocaleString() %></span><% } %>
+              </div>
+
+              <a href="<%= spotlightHref %>" class="btn-primary mt-8 inline-flex">View this car</a>
+            </div>
+          </div>
+        </section>
+      <% } %>
 
       <!-- WHY CHOOSE US -->
       <section class="bg-white py-16">
