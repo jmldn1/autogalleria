@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @layer components {
   /* Shared card shell used across public listing cards (blog, vehicle, related) */

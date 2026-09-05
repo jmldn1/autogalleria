@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
+    "@tailwindcss/typography": "^0.5.20",
     "autoprefixer": "^10.4.21",
     "cssnano": "^8.0.10",
     "lightgallery": "^2.7.2",
