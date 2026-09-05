@@ -38,20 +38,23 @@ async function main() {
   copyFile(path.join(swiperSrc, 'swiper.min.css'), path.join(swiperDest, 'swiper.min.css'));
   copyFile(path.join(swiperSrc, 'modules', 'navigation.min.css'), path.join(swiperDest, 'navigation.min.css'));
   copyFile(path.join(swiperSrc, 'modules', 'free-mode.min.css'), path.join(swiperDest, 'free-mode.min.css'));
+  copyFile(path.join(swiperSrc, 'modules', 'pagination.min.css'), path.join(swiperDest, 'pagination.min.css'));
 
   // JS is pulled as native ES modules instead of swiper-bundle.min.js so the page only
-  // downloads the core plus the Navigation/FreeMode/Thumbs modules the car-details pages actually
-  // uses (~86KB total), rather than every module Swiper ships (~155KB in the all-in-one bundle).
+  // downloads the core plus the Navigation/FreeMode/Thumbs/Pagination modules the car-details pages
+  // actually uses, rather than every module Swiper ships (~155KB in the all-in-one bundle).
   copyFile(path.join(swiperSrc, 'swiper.min.mjs'), path.join(swiperDest, 'swiper.min.mjs'));
   copyFile(path.join(swiperSrc, 'modules', 'navigation.min.mjs'), path.join(swiperDest, 'modules', 'navigation.min.mjs'));
   copyFile(path.join(swiperSrc, 'modules', 'free-mode.min.mjs'), path.join(swiperDest, 'modules', 'free-mode.min.mjs'));
   copyFile(path.join(swiperSrc, 'modules', 'thumbs.min.mjs'), path.join(swiperDest, 'modules', 'thumbs.min.mjs'));
+  copyFile(path.join(swiperSrc, 'modules', 'pagination.min.mjs'), path.join(swiperDest, 'modules', 'pagination.min.mjs'));
   // Shared chunks imported by the core and the modules above via relative "../shared/..." paths.
   const swiperSharedFiles = [
     'swiper-core.min.mjs',
     'ssr-window.esm.min.mjs',
     'utils.min.mjs',
     'create-element-if-not-defined.min.mjs',
+    'classes-to-selector.min.mjs',
   ];
   for (const file of swiperSharedFiles) {
     copyFile(path.join(swiperSrc, 'shared', file), path.join(swiperDest, 'shared', file));

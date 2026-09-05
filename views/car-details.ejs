@@ -37,6 +37,19 @@
   <link rel="stylesheet" href="/vendor/swiper/swiper.min.css?v=<%= vendorVersion %>"/>
   <link rel="stylesheet" href="/vendor/swiper/navigation.min.css?v=<%= vendorVersion %>"/>
   <link rel="stylesheet" href="/vendor/swiper/free-mode.min.css?v=<%= vendorVersion %>"/>
+  <link rel="stylesheet" href="/vendor/swiper/pagination.min.css?v=<%= vendorVersion %>"/>
+  <!-- Slender image-count dots: Swiper's default bullets are larger/chunkier than we want
+       sitting directly under the hero title, and it has no size/shape distinction for the
+       active bullet built in, so this overrides both. Pagination lives in the title overlay,
+       not inside .mySwiper2, so it's scoped by its own class instead of that ancestor. -->
+  <style>
+    /* line-height:0 kills the ~19px of inherited line-box padding the browser would
+       otherwise add around a 5px inline-block dot, which was pushing the row well
+       below the title instead of sitting close under it. */
+    .hero-pagination { line-height: 0; }
+    .hero-pagination .swiper-pagination-bullet { width: 5px; height: 5px; background: #fff; opacity: .45; }
+    .hero-pagination .swiper-pagination-bullet-active { width: 14px; border-radius: 9999px; background: #fff; opacity: 1; }
+  </style>
   <!-- LightGallery (self-hosted) -->
   <!-- Only needed once the lightbox opens, so load without blocking initial render -->
   <link rel="stylesheet" href="/vendor/lightgallery/css/lightgallery.min.css?v=<%= vendorVersion %>" media="print" onload="this.media='all'">
@@ -51,7 +64,7 @@
 
   <!-- Hero gallery: full-bleed main image with title/price overlaid -->
   <section class="relative isolate w-full">
-    <div class="swiper mySwiper2 relative z-0 w-full aspect-4/5 max-h-[85vh] overflow-hidden sm:aspect-video">
+    <div class="swiper mySwiper2 relative z-0 w-full aspect-square max-h-[85vh] overflow-hidden sm:aspect-video">
       <div class="swiper-wrapper" id="lightgallery">
         <% if (car.galleryImages && car.galleryImages.length) { %>
           <% car.galleryImages.forEach((img, index) => { %>
@@ -130,6 +143,9 @@
           </ol>
         </nav>
         <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
+        <!-- Image count: rendered in normal flow (not Swiper's default absolute placement) so it
+             always sits below the title instead of overlapping it, whatever the title wraps to. -->
+        <div class="swiper-pagination hero-pagination static! mt-3"></div>
       </div>
     </div>
   </section>
@@ -375,6 +391,7 @@
     import Navigation from "/vendor/swiper/modules/navigation.min.mjs?v=<%= vendorVersion %>";
     import Thumbs from "/vendor/swiper/modules/thumbs.min.mjs?v=<%= vendorVersion %>";
     import FreeMode from "/vendor/swiper/modules/free-mode.min.mjs?v=<%= vendorVersion %>";
+    import Pagination from "/vendor/swiper/modules/pagination.min.mjs?v=<%= vendorVersion %>";
 
     document.addEventListener("DOMContentLoaded", () => {
       const swiperThumbs = new Swiper(".mySwiper", {
@@ -391,11 +408,15 @@
         },
       });
       const swiperMain = new Swiper(".mySwiper2", {
-        modules: [Navigation, Thumbs],
+        modules: [Navigation, Thumbs, Pagination],
         spaceBetween: 10,
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
         },
         thumbs: {
           swiper: swiperThumbs,

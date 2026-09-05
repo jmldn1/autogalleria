@@ -46,12 +46,12 @@ car: [
     { width: 1600, height: 900 },
     { width: 1920, height: 1080 },
   ],
-  // Portrait 4:5 crop cut directly from the original upload for the mobile
+  // Square 1:1 crop cut directly from the original upload for the mobile
   // car-detail hero (<640px), matching the fixed aspect-ratio hero box.
   carHeroMobile: [
-    { width: 480, height: 600 },
-    { width: 720, height: 900 },
-    { width: 960, height: 1200 },
+    { width: 480, height: 480 },
+    { width: 720, height: 720 },
+    { width: 960, height: 960 },
   ],
 };
 
