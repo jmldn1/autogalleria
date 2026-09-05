@@ -253,12 +253,29 @@
                 <div class="relative group" data-existing-image-card>
                   <img src="<%= img.fallback %>" alt="Gallery Image <%= index + 1 %>"
                        class="w-full aspect-4/3 object-cover rounded-lg border-2 border-gray-200">
-                  <button type="button" data-remove-existing-image data-existing-image-index="<%= index %>"
-                          class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
+                  <div class="absolute top-2 right-2 flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition">
+                    <button type="button" data-move-existing-image data-existing-image-index="<%= index %>" data-direction="up"
+                            title="Move image left" aria-label="Move image left"
+                            class="bg-black/65 text-white rounded p-1.5 hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-40">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-move-existing-image data-existing-image-index="<%= index %>" data-direction="down"
+                            title="Move image right" aria-label="Move image right"
+                            class="bg-black/65 text-white rounded p-1.5 hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-40">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-remove-existing-image data-existing-image-index="<%= index %>"
+                            title="Remove image" aria-label="Remove image"
+                            class="bg-red-500 text-white rounded p-1.5 hover:bg-red-600">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
                   <div class="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
                     Image <%= index + 1 %>
                   </div>
@@ -435,6 +452,8 @@
       }
     });
 
+    updateExistingImageControls();
+
     const countLabel = existingImagesContainer.querySelector('[data-existing-images-count]');
     if (countLabel) {
       countLabel.textContent = `Current Images (${images.length})`;
@@ -445,6 +464,49 @@
     }
   }
 
+  function updateExistingImageControls() {
+    const existingImagesContainer = document.querySelector('[data-existing-images]');
+    if (!existingImagesContainer) return;
+
+    const cards = Array.from(existingImagesContainer.querySelectorAll('[data-existing-image-card]'));
+    cards.forEach((card, index) => {
+      card.querySelectorAll('[data-existing-image-index]').forEach((button) => {
+        button.setAttribute('data-existing-image-index', String(index));
+      });
+
+      const moveUpButton = card.querySelector('[data-direction="up"]');
+      const moveDownButton = card.querySelector('[data-direction="down"]');
+      if (moveUpButton) moveUpButton.disabled = index === 0;
+      if (moveDownButton) moveDownButton.disabled = index === cards.length - 1;
+    });
+  }
+
+  function moveExistingImage(index, direction) {
+    const existingImagesInput = document.getElementById('existingImages');
+    const existingImagesContainer = document.querySelector('[data-existing-images]');
+    const images = JSON.parse(existingImagesInput.value || '[]');
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (!existingImagesContainer || targetIndex < 0 || targetIndex >= images.length) return;
+
+    [images[index], images[targetIndex]] = [images[targetIndex], images[index]];
+    existingImagesInput.value = JSON.stringify(images);
+
+    const cards = Array.from(existingImagesContainer.querySelectorAll('[data-existing-image-card]'));
+    const card = cards[index];
+    const targetCard = cards[targetIndex];
+    if (direction === 'up') {
+      targetCard.before(card);
+    } else {
+      targetCard.after(card);
+    }
+
+    existingImagesContainer.querySelectorAll('[data-existing-image-card]').forEach((currentCard, currentIndex) => {
+      const label = currentCard.querySelector('.absolute.bottom-2.left-2');
+      if (label) label.textContent = `Image ${currentIndex + 1}`;
+    });
+    updateExistingImageControls();
+  }
+
   document.querySelectorAll('[data-remove-existing-image]').forEach((button) => {
     button.addEventListener('click', function () {
       const index = Number(this.getAttribute('data-existing-image-index'));
@@ -453,6 +515,18 @@
       }
     });
   });
+
+  document.querySelectorAll('[data-move-existing-image]').forEach((button) => {
+    button.addEventListener('click', function () {
+      const index = Number(this.getAttribute('data-existing-image-index'));
+      const direction = this.getAttribute('data-direction');
+      if (!Number.isNaN(index) && direction) {
+        moveExistingImage(index, direction);
+      }
+    });
+  });
+
+  updateExistingImageControls();
 </script>
 <script>
 function normaliseYouTubeUrl() {
