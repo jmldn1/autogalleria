@@ -39,7 +39,7 @@
       </div>
     <% } %>
 
-    <div class="flex-1 p-6">
+    <div class="flex-1 <%= isCompact ? 'p-5' : 'p-6' %>">
       <div class="flex items-start justify-between gap-3">
         <div>
           <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"><%= cardVehicle.year || (isCompact ? 'In stock' : 'New arrival') %></p>
@@ -52,14 +52,16 @@
         <% } %>
       </div>
 
-      <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-500">
-        <% if (cardVehicle.mileage) { %>
-          <span><%= Number(cardVehicle.mileage).toLocaleString() %> miles</span>
-        <% } %>
-        <% if (cardVehicle.condition) { %>
-          <span><%= cardVehicle.condition %></span>
-        <% } %>
-      </div>
+      <% if (!isCompact) { %>
+        <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-500">
+          <% if (cardVehicle.mileage) { %>
+            <span><%= Number(cardVehicle.mileage).toLocaleString() %> miles</span>
+          <% } %>
+          <% if (cardVehicle.condition) { %>
+            <span><%= cardVehicle.condition %></span>
+          <% } %>
+        </div>
+      <% } %>
     </div>
   </a>
 

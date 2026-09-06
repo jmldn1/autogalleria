@@ -284,12 +284,12 @@
           </ul>
         </div>
 
-        <div class="bg-blue-50 border border-blue-100 rounded-3xl shadow-lg p-6">
+        <div class="bg-white border-t-4 border-blue-200 rounded-3xl shadow-lg p-6">
           <div id="enquiry-form-wrap">
-            <h2 class="text-xl font-semibold text-slate-900">Interested in this vehicle?</h2>
-            <p class="mt-2 text-sm text-slate-600">Send an enquiry about this <%= car.make %> <%= car.model %> and we'll get back to you shortly.</p>
+            <h2 class="text-lg font-semibold text-slate-900">Interested in this car?</h2>
+            <p class="mt-1 text-sm text-slate-500">We'll be in touch about this <%= car.make %> <%= car.model %> shortly.</p>
 
-            <form id="enquiry-form" class="mt-5 space-y-3" novalidate>
+            <form id="enquiry-form" class="mt-5 space-y-4" novalidate>
               <div class="hidden" aria-hidden="true">
                 <label for="enq-company">Company website</label>
                 <input id="enq-company" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
@@ -299,7 +299,7 @@
                 <label for="enq-name" class="sr-only">Full name</label>
                 <input
                   id="enq-name" name="name" type="text" placeholder="Full name" autocomplete="name"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  class="enq-input w-full border-0 border-b border-slate-300 bg-transparent px-0.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-b-2 focus:border-blue-500 focus:pb-[7px] focus:outline-none"
                   aria-describedby="enq-err-name"
                 >
                 <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-name" role="alert"></p>
@@ -309,28 +309,34 @@
                 <label for="enq-email" class="sr-only">Email address</label>
                 <input
                   id="enq-email" name="email" type="email" placeholder="Email address" autocomplete="email"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  class="enq-input w-full border-0 border-b border-slate-300 bg-transparent px-0.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-b-2 focus:border-blue-500 focus:pb-[7px] focus:outline-none"
                   aria-describedby="enq-err-email"
                 >
                 <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-email" role="alert"></p>
               </div>
 
-              <div>
-                <label for="enq-phone" class="sr-only">Phone number (optional)</label>
-                <input
-                  id="enq-phone" name="phone" type="tel" inputmode="tel" placeholder="Phone (optional)" autocomplete="tel"
-                  class="enq-input w-full rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                  aria-describedby="enq-err-phone"
-                >
-                <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-phone" role="alert"></p>
-              </div>
+              <button type="button" id="enq-more-toggle" class="text-xs font-medium text-blue-600 transition hover:text-blue-700">
+                + Add phone or a message
+              </button>
 
-              <div>
-                <label for="enq-message" class="sr-only">Message (optional)</label>
-                <textarea
-                  id="enq-message" name="message" rows="3" placeholder="Anything you'd like us to know? (optional)"
-                  class="enq-input w-full resize-none rounded-lg bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                ></textarea>
+              <div id="enq-more-fields" class="hidden space-y-4">
+                <div>
+                  <label for="enq-phone" class="sr-only">Phone number (optional)</label>
+                  <input
+                    id="enq-phone" name="phone" type="tel" inputmode="tel" placeholder="Phone (optional)" autocomplete="tel"
+                    class="enq-input w-full border-0 border-b border-slate-300 bg-transparent px-0.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-b-2 focus:border-blue-500 focus:pb-[7px] focus:outline-none"
+                    aria-describedby="enq-err-phone"
+                  >
+                  <p class="enq-error hidden mt-1 text-xs text-rose-600" id="enq-err-phone" role="alert"></p>
+                </div>
+
+                <div>
+                  <label for="enq-message" class="sr-only">Message (optional)</label>
+                  <textarea
+                    id="enq-message" name="message" rows="3" placeholder="Anything you'd like us to know? (optional)"
+                    class="enq-input w-full resize-none rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm text-slate-900 placeholder-slate-400 transition focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400/40"
+                  ></textarea>
+                </div>
               </div>
 
               <p id="enq-form-error" class="hidden text-xs text-rose-600" role="alert"></p>
@@ -339,9 +345,9 @@
                 <button
                   type="submit"
                   id="enq-submit"
-                  class="btn-primary text-sm shadow disabled:cursor-not-allowed disabled:opacity-60"
+                  class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <span id="enq-submit-label">Send Enquiry</span>
+                  <span id="enq-submit-label">Send enquiry</span>
                 </button>
               </div>
             </form>
@@ -376,9 +382,9 @@
           </a>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           <% relatedCars.forEach((relatedCar) => { %>
-            <%- include('partials/vehicle-card', { vehicle: relatedCar }) %>
+            <%- include('partials/vehicle-card', { vehicle: relatedCar, compact: true }) %>
           <% }) %>
         </div>
       </section>
@@ -449,6 +455,15 @@
       const formWrap = document.getElementById("enquiry-form-wrap");
       const confirmation = document.getElementById("enquiry-confirmation");
       const form = document.getElementById("enquiry-form");
+
+      const moreToggle = document.getElementById("enq-more-toggle");
+      const moreFields = document.getElementById("enq-more-fields");
+      if (moreToggle && moreFields) {
+        moreToggle.addEventListener("click", () => {
+          moreFields.classList.remove("hidden");
+          moreToggle.remove();
+        }, { once: true });
+      }
 
       if (formWrap && confirmation && form) {
         function showConfirmation() {
