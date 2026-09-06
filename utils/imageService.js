@@ -3,9 +3,12 @@ const fs = require("fs");
 const path = require("path");
 
 // ✅ Modern formats only
+// avif effort is lowered from sharp's default (4) since it's by far the
+// slowest encoder of the three and this runs synchronously in the upload
+// request — a small quality/size tradeoff buys a big speedup.
 const FORMATS = {
   webp: (q) => ({ quality: q }),
-  avif: (q) => ({ quality: q }),
+  avif: (q) => ({ quality: q, effort: 2 }),
   jpg: (q) => ({ quality: q, mozjpeg: true }),
 };
 
@@ -29,28 +32,31 @@ const SIZES = {
     { width: 200, height: 150 },
     { width: 400, height: 300 },
   ],
+// noAvif sizes still get jpg + webp; avif (the slowest encode) is kept only
+// on the largest rendition per set, since its size win is marginal on small
+// crops and car uploads process several images synchronously in-request.
 car: [
-  { width: 150, height: 112 },
-  { width: 300, height: 225 },
-  { width: 500, height: 375 },
-  { width: 600, height: 450 },
-  { width: 900, height: 675 },
+  { width: 150, height: 112, noAvif: true },
+  { width: 300, height: 225, noAvif: true },
+  { width: 500, height: 375, noAvif: true },
+  { width: 600, height: 450, noAvif: true },
+  { width: 900, height: 675, noAvif: true },
   { width: 1200, height: 900 },
 ],
   // Widescreen crop cut directly from the original upload for the full-bleed
   // hero banner, so it isn't a second crop on top of the 4:3 "car" rendition.
   carHero: [
-    { width: 640, height: 360 },
-    { width: 960, height: 540 },
-    { width: 1280, height: 720 },
-    { width: 1600, height: 900 },
+    { width: 640, height: 360, noAvif: true },
+    { width: 960, height: 540, noAvif: true },
+    { width: 1280, height: 720, noAvif: true },
+    { width: 1600, height: 900, noAvif: true },
     { width: 1920, height: 1080 },
   ],
   // Square 1:1 crop cut directly from the original upload for the mobile
   // car-detail hero (<640px), matching the fixed aspect-ratio hero box.
   carHeroMobile: [
-    { width: 480, height: 480 },
-    { width: 720, height: 720 },
+    { width: 480, height: 480, noAvif: true },
+    { width: 720, height: 720, noAvif: true },
     { width: 960, height: 960 },
   ],
 };
@@ -102,7 +108,9 @@ async function processImage(
         ? { width: size.width, height: size.height, fit: "cover", ...(position ? { position } : {}) }
         : { width: size.width };
 
-      return Object.entries(FORMATS).map(([ext, fn]) => {
+      return Object.entries(FORMATS)
+        .filter(([ext]) => !(ext === "avif" && size.noAvif))
+        .map(([ext, fn]) => {
         const fileName = `${baseName}-${size.width}${
           size.height ? `x${size.height}` : ""
         }.${ext}`;

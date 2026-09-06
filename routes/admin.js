@@ -93,15 +93,16 @@ async function handleMultipleImageUploads(files, folder, sizes, heroSizes, heroM
   const results = [];
   for (const file of files) {
     const prefix = path.parse(file.filename).name;
-    const result = await processImage(file.path, outDir, prefix, sizes);
-    if (heroSizes) {
-      // Cut from the same original before it's deleted, so the hero crop
-      // isn't a second crop stacked on top of the 4:3 "car" rendition.
-      await processImage(file.path, outDir, prefix, heroSizes);
-    }
-    if (heroMobileSizes) {
-      await processImage(file.path, outDir, prefix, heroMobileSizes, undefined, 'attention');
-    }
+    // Cut hero/heroMobile from the same original before it's deleted, so
+    // they aren't a second crop stacked on top of the 4:3 "car" rendition.
+    // Run all three size sets concurrently instead of one after another —
+    // they read the same still-on-disk file independently, so this is safe
+    // and cuts per-photo processing time substantially.
+    const [result] = await Promise.all([
+      processImage(file.path, outDir, prefix, sizes),
+      heroSizes ? processImage(file.path, outDir, prefix, heroSizes) : null,
+      heroMobileSizes ? processImage(file.path, outDir, prefix, heroMobileSizes, undefined, 'attention') : null,
+    ]);
     fs.unlinkSync(file.path);
 
     const publicBaseURL = `${process.env.PUBLIC_IMAGE_PATH || '/images'}/${folder}`;
