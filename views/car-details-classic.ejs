@@ -39,11 +39,11 @@
     <header class="mb-5">
       <nav aria-label="Breadcrumb" class="mb-2 text-sm text-slate-500">
         <ol class="flex flex-wrap items-center gap-2">
-          <li><a href="/" class="transition hover:text-blue-600">Home</a></li>
+          <li><a href="/" class="inline-flex min-h-11 items-center px-1 -mx-1 transition hover:text-blue-600">Home</a></li>
           <li aria-hidden="true">/</li>
-          <li><a href="/cars" class="transition hover:text-blue-600">Cars</a></li>
+          <li><a href="/cars" class="inline-flex min-h-11 items-center px-1 -mx-1 transition hover:text-blue-600">Cars</a></li>
           <li aria-hidden="true">/</li>
-          <li class="text-slate-700"><%= car.make %> <%= car.model %></li>
+          <li class="text-slate-700" aria-current="page"><%= car.make %> <%= car.model %></li>
         </ol>
       </nav>
 
@@ -57,10 +57,14 @@
   <div class="swiper-wrapper" id="lightgallery">
     <% if (car.galleryImages && car.galleryImages.length) { %>
       <% car.galleryImages.forEach((img, index) => { %>
+        <% const lightboxJpg = img.manifest.heroSources.jpg || []; %>
+        <% const lightboxSrcset = lightboxJpg.map(source => `${source.url} ${source.w}w`).join(', '); %>
         <div class="swiper-slide" role="group" aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>">
           <a
             href="<%= img.lightboxSrc || img.fallback %>"
             data-src="<%= img.lightboxSrc || img.fallback %>"
+            data-srcset="<%= lightboxSrcset %>"
+            data-sizes="100vw"
             data-lg-size="1200-900"
             data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
             class="gallery-item block"

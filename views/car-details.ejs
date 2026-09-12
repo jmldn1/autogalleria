@@ -68,10 +68,14 @@
       <div class="swiper-wrapper" id="lightgallery">
         <% if (car.galleryImages && car.galleryImages.length) { %>
           <% car.galleryImages.forEach((img, index) => { %>
+            <% const lightboxJpg = img.manifest.heroSources.jpg || []; %>
+            <% const lightboxSrcset = lightboxJpg.map(source => `${source.url} ${source.w}w`).join(', '); %>
             <div class="swiper-slide" role="group" aria-label="Image <%= index + 1 %> of <%= car.galleryImages.length %>">
               <a
                 href="<%= img.lightboxSrc || img.fallback %>"
                 data-src="<%= img.lightboxSrc || img.fallback %>"
+                data-srcset="<%= lightboxSrcset %>"
+                data-sizes="100vw"
                 data-lg-size="<%= img.lightboxSize || '1200-900' %>"
                 data-sub-html="<h4><%= car.make %> <%= car.model %></h4><p><%= img.alt || 'Gallery image' %></p>"
                 class="gallery-item block h-full w-full"
@@ -135,11 +139,11 @@
       <div class="pointer-events-auto mx-auto max-w-7xl">
         <nav aria-label="Breadcrumb" class="mb-2 text-sm text-white/75">
           <ol class="flex flex-wrap items-center gap-2">
-            <li><a href="/" class="transition hover:text-white">Home</a></li>
+            <li><a href="/" class="inline-flex min-h-11 items-center px-1 -mx-1 transition hover:text-white">Home</a></li>
             <li aria-hidden="true">/</li>
-            <li><a href="/cars" class="transition hover:text-white">Cars</a></li>
+            <li><a href="/cars" class="inline-flex min-h-11 items-center px-1 -mx-1 transition hover:text-white">Cars</a></li>
             <li aria-hidden="true">/</li>
-            <li class="text-white"><%= car.make %> <%= car.model %></li>
+            <li class="text-white" aria-current="page"><%= car.make %> <%= car.model %></li>
           </ol>
         </nav>
         <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl"><%= car.year %> <%= car.make %> <%= car.model %></h1>
@@ -151,7 +155,7 @@
   </section>
 
   <main class="max-w-7xl mx-auto p-4">
-    <div class="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-12">
+    <div class="mt-2 grid grid-cols-1 gap-8 lg:grid-cols-12 sm:mt-4">
       <!-- Left: thumbnails + description + video -->
       <div class="lg:col-span-7">
         <!-- Thumbnails -->

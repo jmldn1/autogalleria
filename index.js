@@ -329,6 +329,11 @@ app.post("/contact", async (req, res) => {
   }
 });
 
+// Brochure page: contact-form layout gallery (component showcase)
+app.get("/components/forms", (req, res) => {
+  res.render("form-gallery");
+});
+
 // General vehicle sale enquiry page
 app.get("/sell-your-car", (req, res) => {
   res.render("sell-your-car", {

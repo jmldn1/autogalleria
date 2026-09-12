@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/seo-head', {
+    title: 'Contact Form Components | Auto Galleria',
+    description: 'Enquiry form layout variations built for the Auto Galleria demo car dealership — hero-embedded and below-hero placements compared.'
+  }) %>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+  <style>
+    /* Miniature previews below reproduce the demo app's own form screens at scale — not part of the brochure's type/color system. */
+    .thumb { position: relative; height: 168px; overflow: hidden; }
+    .thumb.dark-full { background: #0f172a; }
+    .thumb-body { position: relative; height: 168px; }
+    .thumb-real { position: relative; width: 320px; height: 200px; overflow: hidden; background: #0f172a; margin: 0 auto; }
+    .thumb-scale { position: absolute; top: 0; left: 0; width: 1280px; transform-origin: top left; transform: scale(0.25); pointer-events: none; user-select: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <%- include('partials/navbar-brochure') %>
+
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-linear-to-br from-slate-900 via-blue-900 to-slate-800"></div>
+    <div class="absolute -top-24 -left-16 h-64 w-64 rounded-full bg-blue-500/30 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 pt-28 pb-16 text-white sm:px-6 sm:pt-32 sm:pb-20 lg:px-8">
+      <p class="section-eyebrow text-blue-200">Website components</p>
+      <h1 class="max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">Five ways to ask for the sale.</h1>
+      <p class="mt-6 max-w-2xl text-lg text-slate-200">Every Auto Galleria enquiry form shares the same trusted building blocks — the UK number-plate lookup, a personal reply (never an automated offer), and an optional WhatsApp line. Here's how we lay them out, depending on how much of the page the ask should take up.</p>
+    </div>
+  </section>
+
+  <main class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
+
+    <div class="mx-auto mb-10 max-w-3xl text-center">
+      <p class="section-eyebrow">Choose where the ask sits</p>
+      <h2 class="text-3xl font-bold text-slate-900">At a glance</h2>
+      <p class="mt-3 text-slate-600">From a form that greets visitors inside the hero, to a quieter single-column layout further down the page — every style keeps the number-plate field visible, since that's what tells a visitor at a glance this is a sell-your-car form.</p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+      <div class="card card-hover flex flex-col">
+        <div class="thumb dark-full">
+          <div style="position:absolute; left:16px; top:24px; width:60px; height:7px; border-radius:4px; background:#93c5fd;"></div>
+          <div style="position:absolute; left:16px; top:40px; width:78px; height:11px; border-radius:4px; background:#ffffff;"></div>
+          <div style="position:absolute; left:16px; top:58px; width:66px; height:6px; border-radius:4px; background:#475569;"></div>
+          <div style="position:absolute; right:16px; top:16px; bottom:16px; width:104px; background:#ffffff; border-top:3px solid #bfdbfe; border-radius:10px; box-shadow:0 10px 20px -6px rgba(0,0,0,0.4);"></div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Split</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Headline and form share the hero band side by side — the ask is visible before any scrolling.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — paid-traffic landing pages, where intent is already high.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex flex-col">
+        <div class="thumb dark-full">
+          <div style="position:absolute; left:16px; top:36px; width:60px; height:7px; border-radius:4px; background:#93c5fd;"></div>
+          <div style="position:absolute; left:16px; top:52px; width:78px; height:11px; border-radius:4px; background:#ffffff;"></div>
+          <div style="position:absolute; left:16px; top:70px; width:66px; height:6px; border-radius:4px; background:#475569;"></div>
+          <div style="position:absolute; right:16px; top:40px; width:104px; height:88px; background:#ffffff; border-top:3px solid #bfdbfe; border-radius:10px; box-shadow:0 10px 20px -6px rgba(0,0,0,0.4);"></div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Split — Trimmed</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Same split layout, cut to name, email, plate and message so the card's height balances the headline column.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — the same immediate ask, without the hero growing too tall.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex flex-col">
+        <div class="thumb dark-full">
+          <div style="position:absolute; left:50%; top:20px; transform:translateX(-50%); width:64px; height:7px; border-radius:4px; background:#93c5fd;"></div>
+          <div style="position:absolute; left:50%; top:36px; transform:translateX(-50%); width:88px; height:11px; border-radius:4px; background:#ffffff;"></div>
+          <div style="position:absolute; left:50%; top:56px; transform:translateX(-50%); width:150px; height:96px; background:#ffffff; border-top:3px solid #bfdbfe; border-radius:10px; box-shadow:0 10px 20px -6px rgba(0,0,0,0.4);"></div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Compact</h3>
+          <p class="text-sm leading-relaxed text-slate-600">A short, centered hero with the form sitting directly beneath the headline in one tight band.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — pages that want one focused action and minimal scroll.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex flex-col">
+        <div class="thumb-body">
+          <div style="position:absolute; left:0; right:0; top:0; height:58px; background:#0f172a;">
+            <div style="position:absolute; left:16px; top:18px; width:56px; height:6px; border-radius:4px; background:#93c5fd;"></div>
+            <div style="position:absolute; left:16px; top:32px; width:80px; height:9px; border-radius:4px; background:#ffffff;"></div>
+          </div>
+          <div style="position:absolute; left:0; right:0; top:58px; bottom:0; background:#f1f5f9;">
+            <div style="position:absolute; left:16px; top:16px; bottom:16px; width:130px; background:#ffffff; border-top:3px solid #bfdbfe; border-radius:8px;"></div>
+            <div style="position:absolute; right:16px; top:16px; bottom:16px; width:60px; display:flex; flex-direction:column; gap:8px;">
+              <div style="height:44%; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px;"></div>
+              <div style="height:44%; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Below-hero</span>
+          <h3 class="text-lg font-semibold text-slate-900">Below-Hero — Current</h3>
+          <p class="text-sm leading-relaxed text-slate-600">A simple hero banner, then the full form alongside a sidebar covering what happens next.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — enquirers who want reassurance and process detail before committing.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex flex-col">
+        <div class="thumb-body">
+          <div style="position:absolute; left:0; right:0; top:0; height:44px; background:#0f172a;">
+            <div style="position:absolute; left:50%; top:14px; transform:translateX(-50%); width:56px; height:6px; border-radius:4px; background:#93c5fd;"></div>
+            <div style="position:absolute; left:50%; top:26px; transform:translateX(-50%); width:80px; height:9px; border-radius:4px; background:#ffffff;"></div>
+          </div>
+          <div style="position:absolute; left:0; right:0; top:44px; bottom:0; background:#f1f5f9;">
+            <div style="position:absolute; left:50%; top:16px; transform:translateX(-50%); width:150px; height:108px; background:#ffffff; border-top:3px solid #bfdbfe; border-radius:8px;"></div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Below-hero</span>
+          <h3 class="text-lg font-semibold text-slate-900">Below-Hero — Focused</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Hero stays short; a single centered card carries the form with no distractions.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — a calmer, single-column page for less promotional sections.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mx-auto mb-10 mt-16 max-w-3xl text-center">
+      <p class="section-eyebrow">In detail</p>
+      <h2 class="text-3xl font-bold text-slate-900">See the full mockups</h2>
+      <p class="mt-3 text-slate-600">Each style in full — actual headline, copy and fields, including the plate lookup — scaled down so you can compare them at a glance.</p>
+    </div>
+
+    <div class="grid justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+      <div class="card card-hover flex w-80 flex-col">
+        <div class="thumb-real">
+          <div class="thumb-scale">
+            <div style="width:1280px; background:#f1f5f9;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
+                <div style="font-weight:800; font-size:18px; letter-spacing:-0.01em; color:#0f172a;">Auto Galleria</div>
+                <div style="display:flex; gap:28px; font-size:14px; color:#475569; font-weight:500;">
+                  <div>Stock</div><div>Sell your car</div><div>About</div><div>Contact</div>
+                </div>
+              </div>
+              <div style="background:#0f172a; padding:64px 40px 72px; position:relative; overflow:hidden;">
+                <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns: 1.05fr 0.95fr; gap:48px; align-items:start;">
+                  <div style="padding-top:28px;">
+                    <p style="margin:0 0 14px; text-transform:uppercase; letter-spacing:0.08em; font-size:12px; font-weight:700; color:#93c5fd;">Vehicle sale enquiries</p>
+                    <h1 style="margin:0; font-size:42px; line-height:1.08; font-weight:800; color:#ffffff; max-width:460px;">Sell your car to us.</h1>
+                    <p style="margin:18px 0 0; font-size:16px; line-height:1.6; color:#cbd5e1; max-width:420px;">Whether you are ready to sell or want a valuation we would love to hear from you.</p>
+                  </div>
+                  <div style="background:#ffffff; border-top:4px solid #bfdbfe; border-radius:24px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.35); padding:28px 30px;">
+                    <h2 style="margin:0 0 18px; font-size:18px; font-weight:700; color:#0f172a;">Send us the details</h2>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                      <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
+                        <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      </div>
+                      <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
+                        <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
+                      <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
+                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
+                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                        <option>I would like to sell my car</option>
+                      </select>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
+                      <textarea placeholder="Tell us what you'd like help with." style="width:100%; height:64px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                    </div>
+                    <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
+                    <div style="display:flex; gap:10px;">
+                      <div style="flex:1; text-align:center; background:#2563eb; color:#fff; font-weight:700; font-size:14px; padding:12px; border-radius:11px;">Start a conversation</div>
+                      <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 16px; border:1.5px solid #25D366; border-radius:11px; color:#128C4A; font-weight:700; font-size:13px;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="#128C4A"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+                        WhatsApp
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Split</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Headline and form share the hero band side by side — the ask is visible before any scrolling.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — paid-traffic landing pages, where intent is already high.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex w-80 flex-col">
+        <div class="thumb-real">
+          <div class="thumb-scale">
+            <div style="width:1280px; background:#f1f5f9;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
+                <div style="font-weight:800; font-size:18px; letter-spacing:-0.01em; color:#0f172a;">Auto Galleria</div>
+                <div style="display:flex; gap:28px; font-size:14px; color:#475569; font-weight:500;">
+                  <div>Stock</div><div>Sell your car</div><div>About</div><div>Contact</div>
+                </div>
+              </div>
+              <div style="background:#0f172a; padding:64px 40px 72px; position:relative; overflow:hidden;">
+                <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns: 1.05fr 0.95fr; gap:48px; align-items:center;">
+                  <div>
+                    <p style="margin:0 0 14px; text-transform:uppercase; letter-spacing:0.08em; font-size:12px; font-weight:700; color:#93c5fd;">Vehicle sale enquiries</p>
+                    <h1 style="margin:0; font-size:42px; line-height:1.08; font-weight:800; color:#ffffff; max-width:460px;">Sell your car to us.</h1>
+                    <p style="margin:18px 0 0; font-size:16px; line-height:1.6; color:#cbd5e1; max-width:420px;">Whether you are ready to sell or want a valuation we would love to hear from you.</p>
+                  </div>
+                  <div style="background:#ffffff; border-top:4px solid #bfdbfe; border-radius:24px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.35); padding:28px 30px;">
+                    <h2 style="margin:0 0 18px; font-size:18px; font-weight:700; color:#0f172a;">Send us the details</h2>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
+                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
+                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional — leave blank if imported)</span></label>
+                      <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
+                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
+                      <textarea placeholder="Tell us about your car, or simply say hello." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                    </div>
+                    <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone, vehicle details or enquiry type <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
+                    <div style="display:flex; gap:10px;">
+                      <div style="flex:1; text-align:center; background:#2563eb; color:#fff; font-weight:700; font-size:14px; padding:12px; border-radius:11px;">Start a conversation</div>
+                      <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 16px; border:1.5px solid #25D366; border-radius:11px; color:#128C4A; font-weight:700; font-size:13px;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="#128C4A"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+                        WhatsApp
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Split — Trimmed</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Same split layout, cut to name, email, plate and message so the card's height balances the headline column.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — the same immediate ask, without the hero growing too tall.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex w-80 flex-col">
+        <div class="thumb-real">
+          <div class="thumb-scale">
+            <div style="width:1280px; background:#f1f5f9;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
+                <div style="font-weight:800; font-size:18px; letter-spacing:-0.01em; color:#0f172a;">Auto Galleria</div>
+                <div style="display:flex; gap:28px; font-size:14px; color:#475569; font-weight:500;">
+                  <div>Stock</div><div>Sell your car</div><div>About</div><div>Contact</div>
+                </div>
+              </div>
+              <div style="background:#0f172a; padding:48px 40px 56px; text-align:center;">
+                <p style="margin:0 0 12px; text-transform:uppercase; letter-spacing:0.08em; font-size:12px; font-weight:700; color:#93c5fd;">Vehicle sale enquiries</p>
+                <h1 style="margin:0; font-size:36px; line-height:1.1; font-weight:800; color:#ffffff;">Sell your car to us.</h1>
+                <p style="margin:14px auto 0; font-size:15px; line-height:1.6; color:#cbd5e1; max-width:460px;">Whether you are ready to sell or want a valuation we would love to hear from you.</p>
+                <div style="background:#ffffff; border-top:4px solid #bfdbfe; border-radius:24px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.35); padding:26px 30px; margin:32px auto 0; max-width:620px; text-align:left;">
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                    <div>
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
+                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                    <div>
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
+                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:end; margin-bottom:14px;">
+                    <div>
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Reg <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
+                      <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:24px; background:#1d4ed8; color:#fff; font-size:7px; font-weight:800;">UK</span>
+                        <input type="text" placeholder="AB12 CDE" style="width:130px; padding:9px 6px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:14px; letter-spacing:0.1em; color:#0f172a; border:none; outline:none;"/>
+                      </div>
+                    </div>
+                    <div>
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
+                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                        <option>I would like to sell my car</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style="margin-bottom:14px;">
+                    <textarea placeholder="Tell us what you'd like help with." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                  </div>
+                  <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
+                  <div style="display:flex; gap:10px;">
+                    <div style="flex:1; text-align:center; background:#2563eb; color:#fff; font-weight:700; font-size:14px; padding:12px; border-radius:11px;">Start a conversation</div>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 16px; border:1.5px solid #25D366; border-radius:11px; color:#128C4A; font-weight:700; font-size:13px; white-space:nowrap;">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="#128C4A"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+                      WhatsApp
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Hero-embedded</span>
+          <h3 class="text-lg font-semibold text-slate-900">Hero Compact</h3>
+          <p class="text-sm leading-relaxed text-slate-600">A short, centered hero with the form sitting directly beneath the headline in one tight band.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — pages that want one focused action and minimal scroll.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex w-80 flex-col">
+        <div class="thumb-real">
+          <div class="thumb-scale">
+            <div style="width:1280px; background:#f1f5f9;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
+                <div style="font-weight:800; font-size:18px; letter-spacing:-0.01em; color:#0f172a;">Auto Galleria</div>
+                <div style="display:flex; gap:28px; font-size:14px; color:#475569; font-weight:500;">
+                  <div>Stock</div><div>Sell your car</div><div>About</div><div>Contact</div>
+                </div>
+              </div>
+              <div style="background:#0f172a; padding:56px 40px 64px;">
+                <p style="margin:0 0 12px; text-transform:uppercase; letter-spacing:0.08em; font-size:12px; font-weight:700; color:#93c5fd;">Vehicle sale enquiries</p>
+                <h1 style="margin:0; font-size:38px; line-height:1.1; font-weight:800; color:#ffffff; max-width:520px;">Sell your car to us.</h1>
+                <p style="margin:14px 0 0; font-size:15px; line-height:1.6; color:#cbd5e1; max-width:480px;">Whether you are ready to sell or want a valuation we would love to hear from you.</p>
+              </div>
+              <div style="padding:44px 40px 56px;">
+                <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns: 3fr 2fr; gap:28px; align-items:start;">
+                  <div style="background:#ffffff; border-top:4px solid #bfdbfe; border-radius:24px; box-shadow: 0 8px 24px -8px rgba(15,23,42,0.12); padding:28px 30px;">
+                    <h2 style="margin:0 0 18px; font-size:19px; font-weight:700; color:#0f172a;">Send us the details</h2>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                      <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
+                        <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      </div>
+                      <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
+                        <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration number <span style="font-weight:400; color:#94a3b8;">(optional — leave blank if imported)</span></label>
+                      <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
+                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
+                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                        <option>I would like to sell my car</option>
+                      </select>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
+                      <textarea placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:76px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                    </div>
+                    <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
+                    <div style="display:flex; gap:10px; margin-bottom:12px;">
+                      <div style="flex:1; text-align:center; background:#2563eb; color:#fff; font-weight:700; font-size:14px; padding:12px; border-radius:11px;">Start a conversation</div>
+                      <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 16px; border:1.5px solid #25D366; border-radius:11px; color:#128C4A; font-weight:700; font-size:13px;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="#128C4A"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+                        WhatsApp
+                      </div>
+                    </div>
+                    <p style="margin:0; font-size:12.5px; color:#94a3b8;">Your enquiry goes directly to our buyer. We usually reply within one working day.</p>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:18px;">
+                    <div style="background:linear-gradient(to bottom, #eff6ff, #ffffff); border:1px solid #e2e8f0; border-radius:24px; overflow:hidden;">
+                      <div style="display:flex; justify-content:center; padding:20px 20px 4px;">
+                        <svg viewBox="0 0 320 170" width="220" height="117">
+                          <line x1="16" y1="150" x2="304" y2="150" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" />
+                          <path d="M180,150 L180,128 C180,120 186,116 194,114 L206,100 C210,96 216,94 222,94 L262,94 C270,94 276,98 280,106 L288,116 C296,118 300,122 300,128 L300,150 Z" fill="#DBEAFE" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" />
+                          <line x1="222" y1="97" x2="222" y2="150" stroke="#2563EB" stroke-width="1.5" />
+                          <circle cx="200" cy="150" r="13" fill="white" stroke="#1E293B" stroke-width="2.5" />
+                          <circle cx="200" cy="150" r="4" fill="#1E293B" />
+                          <circle cx="278" cy="150" r="13" fill="white" stroke="#1E293B" stroke-width="2.5" />
+                          <circle cx="278" cy="150" r="4" fill="#1E293B" />
+                          <line x1="88" y1="116" x2="107" y2="116" stroke="#94A3B8" stroke-width="6" stroke-linecap="round" />
+                          <path d="M70,106 C50,106 40,124 40,150 L100,150 C100,124 90,106 70,106 Z" fill="#94A3B8" />
+                          <circle cx="70" cy="90" r="16" fill="#94A3B8" />
+                          <line x1="122" y1="116" x2="107" y2="116" stroke="#2563EB" stroke-width="6" stroke-linecap="round" />
+                          <path d="M140,104 C120,104 110,122 110,150 L170,150 C170,122 160,104 140,104 Z" fill="#2563EB" />
+                          <circle cx="140" cy="88" r="16" fill="#2563EB" />
+                        </svg>
+                      </div>
+                      <p style="margin:0; padding:4px 24px 20px; text-align:center; font-size:13px; color:#475569;">A friendly handover — we talk you through every step in person.</p>
+                    </div>
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:24px; padding:22px 24px;">
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:999px; background:#eff6ff; color:#1d4ed8;">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9h7.5M8.25 12h5.25m-8.25 8.25 2.37-2.37A2.25 2.25 0 0 1 8.46 17.25h7.29A4.5 4.5 0 0 0 20.25 12V7.5A4.5 4.5 0 0 0 15.75 3h-7.5a4.5 4.5 0 0 0-4.5 4.5V12a4.5 4.5 0 0 0 3.75 4.43"/></svg>
+                        </span>
+                        <h3 style="margin:0; font-size:15px; font-weight:700; color:#0f172a;">A personal first step</h3>
+                      </div>
+                      <p style="margin:14px 0 0; font-size:13px; line-height:1.6; color:#475569;">There is no instant automated offer here. We read every enquiry and speak with you about the car and the best next step.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Below-hero</span>
+          <h3 class="text-lg font-semibold text-slate-900">Below-Hero — Current</h3>
+          <p class="text-sm leading-relaxed text-slate-600">A simple hero banner, then the full form alongside a sidebar covering what happens next.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — enquirers who want reassurance and process detail before committing.</p>
+        </div>
+      </div>
+
+      <div class="card card-hover flex w-80 flex-col">
+        <div class="thumb-real">
+          <div class="thumb-scale">
+            <div style="width:1280px; background:#f1f5f9;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
+                <div style="font-weight:800; font-size:18px; letter-spacing:-0.01em; color:#0f172a;">Auto Galleria</div>
+                <div style="display:flex; gap:28px; font-size:14px; color:#475569; font-weight:500;">
+                  <div>Stock</div><div>Sell your car</div><div>About</div><div>Contact</div>
+                </div>
+              </div>
+              <div style="background:#0f172a; padding:44px 40px 48px; text-align:center;">
+                <p style="margin:0 0 10px; text-transform:uppercase; letter-spacing:0.08em; font-size:12px; font-weight:700; color:#93c5fd;">Vehicle sale enquiries</p>
+                <h1 style="margin:0; font-size:32px; line-height:1.1; font-weight:800; color:#ffffff;">Sell your car to us.</h1>
+                <p style="margin:12px auto 0; font-size:14px; line-height:1.6; color:#cbd5e1; max-width:440px;">Whether you are ready to sell or want a valuation we would love to hear from you.</p>
+              </div>
+              <div style="padding:52px 40px 64px; display:flex; justify-content:center;">
+                <div style="width:560px;">
+                  <div style="background:#ffffff; border-top:4px solid #bfdbfe; border-radius:24px; box-shadow: 0 8px 24px -8px rgba(15,23,42,0.12); padding:32px 34px;">
+                    <h2 style="margin:0 0 6px; font-size:19px; font-weight:700; color:#0f172a;">Send us the details</h2>
+                    <p style="margin:0 0 20px; font-size:13px; color:#94a3b8;">Your enquiry goes directly to our buyer. We usually reply within one working day.</p>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
+                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
+                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
+                      <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
+                        <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
+                        <input type="text" placeholder="AB12 CDE" style="width:180px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
+                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                        <option>I would like to sell my car</option>
+                      </select>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                      <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
+                      <textarea placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:80px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                    </div>
+                    <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:20px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                      <div style="text-align:center; background:#2563eb; color:#fff; font-weight:700; font-size:14px; padding:13px; border-radius:11px;">Start a conversation</div>
+                      <div style="display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 16px; border:1.5px solid #25D366; border-radius:11px; color:#128C4A; font-weight:700; font-size:13px;">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="#128C4A"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+                        Message on WhatsApp
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col gap-2.5 p-5">
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Below-hero</span>
+          <h3 class="text-lg font-semibold text-slate-900">Below-Hero — Focused</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Hero stays short; a single centered card carries the form with no distractions.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — a calmer, single-column page for less promotional sections.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
+      <p class="section-eyebrow">Ready when you are</p>
+      <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl">Want one of these on your site?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-slate-600">We'll talk through which form style fits your page and set it up as part of your build.</p>
+      <a href="/contact" class="btn-primary mt-6">Start a conversation</a>
+    </div>
+
+  </main>
+
+  <%- include('partials/footer-brochure') %>
+
+</body>
+</html>
