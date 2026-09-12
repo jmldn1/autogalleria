@@ -334,6 +334,17 @@ app.get("/components/forms", (req, res) => {
   res.render("form-gallery");
 });
 
+// Brochure page: programmatic landing page template showcase (component showcase)
+app.get("/components/landing-pages", async (req, res) => {
+  try {
+    const exampleLanding = await Landing.findOne().sort({ updatedAt: -1 }).lean();
+    res.render("landing-gallery", { exampleSlug: exampleLanding ? exampleLanding.slug : null });
+  } catch (err) {
+    console.error("Landing gallery error:", err);
+    res.render("landing-gallery", { exampleSlug: null });
+  }
+});
+
 // General vehicle sale enquiry page
 app.get("/sell-your-car", (req, res) => {
   res.render("sell-your-car", {
