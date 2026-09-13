@@ -1,9 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <%
+    const landingGalleryJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a DVLA vehicle registration lookup?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It's an instant check against the DVLA Vehicle Enquiry Service that returns details such as make, colour, year of manufacture and fuel type from a UK number plate, so a landing page can identify a car without the visitor typing it all in."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why add a DVLA lookup to a car-buying or selling landing page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It turns a blank enquiry form into something the visitor recognises as their own car. Confirming a match builds trust before they're asked for contact details, which lifts completion rates compared with a long form filled in from scratch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is DVLA vehicle data free to use on a website?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The DVLA's Vehicle Enquiry Service is a free, official government API that returns basic vehicle details for a registered UK number plate. Auto Galleria wires this lookup directly into the landing page flow as part of the build."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if a registration can't be found?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If a plate isn't held in the DVLA database — for example an import or a very recent registration — the page falls back to manual entry, so the enquiry can still be submitted without the lookup blocking anyone."
+          }
+        }
+      ]
+    };
+  %>
   <%- include('partials/seo-head', {
-    title: 'Landing Page Components | Auto Galleria',
-    description: 'The reg-lookup and lead-capture landing page template used for every "Sell your [make] [model]" page — built for conversion and SEO.'
+    title: 'DVLA Reg Lookup Landing Pages | Auto Galleria',
+    description: 'Landing pages with an instant DVLA vehicle registration lookup built in — identify the car, then capture the enquiry. See the reg-lookup, lead-capture and confirmation flow built for car-buying and selling pages.',
+    jsonLd: landingGalleryJsonLd
   }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
@@ -157,6 +198,20 @@
         <p class="text-sm text-slate-600">Cross-links to other model pages, keeping visitors on-site and search engines crawling deeper.</p>
       </div>
 
+    </div>
+
+    <div class="mx-auto mb-8 mt-16 max-w-3xl text-center">
+      <p class="section-eyebrow">Common questions</p>
+      <h2 class="text-3xl font-bold text-slate-900">DVLA lookup, answered</h2>
+    </div>
+
+    <div class="mx-auto max-w-3xl space-y-4">
+      <% landingGalleryJsonLd.mainEntity.forEach(faq => { %>
+        <details class="rounded-lg bg-white p-4 shadow-sm">
+          <summary class="cursor-pointer font-semibold text-slate-800"><%= faq.name %></summary>
+          <p class="mt-2 text-slate-600"><%= faq.acceptedAnswer.text %></p>
+        </details>
+      <% }) %>
     </div>
 
     <div class="mt-16 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
