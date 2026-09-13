@@ -2,49 +2,57 @@
 <html lang="en">
 <head>
   <%
-    const landingGalleryJsonLd = {
+    const landingHubJsonLd = {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is a DVLA vehicle registration lookup?",
+          "name": "What makes a car dealership landing page convert?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It's an instant check against the DVLA Vehicle Enquiry Service that returns details such as make, colour, year of manufacture and fuel type from a UK number plate, so a landing page can identify a car without the visitor typing it all in."
+            "text": "Identifying the vehicle before asking for anything else, keeping the form short, and giving the visitor one clear action. A landing page that makes someone type out their car's details from scratch loses people; one that recognises the car and asks them to confirm it feels far less like work."
           }
         },
         {
           "@type": "Question",
-          "name": "Why add a DVLA lookup to a car-buying or selling landing page?",
+          "name": "Which landing page flow should I use for my market?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It turns a blank enquiry form into something the visitor recognises as their own car. Confirming a match builds trust before they're asked for contact details, which lifts completion rates compared with a long form filled in from scratch."
+            "text": "If your country has an accessible vehicle registry API, a lookup flow gives the strongest conversion — the UK's DVLA is free, and the US equivalent (VIN decoding via NHTSA) is also free, though it needs a VIN rather than a plate. If no such lookup is worth building yet, guided form fields are the safe universal default. A single call-to-action suits traffic you'd rather close over the phone than capture in writing."
           }
         },
         {
           "@type": "Question",
-          "name": "Is DVLA vehicle data free to use on a website?",
+          "name": "Is a vehicle registry lookup available outside the UK?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The DVLA's Vehicle Enquiry Service is a free, official government API that returns basic vehicle details for a registered UK number plate. Auto Galleria wires this lookup directly into the landing page flow as part of the build."
+            "text": "It depends on the country. The UK's DVLA Vehicle Enquiry Service is free and public. The US has no free plate-lookup equivalent, but the NHTSA's VIN decoder is free and public if the visitor has their VIN to hand. Other markets vary — where no free option exists, guided form fields are the practical starting point."
           }
         },
         {
           "@type": "Question",
-          "name": "What happens if a registration can't be found?",
+          "name": "Can I switch flows later, or combine them?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "If a plate isn't held in the DVLA database — for example an import or a very recent registration — the page falls back to manual entry, so the enquiry can still be submitted without the lookup blocking anyone."
+            "text": "Yes. A common approach is to lead with a lookup where one is available and fall back to guided form fields automatically if the vehicle isn't found — which is exactly how the UK implementation already behaves for unmatched plates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why build a separate landing page for each make and model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A page written for \"sell your Porsche 911\" ranks and converts better than one generic \"sell your car\" page, because the copy, guide content and FAQ all speak directly to that model rather than to cars in general — both for search and for the visitor reading it. This applies whichever capture flow the page uses."
           }
         }
       ]
     };
   %>
   <%- include('partials/seo-head', {
-    title: 'DVLA Reg Lookup Landing Pages | Auto Galleria',
-    description: 'Landing pages with an instant DVLA vehicle registration lookup built in — identify the car, then capture the enquiry. See the reg-lookup, lead-capture and confirmation flow built for car-buying and selling pages.',
-    jsonLd: landingGalleryJsonLd
+    title: 'Car Dealership Landing Pages | Auto Galleria',
+    description: 'Landing page flows for car dealerships and vehicle sellers — registry lookup, guided form fields, or a single call-to-action. Pick the flow that fits your market.',
+    jsonLd: landingHubJsonLd
   }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
@@ -59,23 +67,23 @@
 
     <div class="relative mx-auto max-w-7xl px-4 pt-28 pb-16 text-white sm:px-6 sm:pt-32 sm:pb-20 lg:px-8">
       <p class="section-eyebrow text-blue-200">Website components</p>
-      <h1 class="max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">A landing page built to convert.</h1>
-      <p class="mt-6 max-w-2xl text-lg text-slate-200">Every "Sell your [make] [model]" page runs on the same template: identify the car first, then ask for contact details — so the enquiry feels specific, not generic. One template, generated per model.</p>
+      <h1 class="max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">Landing pages for car dealerships and vehicle sellers.</h1>
+      <p class="mt-6 max-w-2xl text-lg text-slate-200">Not every market has a free vehicle registry lookup like the UK's DVLA. Here are three ways to capture the enquiry — pick the one that fits what's available to you, and how much friction your traffic can take.</p>
     </div>
   </section>
 
   <main class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
 
     <div class="mx-auto mb-10 max-w-3xl text-center">
-      <p class="section-eyebrow">How it works</p>
-      <h2 class="text-3xl font-bold text-slate-900">One flow, three screens</h2>
-      <p class="mt-3 text-slate-600">A DVLA reg lookup identifies the exact vehicle before we ask for anything else — the visitor sees their own car before they're asked to hand over details.</p>
+      <p class="section-eyebrow">Three ways to capture the lead</p>
+      <h2 class="text-3xl font-bold text-slate-900">Same goal, different amount of friction</h2>
+      <p class="mt-3 text-slate-600">Each flow identifies what's being sold and gets a name and contact detail — the difference is how much work that takes, and what it costs to build.</p>
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
       <div class="card card-hover flex flex-col">
-        <div class="relative overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7">
+        <div class="relative min-h-48 overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7">
           <div class="absolute inset-0 bg-black/40"></div>
           <div class="relative">
             <p class="text-center text-xl font-bold leading-tight text-white drop-shadow-lg">Sell Your <span class="text-cyan-400">Porsche 911</span></p>
@@ -88,125 +96,65 @@
           </div>
         </div>
         <div class="flex flex-1 flex-col gap-2.5 p-5">
-          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Step 1</span>
-          <h3 class="text-lg font-semibold text-slate-900">Reg lookup</h3>
-          <p class="text-sm leading-relaxed text-slate-600">One field. A DVLA lookup fills in year, colour and fuel type automatically, so the visitor confirms rather than types.</p>
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Automated</span>
+          <h3 class="text-lg font-semibold text-slate-900">Registry lookup</h3>
+          <p class="text-sm leading-relaxed text-slate-600">One field. The plate or VIN is checked against a vehicle registry and the make, model and year come back automatically — the visitor confirms rather than types.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — markets with an accessible registry API, like the UK's DVLA or US VIN decoding.</p>
+          <a href="/components/landing-pages-dvla" class="mt-1 inline-flex w-fit items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700">See the full UK implementation &rarr;</a>
         </div>
       </div>
 
       <div class="card card-hover flex flex-col">
-        <div class="relative overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7">
+        <div class="relative min-h-48 overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7">
           <div class="absolute inset-0 bg-black/40"></div>
           <div class="relative space-y-2.5">
-            <div class="flex items-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2.5 backdrop-blur">
-              <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/40 bg-emerald-500/30">
-                <svg class="h-3.5 w-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-              </div>
-              <div class="min-w-0">
-                <p class="truncate text-xs font-semibold text-white">2019 Porsche 911 Carrera</p>
-                <p class="font-mono text-[11px] text-slate-400">AB12 ABC &middot; Grey</p>
-              </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded-xl border-2 border-white/30 bg-white/10 px-3 py-2.5 text-xs text-slate-300 backdrop-blur">Year &#9662;</div>
+              <div class="rounded-xl border-2 border-white/30 bg-white/10 px-3 py-2.5 text-xs text-slate-300 backdrop-blur">Make &#9662;</div>
             </div>
+            <div class="rounded-xl border-2 border-white/30 bg-white/10 px-3.5 py-2.5 text-xs text-slate-300 backdrop-blur">Model &#9662;</div>
             <div class="rounded-xl border-2 border-white/30 bg-white/10 px-3.5 py-2.5 text-sm text-slate-400 backdrop-blur">Jane Smith</div>
             <div class="rounded-xl border-2 border-white/30 bg-white/10 px-3.5 py-2.5 text-sm text-slate-400 backdrop-blur">jane@example.com</div>
-            <div class="rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 py-2.5 text-center text-sm font-bold text-white shadow-lg">Submit Enquiry</div>
+            <div class="rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 py-2.5 text-center text-sm font-bold text-white shadow-lg">Get My Offer</div>
           </div>
         </div>
         <div class="flex flex-1 flex-col gap-2.5 p-5">
-          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Step 2</span>
-          <h3 class="text-lg font-semibold text-slate-900">Your details</h3>
-          <p class="text-sm leading-relaxed text-slate-600">The vehicle found in step one stays pinned above the form, so the visitor sees exactly what they're enquiring about.</p>
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Universal</span>
+          <h3 class="text-lg font-semibold text-slate-900">Guided form fields</h3>
+          <p class="text-sm leading-relaxed text-slate-600">Year, make and model as simple dropdowns or free-text fields, alongside name and contact details. No external API, so it works in any market from day one.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — a new market, or anywhere a lookup isn't worth building yet.</p>
         </div>
       </div>
 
       <div class="card card-hover flex flex-col">
-        <div class="relative overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7 text-center">
+        <div class="relative flex min-h-48 flex-col items-center justify-center overflow-hidden bg-linear-to-br from-slate-800 via-slate-900 to-black p-7 text-center">
           <div class="absolute inset-0 bg-black/40"></div>
           <div class="relative">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-emerald-500 to-teal-400 shadow-xl">
-              <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-            </div>
-            <p class="mt-3 text-lg font-bold text-white">Enquiry Sent!</p>
-            <p class="mt-1 text-xs text-slate-300">We'll be in touch with an offer shortly</p>
-            <div class="mt-4 rounded-xl border border-white/20 bg-white/10 p-3.5 text-left backdrop-blur">
-              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Enquiry summary</p>
-              <p class="mt-1.5 text-sm font-medium text-white">Jane Smith</p>
-              <p class="text-xs text-slate-400">jane@example.com</p>
+            <p class="text-lg font-bold text-white drop-shadow-lg">Sell Your Car Today</p>
+            <p class="mt-1.5 text-xs text-slate-300">No forms. Just a quick chat.</p>
+            <div class="mt-5 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 px-5 py-3 text-sm font-bold text-white shadow-lg">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.96 7.96 0 0 0 8.003 0C3.58 0 .035 3.54.035 7.907c0 1.394.372 2.75 1.076 3.94L0 16l4.263-1.106a8.047 8.047 0 0 0 3.74.949h.003c4.422 0 7.968-3.539 7.968-7.906a7.868 7.868 0 0 0-2.373-5.611Z"/></svg>
+              Chat on WhatsApp
             </div>
           </div>
         </div>
         <div class="flex flex-1 flex-col gap-2.5 p-5">
-          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Step 3</span>
-          <h3 class="text-lg font-semibold text-slate-900">Confirmation</h3>
-          <p class="text-sm leading-relaxed text-slate-600">A summary of what was submitted, with the vehicle and contact details together — no dead end, no uncertainty.</p>
+          <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-amber-700">Lowest friction</span>
+          <h3 class="text-lg font-semibold text-slate-900">Single call-to-action</h3>
+          <p class="text-sm leading-relaxed text-slate-600">One button leading straight to a call or chat, rather than a form at all. Best when the goal is a conversation, not written data.</p>
+          <p class="mt-auto border-t border-slate-100 pt-2.5 text-xs text-slate-500"><b class="font-semibold text-slate-700">Best for</b> — paid mobile traffic, or a seller who'd rather close over the phone.</p>
         </div>
-      </div>
-
-    </div>
-
-    <div class="mx-auto mb-10 mt-16 max-w-3xl text-center">
-      <p class="section-eyebrow">Built to rank, not just convert</p>
-      <h2 class="text-3xl font-bold text-slate-900">What's included on every page</h2>
-      <p class="mt-3 text-slate-600">Beyond the lookup flow, each page carries model-specific content so it stands on its own for search, not just for paid traffic.</p>
-    </div>
-
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-
-      <div class="rounded-2xl border border-blue-100 bg-white p-6 transition hover:shadow-lg">
-        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-          </svg>
-        </div>
-        <h3 class="mb-2 font-semibold text-slate-900">Buyer's guide</h3>
-        <p class="text-sm text-slate-600">Model-specific copy on value factors and selling tips, written for that exact car.</p>
-      </div>
-
-      <div class="rounded-2xl border border-amber-100 bg-white p-6 transition hover:shadow-lg">
-        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8" r="5"></circle>
-            <path d="M8.5 12.5 6 21l6-3 6 3-2.5-8.5"></path>
-          </svg>
-        </div>
-        <h3 class="mb-2 font-semibold text-slate-900">Why-choose-us benefits</h3>
-        <p class="text-sm text-slate-600">Quick quotes, top offers and free pickup — the same trust signals on every model page.</p>
-      </div>
-
-      <div class="rounded-2xl border border-emerald-100 bg-white p-6 transition hover:shadow-lg">
-        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 17.5v.5"></path>
-            <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1.5 1-1.5 2.2"></path>
-            <circle cx="12" cy="12" r="9"></circle>
-          </svg>
-        </div>
-        <h3 class="mb-2 font-semibold text-slate-900">FAQ, with schema</h3>
-        <p class="text-sm text-slate-600">An accordion answering the real questions, marked up as FAQPage schema for search snippets.</p>
-      </div>
-
-      <div class="rounded-2xl border border-rose-100 bg-white p-6 transition hover:shadow-lg">
-        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="7" width="7" height="7" rx="1.5"></rect>
-            <rect x="14" y="7" width="7" height="7" rx="1.5"></rect>
-            <path d="M10 10.5h4"></path>
-          </svg>
-        </div>
-        <h3 class="mb-2 font-semibold text-slate-900">Related models</h3>
-        <p class="text-sm text-slate-600">Cross-links to other model pages, keeping visitors on-site and search engines crawling deeper.</p>
       </div>
 
     </div>
 
     <div class="mx-auto mb-8 mt-16 max-w-3xl text-center">
       <p class="section-eyebrow">Common questions</p>
-      <h2 class="text-3xl font-bold text-slate-900">DVLA lookup, answered</h2>
+      <h2 class="text-3xl font-bold text-slate-900">Landing pages, answered</h2>
     </div>
 
     <div class="mx-auto max-w-3xl space-y-4">
-      <% landingGalleryJsonLd.mainEntity.forEach(faq => { %>
+      <% landingHubJsonLd.mainEntity.forEach(faq => { %>
         <details class="rounded-lg bg-white p-4 shadow-sm">
           <summary class="cursor-pointer font-semibold text-slate-800"><%= faq.name %></summary>
           <p class="mt-2 text-slate-600"><%= faq.acceptedAnswer.text %></p>
@@ -216,13 +164,11 @@
 
     <div class="mt-16 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
       <p class="section-eyebrow">Ready when you are</p>
-      <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl">Want a landing page built for one of your models?</h2>
-      <p class="mx-auto mt-3 max-w-xl text-slate-600">We'll set up the reg lookup, the lead flow, and the supporting content for your make and model.</p>
+      <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl">Want a landing page built for your market?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-slate-600">We'll help you pick the right flow and set up the lead capture, guide content and FAQ for your make and model.</p>
       <div class="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
         <a href="/contact" class="btn-primary">Start a conversation</a>
-        <% if (exampleSlug) { %>
-          <a href="/sell-your-<%= exampleSlug %>" class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50">See a live example</a>
-        <% } %>
+        <a href="/components/landing-pages-dvla" class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50">See the UK registry-lookup version</a>
       </div>
     </div>
 

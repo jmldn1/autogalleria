@@ -334,14 +334,19 @@ app.get("/components/forms", (req, res) => {
   res.render("form-gallery");
 });
 
-// Brochure page: programmatic landing page template showcase (component showcase)
-app.get("/components/landing-pages", async (req, res) => {
+// Brochure page: landing page flow options (component showcase hub)
+app.get("/components/landing-pages", (req, res) => {
+  res.render("landing-gallery");
+});
+
+// Brochure page: UK DVLA registry-lookup landing page implementation (component showcase detail)
+app.get("/components/landing-pages-dvla", async (req, res) => {
   try {
     const exampleLanding = await Landing.findOne().sort({ updatedAt: -1 }).lean();
-    res.render("landing-gallery", { exampleSlug: exampleLanding ? exampleLanding.slug : null });
+    res.render("landing-gallery-dvla", { exampleSlug: exampleLanding ? exampleLanding.slug : null });
   } catch (err) {
-    console.error("Landing gallery error:", err);
-    res.render("landing-gallery", { exampleSlug: null });
+    console.error("Landing gallery (DVLA) error:", err);
+    res.render("landing-gallery-dvla", { exampleSlug: null });
   }
 });
 

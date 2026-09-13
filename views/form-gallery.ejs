@@ -1,9 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <%
+    const formGalleryJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What should a car dealership enquiry form include?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At minimum a name, email and message field, plus a way to identify the vehicle — either a free-text field or, better, a UK number-plate lookup that fills in the make, model and year automatically. Keep the ask short; anything beyond that (phone, mileage, preferred contact time) should sit behind a progressive-disclosure toggle rather than block the initial submission."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should a sell-your-car form sit in the hero or below it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A hero-embedded form suits paid traffic where intent is already high and you want the ask visible before any scrolling. A below-hero placement suits pages that need to build trust first — supporting content, a process explainer, or reassurance that there's no automated lowball offer — before asking for details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why keep the number plate field visible on a car sale form?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A styled UK number-plate field is an instant visual cue that a form is about selling a car, even before someone reads the copy. Trimming a form down to save space should cut secondary fields first — the plate lookup is one of the last things to hide."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a car dealership need more than one contact form design?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually one well-placed enquiry form is enough for a single page, but different pages can call for different layouts — a compact hero form for a paid landing page, a fuller below-hero form with supporting content on the main sell-your-car page, and so on. The layout should match how much convincing a visitor needs before they're ready to hand over details."
+          }
+        }
+      ]
+    };
+  %>
   <%- include('partials/seo-head', {
-    title: 'Contact Form Components | Auto Galleria',
-    description: 'Enquiry form layout variations built for the Auto Galleria demo car dealership — hero-embedded and below-hero placements compared.'
+    title: 'Car Dealership Enquiry Form Design | Auto Galleria',
+    description: 'Contact and sell-your-car form layouts built for car dealerships — where to place the enquiry, how to use a UK number-plate lookup, and when to trim the ask.',
+    jsonLd: formGalleryJsonLd
   }) %>
   <link rel="stylesheet" href="/css/tailwind.css" />
   <style>
@@ -494,6 +535,20 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="mx-auto mb-8 mt-16 max-w-3xl text-center">
+      <p class="section-eyebrow">Common questions</p>
+      <h2 class="text-3xl font-bold text-slate-900">Car dealership contact forms, answered</h2>
+    </div>
+
+    <div class="mx-auto max-w-3xl space-y-4">
+      <% formGalleryJsonLd.mainEntity.forEach(faq => { %>
+        <details class="rounded-lg bg-white p-4 shadow-sm">
+          <summary class="cursor-pointer font-semibold text-slate-800"><%= faq.name %></summary>
+          <p class="mt-2 text-slate-600"><%= faq.acceptedAnswer.text %></p>
+        </details>
+      <% }) %>
     </div>
 
     <div class="mt-16 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
