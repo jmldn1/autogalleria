@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/seo-head', {
+    title: 'Terms of Service | Auto Galleria Web Design',
+    description: 'The terms that apply to your use of the Auto Galleria web design brochure site.'
+  }) %>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+  <style>
+    /* The typography plugin's default prose link color (red) doesn't match the site's blue link convention. */
+    .prose a { color: #2563eb; }
+    .prose a:hover { color: #1d4ed8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <%- include('partials/navbar-brochure') %>
+
+  <div class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-3xl px-4 pt-28 pb-8 sm:px-6 sm:pt-32 lg:px-8">
+      <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">Terms of Service</h1>
+      <p class="mt-3 text-sm text-slate-500">Last updated: 13 September 2026 &middot; covers our web design brochure pages</p>
+    </div>
+  </div>
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+    <div class="prose prose-slate max-w-none">
+
+      <h2>About these terms</h2>
+      <p>These terms apply to your use of the Auto Galleria web design brochure pages — the homepage, showcase and contact pages — operated by Auto Galleria ("we", "us", "our"). By using these pages, you agree to them. If you don't agree, please don't use the site. Our demonstration car-dealership pages, marked "Demo" in the navigation, are covered by a <a href="/showroom-terms">separate set of terms</a>.</p>
+
+      <h2>About this site</h2>
+      <p>Auto Galleria provides web design services. The showcase and portfolio content on this site illustrates our previous or demonstration work and does not itself constitute an offer to build a specific product for a specific price.</p>
+
+      <h2>Enquiries and quotes</h2>
+      <p>When you submit the contact form, you're sending that information to us so we can respond to you and discuss your project. Submitting the form isn't a contract; any web design project would be agreed separately, in writing, between us — covering scope, price and timeline.</p>
+
+      <h2>Website content</h2>
+      <p>We try to keep the site accurate and up to date, but we make no guarantees about the accuracy, completeness or availability of any content on it. Content may be changed or removed at any time.</p>
+
+      <h2>Intellectual property</h2>
+      <p>The design, code, text and images on this site belong to Auto Galleria unless otherwise credited, and may not be copied or reused without our permission.</p>
+
+      <h2>Liability</h2>
+      <p>We provide this site "as is." To the extent permitted by law, we're not liable for any loss or damage arising from your use of the site.</p>
+
+      <h2>Governing law</h2>
+      <p>These terms are governed by the laws of England and Wales, and any disputes will be handled by the courts of England and Wales.</p>
+
+      <h2>Changes to these terms</h2>
+      <p>We may update these terms from time to time. The latest version will always be on this page.</p>
+
+      <h2>Contact us</h2>
+      <p>Email: <a href="mailto:info@autogalleria.co.uk">info@autogalleria.co.uk</a></p>
+
+    </div>
+  </main>
+
+  <%- include('partials/footer-brochure') %>
+
+</body>
+</html>

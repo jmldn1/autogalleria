@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/seo-head', {
+    title: 'Privacy Policy | Auto Galleria Web Design',
+    description: 'How Auto Galleria collects, uses and protects your personal information on our web design brochure site.'
+  }) %>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+  <style>
+    /* The typography plugin's default prose link color (red) doesn't match the site's blue link convention. */
+    .prose a { color: #2563eb; }
+    .prose a:hover { color: #1d4ed8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <%- include('partials/navbar-brochure') %>
+
+  <div class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-3xl px-4 pt-28 pb-8 sm:px-6 sm:pt-32 lg:px-8">
+      <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">Privacy Policy</h1>
+      <p class="mt-3 text-sm text-slate-500">Last updated: 13 September 2026 &middot; covers our web design brochure pages</p>
+    </div>
+  </div>
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+    <div class="prose prose-slate max-w-none">
+
+      <p>Auto Galleria ("we", "us", "our") operates this website at autogalleria.co.uk. This policy covers our web design brochure pages — the homepage, showcase and contact pages. Our site also includes demonstration car-dealership pages, marked "Demo" in the navigation; those pages collect some additional information (such as vehicle registration lookups) and are covered by a <a href="/showroom-privacy">separate privacy policy</a>.</p>
+
+      <p>This site is aimed at visitors in the United Kingdom and is intended to comply with the UK GDPR and the Data Protection Act 2018. If you have any questions about this policy, contact us at <a href="mailto:info@autogalleria.co.uk">info@autogalleria.co.uk</a>.</p>
+
+      <h2>Information we collect</h2>
+      <h3>Information you give us</h3>
+      <ul>
+        <li>Contact form submissions: your name, email address, optionally your phone number, project type, a reference URL, and your message</li>
+        <li>Anything you send us directly by email</li>
+      </ul>
+
+      <h3>Information collected automatically</h3>
+      <p>We keep a basic log of page visits — the page viewed, the referring page, your browser's user agent, and your IP address — so we can understand how the site is used. We do not use third-party analytics or advertising trackers: no Google Analytics, Meta Pixel, or similar services are set up on this site.</p>
+
+      <h2>Cookies</h2>
+      <p>We only set a cookie when our team logs into the site's admin area to manage content. If you're a visitor browsing the public site, we do not set any cookies.</p>
+
+      <h2>How we use your information</h2>
+      <ul>
+        <li>To respond to enquiries submitted through the contact form</li>
+        <li>To discuss and scope a web design project with you</li>
+        <li>To keep basic records of who has contacted us</li>
+        <li>To understand how visitors use the site, so we can improve it</li>
+      </ul>
+
+      <h2>Who we share it with</h2>
+      <p>We share contact-form submissions with our email provider, to deliver notifications to us. We do not sell or rent your personal information to third parties.</p>
+
+      <h2>How long we keep it</h2>
+      <p>We keep enquiry records for as long as reasonably needed to respond to you and to keep basic business records, and delete them when they're no longer needed. If you'd like your data deleted sooner, contact us and we'll action it.</p>
+
+      <h2>Your rights</h2>
+      <p>Under UK GDPR, you have the right to:</p>
+      <ul>
+        <li>Ask what personal data we hold about you</li>
+        <li>Ask us to correct or delete it</li>
+        <li>Object to how we use it</li>
+        <li>Complain to the <a href="https://ico.org.uk" target="_blank" rel="noopener">Information Commissioner's Office</a> if you believe we've mishandled your data</li>
+      </ul>
+
+      <h2>Children</h2>
+      <p>This site is not directed at children, and we don't knowingly collect information from anyone under 16.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy from time to time. The latest version will always be on this page.</p>
+
+      <h2>Contact us</h2>
+      <p>Email: <a href="mailto:info@autogalleria.co.uk">info@autogalleria.co.uk</a></p>
+
+    </div>
+  </main>
+
+  <%- include('partials/footer-brochure') %>
+
+</body>
+</html>

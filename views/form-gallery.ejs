@@ -72,7 +72,7 @@
     </div>
   </section>
 
-  <main class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
+  <main id="main-content" class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
 
     <div class="mx-auto mb-10 max-w-3xl text-center">
       <p class="section-eyebrow">Choose where the ask sits</p>
@@ -177,7 +177,7 @@
     <div class="grid justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
       <div class="card card-hover flex w-80 flex-col">
-        <div class="thumb-real">
+        <div class="thumb-real" aria-hidden="true">
           <div class="thumb-scale">
             <div style="width:1280px; background:#f1f5f9;">
               <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
@@ -198,29 +198,29 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
                       <div>
                         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
-                        <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                       </div>
                       <div>
                         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
-                        <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
                       <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
                         <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
-                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
-                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                      <select tabindex="-1" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
                         <option>I would like to sell my car</option>
                       </select>
                     </div>
                     <div style="margin-bottom:12px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
-                      <textarea placeholder="Tell us what you'd like help with." style="width:100%; height:64px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                      <textarea tabindex="-1" placeholder="Tell us what you'd like help with." style="width:100%; height:64px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
                     </div>
                     <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
                     <div style="display:flex; gap:10px;">
@@ -245,7 +245,7 @@
       </div>
 
       <div class="card card-hover flex w-80 flex-col">
-        <div class="thumb-real">
+        <div class="thumb-real" aria-hidden="true">
           <div class="thumb-scale">
             <div style="width:1280px; background:#f1f5f9;">
               <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
@@ -265,22 +265,22 @@
                     <h2 style="margin:0 0 18px; font-size:18px; font-weight:700; color:#0f172a;">Send us the details</h2>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
-                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
-                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional — leave blank if imported)</span></label>
                       <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
                         <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
-                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:16px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
-                      <textarea placeholder="Tell us about your car, or simply say hello." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                      <textarea tabindex="-1" placeholder="Tell us about your car, or simply say hello." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
                     </div>
                     <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone, vehicle details or enquiry type <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
                     <div style="display:flex; gap:10px;">
@@ -305,7 +305,7 @@
       </div>
 
       <div class="card card-hover flex w-80 flex-col">
-        <div class="thumb-real">
+        <div class="thumb-real" aria-hidden="true">
           <div class="thumb-scale">
             <div style="width:1280px; background:#f1f5f9;">
               <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
@@ -322,11 +322,11 @@
                   <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
                     <div>
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
-                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                     <div>
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
-                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                   </div>
                   <div style="display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:end; margin-bottom:14px;">
@@ -334,18 +334,18 @@
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Reg <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
                       <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
                         <span style="display:flex; align-items:center; justify-content:center; width:24px; background:#1d4ed8; color:#fff; font-size:7px; font-weight:800;">UK</span>
-                        <input type="text" placeholder="AB12 CDE" style="width:130px; padding:9px 6px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:14px; letter-spacing:0.1em; color:#0f172a; border:none; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="AB12 CDE" style="width:130px; padding:9px 6px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:14px; letter-spacing:0.1em; color:#0f172a; border:none; outline:none;"/>
                       </div>
                     </div>
                     <div>
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
-                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                      <select tabindex="-1" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
                         <option>I would like to sell my car</option>
                       </select>
                     </div>
                   </div>
                   <div style="margin-bottom:14px;">
-                    <textarea placeholder="Tell us what you'd like help with." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                    <textarea tabindex="-1" placeholder="Tell us what you'd like help with." style="width:100%; height:52px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
                   </div>
                   <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
                   <div style="display:flex; gap:10px;">
@@ -369,7 +369,7 @@
       </div>
 
       <div class="card card-hover flex w-80 flex-col">
-        <div class="thumb-real">
+        <div class="thumb-real" aria-hidden="true">
           <div class="thumb-scale">
             <div style="width:1280px; background:#f1f5f9;">
               <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
@@ -390,29 +390,29 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
                       <div>
                         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
-                        <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                       </div>
                       <div>
                         <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
-                        <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration number <span style="font-weight:400; color:#94a3b8;">(optional — leave blank if imported)</span></label>
                       <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
                         <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
-                        <input type="text" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="AB12 CDE" style="width:150px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
-                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                      <select tabindex="-1" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
                         <option>I would like to sell my car</option>
                       </select>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
-                      <textarea placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:76px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                      <textarea tabindex="-1" placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:76px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
                     </div>
                     <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:16px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
                     <div style="display:flex; gap:10px; margin-bottom:12px;">
@@ -469,7 +469,7 @@
       </div>
 
       <div class="card card-hover flex w-80 flex-col">
-        <div class="thumb-real">
+        <div class="thumb-real" aria-hidden="true">
           <div class="thumb-scale">
             <div style="width:1280px; background:#f1f5f9;">
               <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
@@ -490,28 +490,28 @@
                     <p style="margin:0 0 20px; font-size:13px; color:#94a3b8;">Your enquiry goes directly to our buyer. We usually reply within one working day.</p>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Name</label>
-                      <input type="text" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="Your full name" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Email</label>
-                      <input type="text" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
+                      <input type="text" tabindex="-1" placeholder="you@example.com" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none;"/>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Registration <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
                       <div style="display:inline-flex; border:2px solid #0f172a; border-radius:9px; overflow:hidden;">
                         <span style="display:flex; align-items:center; justify-content:center; width:26px; background:#1d4ed8; color:#fff; font-size:8px; font-weight:800;">UK</span>
-                        <input type="text" placeholder="AB12 CDE" style="width:180px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
+                        <input type="text" tabindex="-1" placeholder="AB12 CDE" style="width:180px; padding:9px 8px; background:#FFD204; text-align:center; font-family:monospace; font-weight:800; font-size:15px; letter-spacing:0.12em; color:#0f172a; border:none; outline:none;"/>
                       </div>
                     </div>
                     <div style="margin-bottom:14px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">How can we help?</label>
-                      <select style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
+                      <select tabindex="-1" style="width:100%; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; background:#fff;">
                         <option>I would like to sell my car</option>
                       </select>
                     </div>
                     <div style="margin-bottom:16px;">
                       <label style="display:block; font-size:12.5px; font-weight:600; color:#334155; margin-bottom:6px;">Your message</label>
-                      <textarea placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:80px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
+                      <textarea tabindex="-1" placeholder="Tell us what you would like help with, or simply say hello." style="width:100%; height:80px; padding:11px 13px; border:1px solid #cbd5e1; border-radius:11px; font-size:14px; color:#0f172a; outline:none; resize:none; font-family:inherit;"></textarea>
                     </div>
                     <div style="font-size:12.5px; font-weight:600; color:#2563eb; margin-bottom:20px;">+ Add phone or vehicle details <span style="font-weight:400; color:#94a3b8;">(optional)</span></div>
                     <div style="display:flex; flex-direction:column; gap:10px;">

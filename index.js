@@ -259,6 +259,22 @@ app.get("/contact", (req, res) => {
   });
 });
 
+app.get("/privacy", (req, res) => {
+  res.render("privacy");
+});
+
+app.get("/terms", (req, res) => {
+  res.render("terms");
+});
+
+app.get("/showroom-privacy", (req, res) => {
+  res.render("showroom-privacy");
+});
+
+app.get("/showroom-terms", (req, res) => {
+  res.render("showroom-terms");
+});
+
 app.post("/contact", async (req, res) => {
   try {
     const { name, email, phone, projectType, referenceUrl, message, companyWebsite } = req.body;
@@ -599,6 +615,43 @@ app.get("/showroom", async (req, res) => {
     });
   } catch (err) {
     console.error("Showroom homepage error:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Experimental showroom homepage redesign (working name, not linked from nav)
+app.get("/showroom-ideas", async (req, res) => {
+  try {
+    const cars = await Car.find().sort({ updatedAt: -1, createdAt: -1 }).limit(6).lean();
+
+    const buildFallback = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1].url : null);
+    const buildCardImage = (source, car) => {
+      const imageManifest = source?.manifest?.sources;
+      return {
+        sources: {
+          avif: imageManifest?.avif || [],
+          webp: imageManifest?.webp || [],
+          jpg: imageManifest?.jpg || [],
+        },
+        fallback: buildFallback(imageManifest?.jpg) || buildFallback(imageManifest?.webp) || buildFallback(imageManifest?.avif) || null,
+        alt: source?.alt || `${car.make || 'Vehicle'} ${car.model || ''}`.trim(),
+      };
+    };
+
+    const normalizedCars = cars.map((car) => {
+      const gallery = (car.galleryImages?.length ? car.galleryImages : car.images) || [];
+      const images = gallery.slice(0, 3).map((source) => buildCardImage(source, car));
+
+      return {
+        ...car,
+        image: images[0] || buildCardImage(null, car),
+        images,
+      };
+    });
+
+    res.render("showroom-ideas", { cars: normalizedCars });
+  } catch (err) {
+    console.error("Showroom ideas error:", err);
     res.status(500).send("Server error");
   }
 });
