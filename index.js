@@ -350,6 +350,11 @@ app.get("/components/forms", (req, res) => {
   res.render("form-gallery");
 });
 
+// Brochure page: admin dashboard / CMS showcase (component showcase)
+app.get("/components/admin", (req, res) => {
+  res.render("admin-gallery");
+});
+
 // Brochure page: landing page flow options (component showcase hub)
 app.get("/components/landing-pages", (req, res) => {
   res.render("landing-gallery");

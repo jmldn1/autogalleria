@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%
+    const adminGalleryJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I get to manage my own website, or do I have to come back to you for every change?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every build includes a private admin area so you can add and edit listings, blog posts and landing pages yourself. You only need us for structural changes, not routine content updates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the AI assistant on the dashboard actually do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ask it things in plain English, like \"which leads need follow-up this week\", from the dashboard itself. It can also take actions on your behalf, such as updating a lead's status — with a confirmation step before anything actually changes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast can I add a new landing page for a specific make and model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Enter the make and model, click AI Assist to draft the overview, value factors and selling tips for that specific car, add a photo, and publish. Minutes, not a rebuild."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AI Assist work for blog posts too?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — give it a title and a short excerpt or topic, and it drafts the full post. You still read it over and edit before publishing; it's a starting draft, not an auto-publish."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who can access the admin area, and is it secure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It's login-protected with hashed passwords and session-based authentication, not indexed by search engines, and only visible to accounts you create — not to site visitors."
+          }
+        }
+      ]
+    };
+  %>
+  <%- include('partials/seo-head', {
+    title: 'Car Dealership Admin Dashboard | Auto Galleria',
+    description: 'A private admin dashboard behind every car dealership website — manage listings, blog posts and landing pages yourself, with an AI assistant and a leads CRM built in.',
+    jsonLd: adminGalleryJsonLd
+  }) %>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <%- include('partials/navbar-brochure') %>
+
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-linear-to-br from-slate-900 via-blue-900 to-slate-800"></div>
+    <div class="absolute -top-24 -left-16 h-64 w-64 rounded-full bg-blue-500/30 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 pt-28 pb-16 text-white sm:px-6 sm:pt-32 sm:pb-20 lg:px-8">
+      <p class="section-eyebrow text-blue-200">Website components</p>
+      <h1 class="max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">A full backend, not just a website.</h1>
+      <p class="mt-6 max-w-2xl text-lg text-slate-200">Every build comes with a private admin area to manage listings, blog posts and landing pages yourself — plus an AI assistant on the dashboard and a lightweight CRM for enquiries. Here's what's behind the login.</p>
+    </div>
+  </section>
+
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
+
+    <!-- SCREEN 1: DASHBOARD -->
+    <div class="grid gap-8 sm:grid-cols-[1fr_1.4fr] sm:items-center">
+      <div>
+        <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Dashboard</span>
+        <h2 class="mt-3 text-2xl font-bold text-slate-900">Ask the dashboard, don't dig for it</h2>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Follow-up queue, lead volume, page views and a simple activity chart at a glance — plus an assistant you can ask directly, in plain English, instead of hunting through tables.</p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-gray-100 p-4 shadow-sm" aria-hidden="true">
+        <div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-blue-600">Auto Galleria Admin <span class="font-normal text-gray-400">/ Dashboard</span></div>
+
+        <div class="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+          <div class="flex items-center gap-2 text-xs font-medium text-gray-700">
+            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-[10px] text-blue-700">&#10022;</span>
+            Ask assistant
+          </div>
+          <div class="mt-2 space-y-1.5">
+            <div class="ml-auto w-fit max-w-[85%] rounded-lg bg-blue-600 px-2.5 py-1.5 text-[11px] text-white">Which leads need follow-up this week?</div>
+            <div class="mr-auto w-fit max-w-[85%] rounded-lg bg-gray-100 px-2.5 py-1.5 text-[11px] text-gray-800">3 leads are overdue and 5 are due this week — want me to open the follow-up queue?</div>
+          </div>
+        </div>
+
+        <div class="mt-3 grid grid-cols-4 gap-2">
+          <div class="rounded-lg border border-amber-200 bg-amber-50 p-2">
+            <p class="text-[9px] font-semibold uppercase tracking-wide text-amber-700">Overdue</p>
+            <p class="text-lg font-bold text-amber-900">3</p>
+          </div>
+          <div class="rounded-lg border border-blue-200 bg-blue-50 p-2">
+            <p class="text-[9px] font-semibold uppercase tracking-wide text-blue-700">Due this week</p>
+            <p class="text-lg font-bold text-blue-900">5</p>
+          </div>
+          <div class="rounded-lg border border-green-200 bg-green-50 p-2">
+            <p class="text-[9px] font-semibold uppercase tracking-wide text-green-700">New leads</p>
+            <p class="text-lg font-bold text-green-900">8</p>
+          </div>
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-2">
+            <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-700">No notes</p>
+            <p class="text-lg font-bold text-slate-900">2</p>
+          </div>
+        </div>
+
+        <div class="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+          <p class="text-[10px] font-semibold text-gray-600">Leads over time</p>
+          <svg viewBox="0 0 300 70" class="mt-1 h-14 w-full">
+            <polyline points="0,55 40,45 80,50 120,30 160,35 200,15 240,25 300,10" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: LANDINGS + AI ASSIST -->
+    <div class="mt-20 grid gap-8 sm:grid-cols-[1fr_1.4fr] sm:items-center">
+      <div>
+        <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Landings</span>
+        <h2 class="mt-3 text-2xl font-bold text-slate-900">New model page, drafted for you</h2>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Every make/model landing page lives here. Enter the details and let AI draft the overview, value factors and selling tips for that specific car — you edit and publish, rather than starting from a blank page. The same AI Assist button drafts blog posts too, so content doesn't stall waiting on a writer.</p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-gray-100 p-4 shadow-sm" aria-hidden="true">
+        <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2">
+          <span class="text-xs font-semibold text-gray-800">Manage Landings</span>
+          <span class="rounded-md bg-blue-600 px-2 py-1 text-[10px] font-medium text-white">+ Add New Landing</span>
+        </div>
+
+        <div class="mt-3 grid grid-cols-3 gap-2">
+          <div class="rounded-lg border border-gray-200 bg-white p-2">
+            <div class="aspect-video rounded bg-slate-200"></div>
+            <p class="mt-1.5 text-[10px] font-semibold text-gray-800">Porsche 911 Carrera</p>
+          </div>
+          <div class="rounded-lg border border-gray-200 bg-white p-2">
+            <div class="aspect-video rounded bg-slate-200"></div>
+            <p class="mt-1.5 text-[10px] font-semibold text-gray-800">Ferrari 458 GTB</p>
+          </div>
+          <div class="rounded-lg border-2 border-dashed border-blue-300 bg-blue-50/50 p-2">
+            <div class="flex aspect-video items-center justify-center rounded bg-white text-lg text-blue-400">+</div>
+            <p class="mt-1.5 text-[10px] font-semibold text-blue-600">Lister Knobbly &mdash; new</p>
+          </div>
+        </div>
+
+        <div class="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <p class="text-[9px] font-medium text-gray-500">Make</p>
+              <div class="mt-0.5 rounded border border-gray-300 px-2 py-1 text-[11px] text-gray-800">Lister</div>
+            </div>
+            <div>
+              <p class="text-[9px] font-medium text-gray-500">Model</p>
+              <div class="mt-0.5 rounded border border-gray-300 px-2 py-1 text-[11px] text-gray-800">Knobbly</div>
+            </div>
+          </div>
+          <div class="mt-2 flex items-center justify-between">
+            <p class="text-[10px] font-medium text-green-600">&#10003; AI content generated successfully.</p>
+            <span class="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-medium text-blue-600 bg-blue-50">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              AI Assist
+            </span>
+          </div>
+          <div class="mt-2">
+            <p class="text-[9px] font-medium text-gray-500">Overview</p>
+            <div class="mt-0.5 rounded border border-gray-300 px-2 py-1.5 text-[10px] leading-relaxed text-gray-600">A 1962 Lister Knobbly is a rare, race-bred classic &mdash; low production numbers and genuine period racing pedigree make condition and provenance the two biggest factors in its value&hellip;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: LEADS CRM -->
+    <div class="mt-20 grid gap-8 sm:grid-cols-[1fr_1.4fr] sm:items-center">
+      <div>
+        <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-amber-700">Leads</span>
+        <h2 class="mt-3 text-2xl font-bold text-slate-900">A lightweight CRM, not just an inbox</h2>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Every enquiry lands here with a status, a follow-up date and internal notes — filterable by overdue, status or date range, with a one-click CSV export when you need the data elsewhere.</p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-gray-100 p-4 shadow-sm" aria-hidden="true">
+        <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2">
+          <span class="text-xs font-semibold text-gray-800">Leads <span class="font-normal text-gray-400">&middot; 24 recorded</span></span>
+          <span class="rounded-md bg-gray-800 px-2 py-1 text-[10px] font-medium text-white">Export CSV</span>
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-1.5">
+          <span class="rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[9px] font-semibold uppercase tracking-wide text-amber-700">Overdue</span>
+          <span class="rounded-full border border-blue-200 bg-blue-50 px-2 py-1 text-[9px] font-semibold uppercase tracking-wide text-blue-700">Follow-up</span>
+          <span class="rounded-full border border-green-200 bg-green-50 px-2 py-1 text-[9px] font-semibold uppercase tracking-wide text-green-700">New</span>
+          <span class="rounded-full border border-purple-200 bg-purple-50 px-2 py-1 text-[9px] font-semibold uppercase tracking-wide text-purple-700">Qualified</span>
+        </div>
+
+        <div class="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-white">
+          <table class="w-full text-left text-[10px]">
+            <thead class="bg-gray-50 text-[9px] uppercase tracking-wide text-gray-500">
+              <tr>
+                <th class="px-2.5 py-2">Lead</th>
+                <th class="px-2.5 py-2">Vehicle</th>
+                <th class="px-2.5 py-2">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr>
+                <td class="px-2.5 py-2 font-medium text-gray-800">Jane Smith</td>
+                <td class="px-2.5 py-2 text-gray-600">Porsche 911 Carrera</td>
+                <td class="px-2.5 py-2"><span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-[9px] font-medium text-blue-700">Contacted</span></td>
+              </tr>
+              <tr>
+                <td class="px-2.5 py-2 font-medium text-gray-800">Tom Reid</td>
+                <td class="px-2.5 py-2 text-gray-600">Sell &mdash; BMW M4</td>
+                <td class="px-2.5 py-2"><span class="rounded-full bg-green-100 px-1.5 py-0.5 text-[9px] font-medium text-green-700">New</span></td>
+              </tr>
+              <tr>
+                <td class="px-2.5 py-2 font-medium text-gray-800">Priya Kaur</td>
+                <td class="px-2.5 py-2 text-gray-600">Ferrari 458 GTB</td>
+                <td class="px-2.5 py-2"><span class="rounded-full bg-purple-100 px-1.5 py-0.5 text-[9px] font-medium text-purple-700">Qualified</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-auto mb-8 mt-20 max-w-3xl text-center">
+      <p class="section-eyebrow">Common questions</p>
+      <h2 class="text-3xl font-bold text-slate-900">The admin area, answered</h2>
+    </div>
+
+    <div class="mx-auto max-w-3xl space-y-4">
+      <% adminGalleryJsonLd.mainEntity.forEach(faq => { %>
+        <details class="rounded-lg bg-white p-4 shadow-sm">
+          <summary class="cursor-pointer font-semibold text-slate-800"><%= faq.name %></summary>
+          <p class="mt-2 text-slate-600"><%= faq.acceptedAnswer.text %></p>
+        </details>
+      <% }) %>
+    </div>
+
+    <div class="mt-16 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
+      <p class="section-eyebrow">Ready when you are</p>
+      <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl">Want an admin area behind your site?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-slate-600">We'll scope what you actually need to manage day to day — content, listings, leads &mdash; and build the admin tools around that.</p>
+      <a href="/contact" class="btn-primary mt-6">Start a conversation</a>
+    </div>
+
+  </main>
+
+  <%- include('partials/footer-brochure') %>
+
+</body>
+</html>
